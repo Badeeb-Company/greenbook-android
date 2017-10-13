@@ -12,4 +12,37 @@
 
     </style>
 
+    <style name="sign_up_input_text" >
+        <item name="android:layout_width" >fill_parent</item>
+        <item name="android:layout_height" >match_parent</item>
+        <item name="android:textSize" >@dimen/sign_up_input_text_font_size</item>
+        <item name="android:textColorHint" >@color/light_green</item>
+        <item name="android:layout_marginLeft" >@dimen/sign_up_input_text_left_margin</item>
+        <item name="android:background" >@android:color/transparent</item>
+    </style>
+
+    <style name="sign_up_input_icon" >
+        <item name="android:layout_width">@dimen/sign_up_input_icon_layout_width</item>
+        <item name="android:layout_marginRight" >@dimen/sign_up_input_icon_margin</item>
+        <item name="android:layout_marginLeft" >@dimen/sign_up_input_icon_margin</item>
+        <item name="android:layout_gravity" >center_vertical</item>
+    </style>
+
+    <style name="sign_up_horizontal_line" >
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/sign_up_line_width</item>
+        <item name="android:layout_marginRight" >@dimen/sign_up_line_margin_right</item>
+        <item name="android:layout_marginLeft" >@dimen/sign_up_line_margin_left</item>
+        <item name="android:background" >@color/light_gray</item>
+    </style>
+
+    <style name="sign_up_vertical_line" >
+        <item name="android:layout_width">@dimen/sign_up_line_width</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:background" >@color/light_gray</item>
+    </style>
+
+
+
+
 </resources>
