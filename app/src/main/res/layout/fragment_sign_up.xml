@@ -1,0 +1,174 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/signUp_form"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:clickable="true"
+
+    android:scrollbars="none">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:focusable="true"
+        android:focusableInTouchMode="true">
+
+        <LinearLayout
+            android:id="@+id/profileImageLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:orientation="vertical">
+
+            <com.makeramen.roundedimageview.RoundedImageView
+                android:id="@+id/rivProfilePhoto"
+                android:layout_width="91dp"
+                android:layout_height="91dp"
+                android:layout_gravity="center"
+                android:layout_marginBottom="@dimen/profile_image_bottom_margin"
+                android:scaleType="centerCrop"
+                android:src="@drawable/def_usr_img"
+                app:riv_oval="true" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/upload_image_link"
+                android:textSize="16sp"
+                android:layout_gravity="center"
+                android:scaleType="centerCrop"
+                android:textColor="@color/green"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/sign_up_row_height"
+            android:layout_marginTop="41dp"
+            android:layout_marginLeft="40dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:src="@drawable/ic_profile_pressed"
+                android:layout_height="23dp"
+                style="@style/sign_up_input_icon"/>
+
+            <View
+                style="@style/sign_up_vertical_line" />
+
+            <EditText
+                android:hint="Username"
+                style="@style/sign_up_input_text" />
+
+
+        </LinearLayout>
+
+        <View
+            style="@style/sign_up_horizontal_line" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/sign_up_row_height"
+            android:layout_marginLeft="40dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:src="@drawable/ic_envelope"
+                android:layout_height="21dp"
+                style="@style/sign_up_input_icon"/>
+
+            <View
+                style="@style/sign_up_vertical_line" />
+
+            <EditText
+                android:hint="Email Address"
+                style="@style/sign_up_input_text" />
+        </LinearLayout>
+
+
+        <View
+            style="@style/sign_up_horizontal_line" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/sign_up_row_height"
+            android:layout_marginLeft="40dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:src="@drawable/ic_locked"
+                android:layout_height="30dp"
+                style="@style/sign_up_input_icon"/>
+            <View
+                style="@style/sign_up_vertical_line" />
+
+            <EditText
+                android:hint="Password"
+                style="@style/sign_up_input_text" />
+
+        </LinearLayout>
+
+        <View
+            style="@style/sign_up_horizontal_line" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/sign_up_row_height"
+            android:layout_marginLeft="40dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:src="@drawable/ic_locked"
+                android:layout_height="30dp"
+                style="@style/sign_up_input_icon"/>
+            <View
+                style="@style/sign_up_vertical_line" />
+
+            <EditText
+                android:hint="Confirm Password"
+                style="@style/sign_up_input_text" />
+        </LinearLayout>
+
+        <View
+            style="@style/sign_up_horizontal_line" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/sign_up_row_height"
+            android:layout_marginLeft="40dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="27dp"
+                android:layout_height="30dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginLeft="15dp"
+                android:layout_gravity="center_vertical"
+                android:layout_margin="15dp"/>
+            <View
+                style="@style/sign_up_vertical_line" />
+
+        </LinearLayout>
+
+
+        <Button
+            android:id="@+id/show_vendors_bttn"
+            android:layout_width="298dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="37dp"
+            android:layout_marginBottom="15dp"
+            android:layout_gravity="center"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/rounded_corner_green"
+            android:text="Sign Up"
+            android:textColor="@color/white"
+            android:textSize="18sp"/>
+
+
+
+    </LinearLayout>
+
+
+</ScrollView>
