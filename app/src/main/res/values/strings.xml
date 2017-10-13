@@ -1,10 +1,14 @@
 <resources>
     <string name="app_name">Green Book</string>
+    
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="upload_image_link">Upload Image</string>
 
     <string name="skip">skip</string>
     <string name="email_address">Email Address</string>
     <string name="password">Password</string>
     <string name="login">Login</string>
     <string name="signup">Sign up</string>
+
 
 </resources>
