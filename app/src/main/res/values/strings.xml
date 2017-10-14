@@ -13,6 +13,11 @@
     <string name="confirm_password_hint">Confirm Password</string>
     <string name="login_error">Invalid Username and Password</string>
     <string name="ok_btn_dialog">Ok</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="error_email_required">Email address is required</string>
 
 
 </resources>
