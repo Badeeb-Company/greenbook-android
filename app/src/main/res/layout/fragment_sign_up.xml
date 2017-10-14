@@ -136,7 +136,7 @@
 
 
         <Button
-            android:id="@+id/show_vendors_bttn"
+            android:id="@+id/signUp_bttn"
             android:layout_width="@dimen/sign_up_button_layout_width"
             android:layout_height="@dimen/sign_up_button_layout_height"
             android:layout_marginTop="@dimen/sign_up_button_layout_marginTop"
