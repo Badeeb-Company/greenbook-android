@@ -133,25 +133,29 @@ public class UiUtils {
     }
 
     // Snackbar with message only
-    public static Snackbar showSnackBar(View view, String message, int duration) {
+    public static Snackbar showSnackBar(View view, String message, int duration, int color) {
 
         Snackbar snackbar = Snackbar
                 .make(view, message, duration)
                 ;
 
+        View snackbarView = snackbar.getView();
+        snackbarView.setBackgroundColor(color);
         snackbar.show();
 
         return snackbar;
     }
 
     // Snackbar with message and action
-    public static Snackbar showSnackBar(View view, String message, int duration, String actionName, View.OnClickListener onClickListener) {
+    public static Snackbar showSnackBar(View view, String message, int duration, int color, String actionName, View.OnClickListener onClickListener) {
 
         Snackbar snackbar = Snackbar
                 .make(view, message, duration)
                 .setAction(actionName, onClickListener)
                 ;
 
+        View snackbarView = snackbar.getView();
+        snackbarView.setBackgroundColor(color);
         snackbar.show();
 
         return snackbar;
