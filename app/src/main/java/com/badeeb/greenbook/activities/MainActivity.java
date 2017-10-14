@@ -1,5 +1,6 @@
 package com.badeeb.greenbook.activities;
 
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +10,7 @@ import android.util.Log;
 
 import com.badeeb.greenbook.R;
 import com.badeeb.greenbook.fragments.LoginFragment;
+import com.badeeb.greenbook.shared.UiUtils;
 
 public class MainActivity extends AppCompatActivity {
 

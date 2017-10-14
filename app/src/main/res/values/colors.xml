@@ -8,6 +8,7 @@
     <color name="light_green">#6bbb96</color>
 
     <color name="red">#d8463b</color>
+    <color name="orange">#fbc752</color>
 
 
     <color name="white">#FFFFFF</color>
@@ -24,6 +25,7 @@
     <color name="gray">#ababab</color>
     <color name="clouds">#ecf0f1</color>
 
+    <color name="separator_color">#f7f7f7</color>
 
 
 </resources>
