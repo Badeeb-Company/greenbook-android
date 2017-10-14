@@ -49,6 +49,11 @@
         <item name="android:layout_height">@dimen/sign_up_row_height</item>
         <item name="android:layout_marginLeft" >@dimen/sign_up_row_left_margin</item>
         <item name="android:orientation" >horizontal</item>
+
+    </style>
+
+    <style name="login_skip">
+
     </style>
 
 </resources>

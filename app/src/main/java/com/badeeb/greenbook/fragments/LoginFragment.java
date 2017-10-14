@@ -14,7 +14,7 @@ import com.badeeb.greenbook.R;
  */
 public class LoginFragment extends Fragment {
 
-    private final String TAG = LoginFragment.class.getSimpleName();
+    public static final String TAG = LoginFragment.class.getSimpleName();
 
     public LoginFragment() {
         // Required empty public constructor
