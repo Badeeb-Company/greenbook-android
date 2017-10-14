@@ -19,15 +19,16 @@
             android:id="@+id/profileImageLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="@dimen/sign_up_profile_image_layout_marginTop"
+            android:layout_marginBottom="@dimen/sign_up_profile_image_layout_marginBottom"
             android:orientation="vertical">
 
             <com.makeramen.roundedimageview.RoundedImageView
                 android:id="@+id/rivProfilePhoto"
-                android:layout_width="91dp"
-                android:layout_height="91dp"
+                android:layout_width="@dimen/sign_up_profile_round_image_width"
+                android:layout_height="@dimen/sign_up_profile_round_image_height"
                 android:layout_gravity="center"
-                android:layout_marginBottom="@dimen/profile_image_bottom_margin"
+                android:layout_marginBottom="@dimen/sign_up_profile_image_bottom_margin"
                 android:scaleType="centerCrop"
                 android:src="@drawable/def_usr_img"
                 app:riv_oval="true" />
@@ -36,7 +37,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/upload_image_link"
-                android:textSize="16sp"
+                android:textSize="@dimen/sign_up_profile_image_text_size"
                 android:layout_gravity="center"
                 android:scaleType="centerCrop"
                 android:textColor="@color/green"/>
@@ -44,11 +45,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/sign_up_row_height"
-            android:layout_marginTop="41dp"
-            android:layout_marginLeft="40dp"
-            android:orientation="horizontal">
+            style="@style/sign_up_row_layout">
 
             <ImageView
                 android:src="@drawable/ic_profile_pressed"
@@ -59,9 +56,8 @@
                 style="@style/sign_up_vertical_line" />
 
             <EditText
-                android:hint="Username"
+                android:hint="@string/username_hint"
                 style="@style/sign_up_input_text" />
-
 
         </LinearLayout>
 
@@ -69,10 +65,7 @@
             style="@style/sign_up_horizontal_line" />
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/sign_up_row_height"
-            android:layout_marginLeft="40dp"
-            android:orientation="horizontal">
+            style="@style/sign_up_row_layout">
 
             <ImageView
                 android:src="@drawable/ic_envelope"
@@ -83,7 +76,7 @@
                 style="@style/sign_up_vertical_line" />
 
             <EditText
-                android:hint="Email Address"
+                android:hint="@string/email_address"
                 style="@style/sign_up_input_text" />
         </LinearLayout>
 
@@ -92,10 +85,7 @@
             style="@style/sign_up_horizontal_line" />
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/sign_up_row_height"
-            android:layout_marginLeft="40dp"
-            android:orientation="horizontal">
+            style="@style/sign_up_row_layout">
 
             <ImageView
                 android:src="@drawable/ic_locked"
@@ -105,7 +95,7 @@
                 style="@style/sign_up_vertical_line" />
 
             <EditText
-                android:hint="Password"
+                android:hint="@string/password"
                 style="@style/sign_up_input_text" />
 
         </LinearLayout>
@@ -114,10 +104,7 @@
             style="@style/sign_up_horizontal_line" />
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/sign_up_row_height"
-            android:layout_marginLeft="40dp"
-            android:orientation="horizontal">
+            style="@style/sign_up_row_layout">
 
             <ImageView
                 android:src="@drawable/ic_locked"
@@ -127,26 +114,21 @@
                 style="@style/sign_up_vertical_line" />
 
             <EditText
-                android:hint="Confirm Password"
+                android:hint="@string/confirm_password_hint"
                 style="@style/sign_up_input_text" />
+
         </LinearLayout>
 
         <View
             style="@style/sign_up_horizontal_line" />
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/sign_up_row_height"
-            android:layout_marginLeft="40dp"
-            android:orientation="horizontal">
+            style="@style/sign_up_row_layout">
 
             <ImageView
-                android:layout_width="27dp"
                 android:layout_height="30dp"
-                android:layout_marginRight="15dp"
-                android:layout_marginLeft="15dp"
-                android:layout_gravity="center_vertical"
-                android:layout_margin="15dp"/>
+                style="@style/sign_up_input_icon"/>
+
             <View
                 style="@style/sign_up_vertical_line" />
 
@@ -155,16 +137,16 @@
 
         <Button
             android:id="@+id/show_vendors_bttn"
-            android:layout_width="298dp"
-            android:layout_height="48dp"
-            android:layout_marginTop="37dp"
-            android:layout_marginBottom="15dp"
+            android:layout_width="@dimen/sign_up_button_layout_width"
+            android:layout_height="@dimen/sign_up_button_layout_height"
+            android:layout_marginTop="@dimen/sign_up_button_layout_marginTop"
+            android:layout_marginBottom="@dimen/sign_up_button_layout_marginBottom"
             android:layout_gravity="center"
             android:layout_centerHorizontal="true"
             android:background="@drawable/rounded_corner_green"
-            android:text="Sign Up"
+            android:text="@string/signup"
             android:textColor="@color/white"
-            android:textSize="18sp"/>
+            android:textSize="@dimen/sign_up_button_layout_text_size"/>
 
 
 

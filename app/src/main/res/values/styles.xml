@@ -44,7 +44,11 @@
         <item name="android:background" >@color/light_gray</item>
     </style>
 
-
-
+    <style name="sign_up_row_layout" >
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/sign_up_row_height</item>
+        <item name="android:layout_marginLeft" >@dimen/sign_up_row_left_margin</item>
+        <item name="android:orientation" >horizontal</item>
+    </style>
 
 </resources>

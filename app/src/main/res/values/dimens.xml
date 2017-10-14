@@ -2,11 +2,25 @@
 <resources>
 
     <!--Sign Up fragment dimensions-->
-    <dimen name="fragment_signUp_horizontal_margin">16dp</dimen>
-    <dimen name="fragment_signUp_vertical_margin">16dp</dimen>
-    <dimen name="fragment_signUp_margin">16dp</dimen>
-    <dimen name="profile_image_bottom_margin">10dp</dimen>
+
+    <!--Profile Image-->
+    <dimen name="sign_up_profile_image_layout_marginTop">30dp</dimen>
+    <dimen name="sign_up_profile_image_layout_marginBottom">41dp</dimen>
+    <dimen name="sign_up_profile_image_bottom_margin">10dp</dimen>
+    <dimen name="sign_up_profile_round_image_width">91dp</dimen>
+    <dimen name="sign_up_profile_round_image_height">91dp</dimen>
+    <dimen name="sign_up_profile_image_text_size">16sp</dimen>
+
+    <!--Sign up button-->
+    <dimen name="sign_up_button_layout_width">298dp</dimen>
+    <dimen name="sign_up_button_layout_height">48dp</dimen>
+    <dimen name="sign_up_button_layout_marginTop">37dp</dimen>
+    <dimen name="sign_up_button_layout_marginBottom">15dp</dimen>
+    <dimen name="sign_up_button_layout_text_size">18sp</dimen>
+
+    <!--Row Layout-->
     <dimen name="sign_up_row_height">60dp</dimen>
+    <dimen name="sign_up_row_left_margin">40dp</dimen>
 
     <!--Input text Style dimensions-->
     <dimen name="sign_up_input_text_left_margin">34dp</dimen>
