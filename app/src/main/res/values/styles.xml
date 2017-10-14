@@ -14,6 +14,11 @@
         <item name="android:textColorHint">@color/green</item>
     </style>
 
+    <style name="snackbar">
+        <item name="android:background">@color/red</item>
+    </style>
+
+
     <style name="sign_up_input_text" >
         <item name="android:layout_width" >fill_parent</item>
         <item name="android:layout_height" >match_parent</item>
