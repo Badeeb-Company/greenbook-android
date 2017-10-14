@@ -41,33 +41,6 @@ public class SignUpFragment extends Fragment {
         View view =  inflater.inflate(R.layout.fragment_sign_up, container, false);
         ScrollView s = (ScrollView)  view.findViewById(R.id.signUp_form);
 
-        bSignUp = (Button) view.findViewById(R.id.signUp_bttn);
-        bSignUp.setOnClickListener(new View.OnClickListener(){
-
-            @Override
-            public void onClick(View view) {
-                Snackbar snackbar = Snackbar
-                        .make(view, "No internet connection!", Snackbar.LENGTH_LONG)
-                        .setAction("RETRY", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                            }
-                        });
-
-                // Changing message text color
-                                snackbar.setActionTextColor(Color.RED);
-                                View snackBarView = snackbar.getView();
-                                snackBarView.setBackgroundColor(getResources().getColor(R.color.yellow));
-
-
-                // Changing action button text color
-                                View sbView = snackbar.getView();
-                                TextView textView = (TextView) sbView.findViewById(android.support.design.R.id.snackbar_text);
-                                sbView.set
-                                textView.setTextColor(Color.WHITE);
-                                snackbar.show();
-            }
-        });
         return view;
     }
 

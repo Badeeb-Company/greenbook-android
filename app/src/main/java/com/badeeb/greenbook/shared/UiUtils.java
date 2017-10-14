@@ -48,12 +48,12 @@ public class UiUtils {
         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
     }
 
-    public static ProgressDialog createProgressDialog(Context context, int theme){
-        return createProgressDialog(context, "Loading. Please wait...", theme);
+    public static ProgressDialog createProgressDialog(Context context){
+        return createProgressDialog(context, "Loading. Please wait...");
     }
 
-    public static ProgressDialog createProgressDialog(Context context, String message, int theme){
-        ProgressDialog progressDialog = new ProgressDialog(context, theme);
+    public static ProgressDialog createProgressDialog(Context context, String message){
+        ProgressDialog progressDialog = new ProgressDialog(context, R.style.DialogTheme);
         progressDialog.setMessage(message);
         progressDialog.setCancelable(false);
         return progressDialog;
