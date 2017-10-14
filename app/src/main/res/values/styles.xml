@@ -52,8 +52,76 @@
 
     </style>
 
+    <!-- Login fragment - Start -->
+
+    <style name="login_linear_layout">
+        <item name="android:gravity">center</item>
+        <item name="android:layout_marginLeft">@dimen/login_left_margin</item>
+        <item name="android:layout_marginRight">@dimen/login_right_margin</item>
+        <item name="android:minHeight">@dimen/login_ll_min_height</item>
+    </style>
+
+    <style name="login_email_linear_layout" parent="login_linear_layout">
+        <item name="android:layout_marginTop">@dimen/login_email_top_margin</item>
+    </style>
+
+    <style name="login_bttn_linear_layout">
+        <item name="android:background">@drawable/rounded_corner_green</item>
+        <item name="android:layout_marginLeft">@dimen/login_bttn_left_margin</item>
+        <item name="android:layout_marginRight">@dimen/login_bttn_right_margin</item>
+        <item name="android:layout_marginTop">@dimen/login_bttn_top_margin</item>
+        <item name="android:gravity">center</item>
+    </style>
+
     <style name="login_skip">
+        <item name="android:textColor">@color/light_black</item>
+        <item name="android:textSize">17sp</item>
+        <item name="android:fontFamily">fonts/OpenSans-Regular.ttf</item>
+        <item name="android:layout_marginRight">@dimen/login_right_margin</item>
+        <item name="android:layout_marginTop">@dimen/login_skip_top_margin</item>
+    </style>
+
+    <style name="login_vertical_line">
+        <item name="android:layout_width">@dimen/login_line_thickness</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:background">@color/separator_color</item>
 
     </style>
+
+    <style name="login_horizontal_line">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/login_line_thickness</item>
+        <item name="android:layout_marginRight">@dimen/login_right_margin</item>
+        <item name="android:layout_marginLeft">@dimen/login_line_right_margin</item>
+        <item name="android:background">@color/separator_color</item>
+    </style>
+
+    <style name="login_edit_text">
+        <item name="android:layout_marginLeft">@dimen/login_et_left_margin</item>
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:fontFamily">fonts/OpenSans-Regular.ttf</item>
+    </style>
+
+    <style name="login_image">
+        <item name="android:layout_width">@dimen/login_image_width</item>
+        <item name="android:layout_height">@dimen/login_image_height</item>
+        <item name="android:layout_marginRight">@dimen/login_line_right_margin</item>
+    </style>
+
+    <style name="login_forget_password">
+        <item name="android:textColor">@color/gray</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:fontFamily">fonts/OpenSans-Regular.ttf</item>
+    </style>
+
+    <style name="login_bttn">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_weight">1</item>
+    </style>
+
+    <!-- Login fragment - End -->
 
 </resources>
