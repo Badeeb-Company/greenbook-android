@@ -170,7 +170,7 @@ public class LoginFragment extends Fragment {
         // Prepare response type
         Type responseType = new TypeToken<JsonResponse<LoginInquiry>>() {}.getType();
 
-        VolleyWrapper<User, JsonResponse<LoginInquiry>> volleyWrapper = new VolleyWrapper<>(mUser, responseType, Request.Method.POST, url, callback, getContext());
+        VolleyWrapper<User, JsonResponse<LoginInquiry>> volleyWrapper = new VolleyWrapper<>(mUser, responseType, Request.Method.POST, url, callback, getContext(), true, mActivity.findViewById(R.id.ll_main_view));
         volleyWrapper.execute();
     }
 

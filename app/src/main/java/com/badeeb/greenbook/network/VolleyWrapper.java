@@ -1,8 +1,10 @@
 package com.badeeb.greenbook.network;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.design.widget.Snackbar;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -42,14 +44,20 @@ public class VolleyWrapper <T, S> {
     private String url;
     private VolleyCallback<S> callback;
     private Context context;
+    private boolean isSnackBarRequired;
+    private View sankbarParentLayout;
 
-    public VolleyWrapper(T jsonRequest, Type responseType, int requestType, String url, VolleyCallback<S> callback, Context context) {
+    public VolleyWrapper(T jsonRequest, Type responseType, int requestType,
+                         String url, VolleyCallback<S> callback, Context context,
+                         boolean isSnackBarRequired, View sankbarParentLayout) {
         this.jsonRequest = jsonRequest;
         this.requestType = requestType;
         this.url = url;
         this.callback = callback;
         this.context = context;
         this.responseType = responseType;
+        this.isSnackBarRequired = isSnackBarRequired;
+        this.sankbarParentLayout = sankbarParentLayout;
     }
 
     public void execute() {
@@ -110,7 +118,20 @@ public class VolleyWrapper <T, S> {
 
                                 JsonResponse errorResponse = gson.fromJson(responseData, JsonResponse.class);
 
-                                Toast.makeText(context, errorResponse.getJsonMeta().getMessage(), Toast.LENGTH_SHORT).show();
+                                if (isSnackBarRequired) {
+                                    UiUtils.showSnackBar(sankbarParentLayout,
+                                            errorResponse.getJsonMeta().getMessage(),
+                                            Snackbar.LENGTH_INDEFINITE, context.getResources().getColor(R.color.orange), R.drawable.btn_close,
+                                            new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+
+                                        }
+                                    });
+                                }
+                                else {
+                                    Toast.makeText(context, errorResponse.getJsonMeta().getMessage(), Toast.LENGTH_SHORT).show();
+                                }
                             }
                             // Network Error Handling
                             callback.onError();
@@ -142,6 +163,5 @@ public class VolleyWrapper <T, S> {
 
         Log.d(TAG, "execute - End");
     }
-
 
 }
