@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/aiSearch"
+        android:title="@string/aiSearch"/>
+    <item
+        android:id="@+id/aiFavorite"
+        android:icon="@drawable/ic_fav_normal"
+        android:title="@string/aiFavorite"/>
+    <item
+        android:id="@+id/aiProfile"
+        android:icon="@drawable/ic_profile_pressed"
+        android:title="@string/aiProfile"/>
+</menu>

@@ -1,5 +1,6 @@
 package com.badeeb.greenbook.activities;
 
+import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -21,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
 
     private Toolbar mtoolbar;
     private FragmentManager mFragmentManager;
+    private BottomNavigationView mBottomNavigationView;
 
     private User mUser;
     private AppSettings mAppSettings;
@@ -41,12 +43,13 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "init - Start");
 
         mFragmentManager = getSupportFragmentManager();
+        mAppSettings = AppSettings.getInstance();
 
         // Toolbar
         mtoolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mtoolbar);
-
-        mAppSettings = AppSettings.getInstance();
+        // Bottom Navigation bar
+        mBottomNavigationView = (BottomNavigationView) findViewById(R.id.btvNavigation);
 
         // Check if user was logged in before or not
         if (mAppSettings.isLoggedIn()) {
@@ -82,5 +85,13 @@ public class MainActivity extends AppCompatActivity {
 
     public void showToolbar() {
         mtoolbar.setVisibility(View.VISIBLE);
+    }
+
+    public void hideBottomNavigationActionBar() {
+        mBottomNavigationView.setVisibility(View.GONE);
+    }
+
+    public void showBottomNavigationActionBar() {
+        mBottomNavigationView.setVisibility(View.VISIBLE);
     }
 }

@@ -19,5 +19,9 @@
     <string name="error_field_required">This field is required</string>
     <string name="error_email_required">Email address is required</string>
 
+    <string name="aiSearch">Search</string>
+    <string name="aiFavorite">Favorite</string>
+    <string name="aiProfile">Profile</string>
+
 
 </resources>

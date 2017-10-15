@@ -2,6 +2,7 @@ package com.badeeb.greenbook.fragments;
 
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -12,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -82,6 +84,7 @@ public class LoginFragment extends Fragment {
         mProgressDialog = UiUtils.createProgressDialog(mActivity);
 
         mActivity.hideToolbar();
+        mActivity.hideBottomNavigationActionBar();
 
         setupListeners(view);
 
@@ -153,6 +156,8 @@ public class LoginFragment extends Fragment {
 
                 goToSearch();
 
+                hideKeyboard();
+
                 mProgressDialog.dismiss();
 
                 Log.d(TAG, "callLoginApi - onSuccess - End");
@@ -177,8 +182,21 @@ public class LoginFragment extends Fragment {
         volleyWrapper.execute();
     }
 
-    private void goToSearch() {
+    private void hideKeyboard() {
+        View view = mActivity.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager)mActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
 
+    private void goToSearch() {
+        SearchFragment searchFragment = new SearchFragment();
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.add(R.id.main_frame, searchFragment, searchFragment.TAG);
+        fragmentTransaction.addToBackStack(TAG);
+        fragmentTransaction.commit();
     }
 
     private boolean validateInput() {
