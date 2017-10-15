@@ -119,6 +119,14 @@ public class LoginFragment extends Fragment {
             }
         });
 
+        TextView skip = view.findViewById(R.id.tvSkip);
+        skip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                goToSearch();
+            }
+        });
+
         Log.d(TAG, "setupListeners - End");
     }
 
