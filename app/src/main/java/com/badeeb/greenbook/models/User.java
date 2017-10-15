@@ -77,4 +77,28 @@ public class User {
     public void setImageURL(String imageURL) {
         this.imageURL = imageURL;
     }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public ArrayList<Shop> getOwnedShops() {
+        return ownedShops;
+    }
+
+    public void setOwnedShops(ArrayList<Shop> ownedShops) {
+        this.ownedShops = ownedShops;
+    }
 }

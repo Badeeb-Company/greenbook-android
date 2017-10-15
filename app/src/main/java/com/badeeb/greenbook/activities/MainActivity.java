@@ -12,6 +12,7 @@ import android.view.View;
 import com.badeeb.greenbook.R;
 import com.badeeb.greenbook.fragments.LoginFragment;
 import com.badeeb.greenbook.models.User;
+import com.badeeb.greenbook.shared.AppSettings;
 import com.badeeb.greenbook.shared.UiUtils;
 
 public class MainActivity extends AppCompatActivity {
@@ -21,7 +22,8 @@ public class MainActivity extends AppCompatActivity {
     private Toolbar mtoolbar;
     private FragmentManager mFragmentManager;
 
-    private User user;
+    private User mUser;
+    private AppSettings mAppSettings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +46,16 @@ public class MainActivity extends AppCompatActivity {
         mtoolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mtoolbar);
 
+        mAppSettings = AppSettings.getInstance();
+
+        // Check if user was logged in before or not
+        if (mAppSettings.isLoggedIn()) {
+            mUser = mAppSettings.getUser();
+            // Go to Search screen directly
+        }
+        else {
+            // Go to login screen
+        }
         goToLogin();
 
         Log.d(TAG, "init - End");
@@ -57,11 +69,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public User getUser() {
-        return user;
+        return mUser;
     }
 
     public void setUser(User user) {
-        this.user = user;
+        this.mUser = user;
     }
 
     public void hideToolbar() {

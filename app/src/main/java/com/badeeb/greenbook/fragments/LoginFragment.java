@@ -26,6 +26,7 @@ import com.badeeb.greenbook.models.User;
 import com.badeeb.greenbook.network.NonAuthorizedCallback;
 import com.badeeb.greenbook.network.VolleyResponse;
 import com.badeeb.greenbook.network.VolleyWrapper;
+import com.badeeb.greenbook.shared.AppSettings;
 import com.badeeb.greenbook.shared.Constants;
 import com.badeeb.greenbook.shared.UiUtils;
 import com.badeeb.greenbook.shared.Utils;
@@ -42,6 +43,7 @@ public class LoginFragment extends Fragment {
 
     private MainActivity mActivity;
     private User mUser;
+    private AppSettings mAppSettings;
 
     private EditText mEmail;
     private EditText mPassword;
@@ -72,6 +74,7 @@ public class LoginFragment extends Fragment {
 
         mActivity = (MainActivity) getActivity();
         mUser = new User();
+        mAppSettings = AppSettings.getInstance();
 
         mEmail = view.findViewById(R.id.etEmail);
         mPassword = view.findViewById(R.id.etPassword);
@@ -141,6 +144,11 @@ public class LoginFragment extends Fragment {
             @Override
             public void onSuccess(JsonResponse<LoginInquiry> jsonResponse) {
                 Log.d(TAG, "callLoginApi - onSuccess - Start");
+
+                mUser = jsonResponse.getResult().getUser();
+
+                mAppSettings.saveUser(mUser);
+                mActivity.setUser(mUser);
 
                 goToSearch();
 
