@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Green Book</string>
-    
+
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="upload_image_link">Upload Image</string>
 
@@ -22,6 +22,10 @@
     <string name="signup_error">Error during signup, please try later</string>
     <string name="success_sign_up">Account is created Successfully</string>
 
+
+    <string name="aiSearch">Search</string>
+    <string name="aiFavorite">Favorite</string>
+    <string name="aiProfile">Profile</string>
 
 
 </resources>
