@@ -1,5 +1,8 @@
 package com.badeeb.greenbook.activities;
 
+import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.design.internal.BottomNavigationItemView;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
@@ -8,7 +11,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 import com.badeeb.greenbook.R;
 import com.badeeb.greenbook.fragments.LoginFragment;
@@ -61,6 +67,8 @@ public class MainActivity extends AppCompatActivity {
         }
         goToLogin();
 
+        setupListener();
+
         Log.d(TAG, "init - End");
     }
 
@@ -93,5 +101,65 @@ public class MainActivity extends AppCompatActivity {
 
     public void showBottomNavigationActionBar() {
         mBottomNavigationView.setVisibility(View.VISIBLE);
+    }
+
+    private void setupListener() {
+
+
+        mBottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+                switch (item.getItemId()) {
+                    case R.id.aiSearch:
+                        goToShopSearch();
+                        break;
+                    case R.id.aiFavorite:
+                        goToFavorite();
+                        break;
+                    case R.id.aiProfile:
+                        goToProfileEdit();
+                        break;
+                }
+                return true;
+            }
+        });
+    }
+
+    public void hideKeyboard() {
+        View view = getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
+
+    private void goToFavorite() {
+        // Change icon to be pressed and others to be dimmed
+        BottomNavigationItemView favorite = (BottomNavigationItemView) findViewById(R.id.aiFavorite);
+        BottomNavigationItemView search = (BottomNavigationItemView) findViewById(R.id.aiSearch);
+        BottomNavigationItemView profile = (BottomNavigationItemView) findViewById(R.id.aiProfile);
+        favorite.setIcon(getResources().getDrawable(R.drawable.ic_fav_pressed));
+        search.setIcon(getResources().getDrawable(R.drawable.ic_maps_dimmed));
+        profile.setIcon(getResources().getDrawable(R.drawable.ic_profile_dimmed));
+    }
+
+    private void goToProfileEdit() {
+        BottomNavigationItemView profile = (BottomNavigationItemView) findViewById(R.id.aiProfile);
+        BottomNavigationItemView favorite = (BottomNavigationItemView) findViewById(R.id.aiFavorite);
+        BottomNavigationItemView search = (BottomNavigationItemView) findViewById(R.id.aiSearch);
+        profile.setIcon(getResources().getDrawable(R.drawable.ic_profile_pressed));
+        favorite.setIcon(getResources().getDrawable(R.drawable.ic_fav_dimmed));
+        search.setIcon(getResources().getDrawable(R.drawable.ic_maps_dimmed));
+    }
+
+    private void goToShopSearch() {
+
+        BottomNavigationItemView search = (BottomNavigationItemView) findViewById(R.id.aiSearch);
+        BottomNavigationItemView favorite = (BottomNavigationItemView) findViewById(R.id.aiFavorite);
+        BottomNavigationItemView profile = (BottomNavigationItemView) findViewById(R.id.aiProfile);
+        search.setIcon(getResources().getDrawable(R.drawable.ic_maps_pressed));
+        favorite.setIcon(getResources().getDrawable(R.drawable.ic_fav_dimmed));
+        profile.setIcon(getResources().getDrawable(R.drawable.ic_profile_dimmed));
     }
 }

@@ -123,6 +123,7 @@ public class LoginFragment extends Fragment {
         skip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                mActivity.hideKeyboard();
                 goToSearch();
             }
         });
@@ -164,7 +165,7 @@ public class LoginFragment extends Fragment {
 
                 goToSearch();
 
-                hideKeyboard();
+                mActivity.hideKeyboard();
 
                 mProgressDialog.dismiss();
 
@@ -188,14 +189,6 @@ public class LoginFragment extends Fragment {
 
         VolleyWrapper<JsonRequest<User>, JsonResponse<LoginInquiry>> volleyWrapper = new VolleyWrapper<>(request, responseType, Request.Method.POST, url, callback, getContext(), true, mActivity.findViewById(R.id.ll_main_view));
         volleyWrapper.execute();
-    }
-
-    private void hideKeyboard() {
-        View view = mActivity.getCurrentFocus();
-        if (view != null) {
-            InputMethodManager imm = (InputMethodManager)mActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-        }
     }
 
     private void goToSearch() {
