@@ -4,6 +4,7 @@ package com.badeeb.greenbook.fragments;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -195,8 +196,8 @@ public class LoginFragment extends Fragment {
         SearchFragment searchFragment = new SearchFragment();
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add(R.id.main_frame, searchFragment, searchFragment.TAG);
-        fragmentTransaction.addToBackStack(TAG);
+        fragmentTransaction.replace(R.id.main_frame, searchFragment, searchFragment.TAG);
+//        fragmentTransaction.addToBackStack(TAG);
         fragmentTransaction.commit();
     }
 
@@ -227,5 +228,6 @@ public class LoginFragment extends Fragment {
 
         return valid;
     }
+
 
 }

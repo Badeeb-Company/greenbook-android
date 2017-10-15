@@ -24,7 +24,7 @@ import com.badeeb.greenbook.shared.UiUtils;
 
 public class MainActivity extends AppCompatActivity {
 
-    private final String TAG = SplashActivity.class.getSimpleName();
+    private final String TAG = MainActivity.class.getSimpleName();
 
     private Toolbar mtoolbar;
     private FragmentManager mFragmentManager;
@@ -110,6 +110,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
+                changeNavigationIconsState(item);
+
                 switch (item.getItemId()) {
                     case R.id.aiSearch:
                         goToShopSearch();
@@ -135,31 +137,49 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void goToFavorite() {
-        // Change icon to be pressed and others to be dimmed
-        BottomNavigationItemView favorite = (BottomNavigationItemView) findViewById(R.id.aiFavorite);
-        BottomNavigationItemView search = (BottomNavigationItemView) findViewById(R.id.aiSearch);
-        BottomNavigationItemView profile = (BottomNavigationItemView) findViewById(R.id.aiProfile);
-        favorite.setIcon(getResources().getDrawable(R.drawable.ic_fav_pressed));
-        search.setIcon(getResources().getDrawable(R.drawable.ic_maps_dimmed));
-        profile.setIcon(getResources().getDrawable(R.drawable.ic_profile_dimmed));
     }
 
     private void goToProfileEdit() {
-        BottomNavigationItemView profile = (BottomNavigationItemView) findViewById(R.id.aiProfile);
-        BottomNavigationItemView favorite = (BottomNavigationItemView) findViewById(R.id.aiFavorite);
-        BottomNavigationItemView search = (BottomNavigationItemView) findViewById(R.id.aiSearch);
-        profile.setIcon(getResources().getDrawable(R.drawable.ic_profile_pressed));
-        favorite.setIcon(getResources().getDrawable(R.drawable.ic_fav_dimmed));
-        search.setIcon(getResources().getDrawable(R.drawable.ic_maps_dimmed));
     }
 
     private void goToShopSearch() {
+    }
 
-        BottomNavigationItemView search = (BottomNavigationItemView) findViewById(R.id.aiSearch);
-        BottomNavigationItemView favorite = (BottomNavigationItemView) findViewById(R.id.aiFavorite);
-        BottomNavigationItemView profile = (BottomNavigationItemView) findViewById(R.id.aiProfile);
-        search.setIcon(getResources().getDrawable(R.drawable.ic_maps_pressed));
-        favorite.setIcon(getResources().getDrawable(R.drawable.ic_fav_dimmed));
-        profile.setIcon(getResources().getDrawable(R.drawable.ic_profile_dimmed));
+    private void changeNavigationIconsState(MenuItem item) {
+        Menu menu = mBottomNavigationView.getMenu();
+        MenuItem favorite = menu.findItem(R.id.aiFavorite);
+        MenuItem search = menu.findItem(R.id.aiSearch);
+        MenuItem profile = menu.findItem(R.id.aiProfile);
+
+        switch (item.getItemId()) {
+            case R.id.aiSearch:
+                search.setIcon(getResources().getDrawable(R.drawable.ic_maps_pressed));
+                favorite.setIcon(getResources().getDrawable(R.drawable.ic_fav_dimmed));
+                profile.setIcon(getResources().getDrawable(R.drawable.ic_profile_dimmed));
+                break;
+            case R.id.aiFavorite:
+                favorite.setIcon(getResources().getDrawable(R.drawable.ic_fav_pressed));
+                search.setIcon(getResources().getDrawable(R.drawable.ic_maps_dimmed));
+                profile.setIcon(getResources().getDrawable(R.drawable.ic_profile_dimmed));
+                break;
+            case R.id.aiProfile:
+                profile.setIcon(getResources().getDrawable(R.drawable.ic_profile_pressed));
+                favorite.setIcon(getResources().getDrawable(R.drawable.ic_fav_dimmed));
+                search.setIcon(getResources().getDrawable(R.drawable.ic_maps_dimmed));
+                break;
+        }
+    }
+
+    private enum PreviousStatus {NONE, AVAILABLE, CANCELLED}
+
+    @Override
+    public void onBackPressed() {
+        Log.d(TAG, "onBackPressed - Start");
+        super.onBackPressed();
+
+
+
+
+        Log.d(TAG, "onBackPressed - End");
     }
 }

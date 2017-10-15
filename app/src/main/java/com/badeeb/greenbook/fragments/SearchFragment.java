@@ -1,7 +1,9 @@
 package com.badeeb.greenbook.fragments;
 
 
+import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -52,6 +54,8 @@ public class SearchFragment extends Fragment {
         mActivity.showToolbar();
         mActivity.showBottomNavigationActionBar();
 
+        goToShopSearch();
+
         setupListeners(view);
 
         Log.d(TAG, "init - End");
@@ -63,6 +67,34 @@ public class SearchFragment extends Fragment {
 
 
         Log.d(TAG, "setupListeners - End");
+    }
+
+    private void goToShopSearch() {
+        // TODO: Load Shop Search Fragment
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume");
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        Log.d(TAG, "onAttach");
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Log.d(TAG, "onCreate");
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        Log.d(TAG, "onActivityCreated");
     }
 
 }
