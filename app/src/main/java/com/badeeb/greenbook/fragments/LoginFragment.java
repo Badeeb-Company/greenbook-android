@@ -3,28 +3,23 @@ package com.badeeb.greenbook.fragments;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.widget.LinearLayoutCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.badeeb.greenbook.R;
 import com.badeeb.greenbook.activities.MainActivity;
 import com.badeeb.greenbook.models.JsonResponse;
-import com.badeeb.greenbook.models.LoginInquiry;
+import com.badeeb.greenbook.models.JsonUser;
 import com.badeeb.greenbook.models.User;
 import com.badeeb.greenbook.network.NonAuthorizedCallback;
-import com.badeeb.greenbook.network.VolleyResponse;
 import com.badeeb.greenbook.network.VolleyWrapper;
 import com.badeeb.greenbook.shared.AppSettings;
 import com.badeeb.greenbook.shared.Constants;
@@ -140,9 +135,9 @@ public class LoginFragment extends Fragment {
 
         Log.d(TAG, "callLoginApi - url: " + url);
 
-        NonAuthorizedCallback<JsonResponse<LoginInquiry>> callback = new NonAuthorizedCallback<JsonResponse<LoginInquiry>>() {
+        NonAuthorizedCallback<JsonResponse<JsonUser>> callback = new NonAuthorizedCallback<JsonResponse<JsonUser>>() {
             @Override
-            public void onSuccess(JsonResponse<LoginInquiry> jsonResponse) {
+            public void onSuccess(JsonResponse<JsonUser> jsonResponse) {
                 Log.d(TAG, "callLoginApi - onSuccess - Start");
 
                 mUser = jsonResponse.getResult().getUser();
@@ -168,9 +163,9 @@ public class LoginFragment extends Fragment {
         };
 
         // Prepare response type
-        Type responseType = new TypeToken<JsonResponse<LoginInquiry>>() {}.getType();
+        Type responseType = new TypeToken<JsonResponse<JsonUser>>() {}.getType();
 
-        VolleyWrapper<User, JsonResponse<LoginInquiry>> volleyWrapper = new VolleyWrapper<>(mUser, responseType, Request.Method.POST, url, callback, getContext(), true, mActivity.findViewById(R.id.ll_main_view));
+        VolleyWrapper<User, JsonResponse<JsonUser>> volleyWrapper = new VolleyWrapper<>(mUser, responseType, Request.Method.POST, url, callback, getContext(), true, mActivity.findViewById(R.id.ll_main_view));
         volleyWrapper.execute();
     }
 

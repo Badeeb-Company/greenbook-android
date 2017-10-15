@@ -7,13 +7,13 @@ import com.google.gson.annotations.SerializedName;
  * Created by Amr Alghawy on 10/15/2017.
  */
 
-public class LoginInquiry {
+public class JsonUser {
 
     @Expose(serialize = false, deserialize = true)
     @SerializedName("user")
     private User user;
 
-    public LoginInquiry() {
+    public JsonUser() {
     }
 
     public User getUser() {
