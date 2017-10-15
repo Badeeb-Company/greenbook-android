@@ -1,6 +1,7 @@
 package com.badeeb.greenbook.network;
 
 import android.content.Context;
+import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -13,6 +14,7 @@ import com.android.volley.ServerError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.badeeb.greenbook.R;
+import com.badeeb.greenbook.models.JsonResponse;
 import com.badeeb.greenbook.shared.Constants;
 import com.badeeb.greenbook.shared.UiUtils;
 import com.google.gson.Gson;
@@ -21,6 +23,7 @@ import com.google.gson.GsonBuilder;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,21 +33,28 @@ import java.util.Map;
 
 public class VolleyWrapper <T, S> {
 
+    private final String TAG = VolleyWrapper.class.getSimpleName();
+
     private T jsonRequest;
-    private VolleyResponse<S> jsonResponse;
+    private S jsonResponse;
+    private Type responseType;
     private int requestType; // POST, GET, ...etc
     private String url;
     private VolleyCallback<S> callback;
     private Context context;
 
-    public VolleyWrapper(T jsonRequest, int requestType, String url, VolleyCallback<S> callback, Context context) {
+    public VolleyWrapper(T jsonRequest, Type responseType, int requestType, String url, VolleyCallback<S> callback, Context context) {
         this.jsonRequest = jsonRequest;
         this.requestType = requestType;
+        this.url = url;
         this.callback = callback;
         this.context = context;
+        this.responseType = responseType;
     }
 
     public void execute() {
+
+        Log.d(TAG, "execute - Start");
 
         try {
 
@@ -57,8 +67,9 @@ public class VolleyWrapper <T, S> {
 
             if (requestType != Request.Method.GET) {
                 jsonObject = new JSONObject(gson.toJson(jsonRequest));
+
+                Log.d(TAG, "execute - Json Request"+ gson.toJson(jsonRequest));
             }
-//            Log.d(TAG, "login - Json Request"+ gson.toJson(request));
 
             // Service Call
             JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(requestType, url, jsonObject,
@@ -68,18 +79,16 @@ public class VolleyWrapper <T, S> {
                         @Override
                         public void onResponse(JSONObject response) {
                             // Response Handling
-//                            Log.d(TAG, "login - onResponse - Start");
-
-//                            Log.d(TAG, "login - onResponse - Json Response: " + response.toString());
+                            Log.d(TAG, "execute - onResponse - Start");
+                            Log.d(TAG, "execute - onResponse - Json Response: " + response.toString());
 
                             String responseData = response.toString();
 
-                            jsonResponse = gson.fromJson(responseData, jsonResponse.getClass().getGenericSuperclass());
+                            jsonResponse = gson.fromJson(responseData, responseType);
 
-                            // check status  code of response
                             callback.onSuccess(jsonResponse);
 
-//                            Log.d(TAG, "login - onResponse - End");
+                            Log.d(TAG, "execute - onResponse - End");
                         }
                     },
 
@@ -87,6 +96,9 @@ public class VolleyWrapper <T, S> {
 
                         @Override
                         public void onErrorResponse(VolleyError error) {
+                            // Network Error Handling
+                            Log.d(TAG, "execute - onErrorResponse: " + error.toString());
+
                             if (error instanceof AuthFailureError && error.networkResponse.statusCode == 401) {
                                 // Authorization issue
                                 UiUtils.showDialog(context, R.style.DialogTheme,
@@ -96,9 +108,9 @@ public class VolleyWrapper <T, S> {
                                 NetworkResponse response = error.networkResponse;
                                 String responseData = new String(response.data);
 
-                                jsonResponse = gson.fromJson(responseData, jsonResponse.getClass().getGenericSuperclass());
+                                JsonResponse errorResponse = gson.fromJson(responseData, JsonResponse.class);
 
-                                Toast.makeText(context, jsonResponse.getJsonMeta().getMessage(), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(context, errorResponse.getJsonMeta().getMessage(), Toast.LENGTH_SHORT).show();
                             }
                             // Network Error Handling
                             callback.onError();
@@ -128,6 +140,7 @@ public class VolleyWrapper <T, S> {
             e.printStackTrace();
         }
 
+        Log.d(TAG, "execute - End");
     }
 
 

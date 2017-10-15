@@ -1,12 +1,18 @@
 package com.badeeb.greenbook.models;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by Amr Alghawy on 10/14/2017.
  */
 
 public class Category {
 
+    @Expose
     private int id;
+
+    @Expose
     private String name;
 
     public Category() {

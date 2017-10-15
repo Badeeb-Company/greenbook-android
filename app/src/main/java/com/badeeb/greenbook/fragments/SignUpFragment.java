@@ -1,12 +1,8 @@
 package com.badeeb.greenbook.fragments;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,15 +10,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.ScrollView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.badeeb.greenbook.R;
 import com.badeeb.greenbook.activities.MainActivity;
 import com.badeeb.greenbook.models.User;
-import com.badeeb.greenbook.shared.AppPreferences;
 import com.badeeb.greenbook.shared.OnPermissionsGrantedHandler;
 import com.badeeb.greenbook.shared.UiUtils;
 import com.makeramen.roundedimageview.RoundedImageView;
@@ -73,7 +64,7 @@ public class SignUpFragment extends Fragment {
     public void init(View view){
         mActivity = (MainActivity) getActivity();
         onStoragePermissionGrantedHandler = createOnStoragePermissionGrantedHandler();
-        progressDialog = UiUtils.createProgressDialog(getActivity(), "Signing up...",R.style.DialogTheme);
+        progressDialog = UiUtils.createProgressDialog(getActivity(), "Signing up...");
 
         bSignUp = (Button) view.findViewById(R.id.signUp_bttn);
         etUsername = (EditText) view.findViewById(R.id.username);

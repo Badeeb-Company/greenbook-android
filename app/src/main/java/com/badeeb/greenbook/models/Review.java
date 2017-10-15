@@ -1,16 +1,36 @@
 package com.badeeb.greenbook.models;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by Amr Alghawy on 10/14/2017.
  */
 
 public class Review {
 
+    @Expose
+    @SerializedName("id")
     private int id;
+
+    @Expose
+    @SerializedName("description")
     private String description;
+
+    @Expose
+    @SerializedName("rate")
     private int rate;
+
+    @Expose
+    @SerializedName("created_at")
     private String createdAt;
+
+    @Expose
+    @SerializedName("user")
     private User user;
+
+    @Expose
+    @SerializedName("reply")
     private String reply;
 
     public Review() {

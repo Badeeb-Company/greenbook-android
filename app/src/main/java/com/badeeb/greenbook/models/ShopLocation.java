@@ -1,13 +1,24 @@
 package com.badeeb.greenbook.models;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by Amr Alghawy on 10/14/2017.
  */
 
 public class ShopLocation {
 
+    @Expose
+    @SerializedName("lat")
     private double lat;
+
+    @Expose
+    @SerializedName("lng")
     private double lng;
+
+    @Expose
+    @SerializedName("address")
     private String address;
 
     public ShopLocation() {

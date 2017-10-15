@@ -7,7 +7,7 @@ import java.util.HashMap;
  */
 
 public interface VolleyCallback<T> {
-    public void onSuccess(VolleyResponse<T> jsonResponse);
+    public void onSuccess(T jsonResponse);
     public void onError();
     public void requestHeader(HashMap<String, String> headers);
 }

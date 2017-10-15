@@ -1,5 +1,8 @@
 package com.badeeb.greenbook.models;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
 
 /**
@@ -8,11 +11,32 @@ import java.util.ArrayList;
 
 public class User {
 
+    @Expose
+    @SerializedName("id")
+    private int id;
+
+    @Expose
+    @SerializedName("name")
     private String name;
+
+    @Expose
+    @SerializedName("email")
     private String email;
+
+    @Expose
+    @SerializedName("password")
     private String password;
+
+    @Expose
+    @SerializedName("image_url")
     private String imageURL;
+
+    @Expose
+    @SerializedName("token")
     private String token;
+
+    @Expose
+    @SerializedName("owned_shops")
     private ArrayList<Shop> ownedShops;
 
     public User() {
