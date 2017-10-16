@@ -2,9 +2,8 @@ package com.badeeb.greenbook.activities;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.design.internal.BottomNavigationItemView;
 import android.support.design.widget.BottomNavigationView;
-import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -17,10 +16,12 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
 import com.badeeb.greenbook.R;
+import com.badeeb.greenbook.fragments.FavoriteFragment;
 import com.badeeb.greenbook.fragments.LoginFragment;
+import com.badeeb.greenbook.fragments.ProfileFragment;
+import com.badeeb.greenbook.fragments.ShopSearchFragment;
 import com.badeeb.greenbook.models.User;
 import com.badeeb.greenbook.shared.AppSettings;
-import com.badeeb.greenbook.shared.UiUtils;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -110,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
-                changeNavigationIconsState(item);
+                changeNavigationIconsState(item.getItemId());
 
                 switch (item.getItemId()) {
                     case R.id.aiSearch:
@@ -137,21 +138,52 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void goToFavorite() {
+
+        Fragment fragment = mFragmentManager.findFragmentByTag(FavoriteFragment.TAG);
+        if (fragment != null && fragment instanceof FavoriteFragment && fragment.isVisible())
+            return;
+
+        FavoriteFragment favoriteFragment = new FavoriteFragment();
+        FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.main_frame, favoriteFragment, favoriteFragment.TAG);
+        fragmentTransaction.commit();
+
+        changeNavigationIconsState(R.id.aiFavorite);
     }
 
     private void goToProfileEdit() {
+        Fragment fragment = mFragmentManager.findFragmentByTag(ProfileFragment.TAG);
+        if (fragment != null && fragment instanceof ProfileFragment && fragment.isVisible())
+            return;
+
+        ProfileFragment profileFragment = new ProfileFragment();
+        FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.main_frame, profileFragment, profileFragment.TAG);
+        fragmentTransaction.commit();
+
+        changeNavigationIconsState(R.id.aiProfile);
     }
 
     private void goToShopSearch() {
+        Fragment fragment = mFragmentManager.findFragmentByTag(ShopSearchFragment.TAG);
+        if (fragment != null && fragment instanceof ShopSearchFragment && fragment.isVisible())
+            return;
+
+        ShopSearchFragment shopSearchFragment = new ShopSearchFragment();
+        FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.main_frame, shopSearchFragment, shopSearchFragment.TAG);
+        fragmentTransaction.commit();
+
+        changeNavigationIconsState(R.id.aiSearch);
     }
 
-    private void changeNavigationIconsState(MenuItem item) {
+    public void changeNavigationIconsState(int itemId) {
         Menu menu = mBottomNavigationView.getMenu();
         MenuItem favorite = menu.findItem(R.id.aiFavorite);
         MenuItem search = menu.findItem(R.id.aiSearch);
         MenuItem profile = menu.findItem(R.id.aiProfile);
 
-        switch (item.getItemId()) {
+        switch (itemId) {
             case R.id.aiSearch:
                 search.setIcon(getResources().getDrawable(R.drawable.ic_maps_pressed));
                 favorite.setIcon(getResources().getDrawable(R.drawable.ic_fav_dimmed));
