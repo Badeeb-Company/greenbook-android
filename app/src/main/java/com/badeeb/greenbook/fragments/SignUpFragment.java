@@ -256,10 +256,10 @@ public class SignUpFragment extends Fragment {
 
         Log.d(TAG, "execute - Json Request"+ gson.toJson(jsonRequest,requestType));
 
-        VolleyWrapper<JsonRequest<JsonUser>, JsonResponse<JsonUser>> volleyWrapper = new VolleyWrapper<>(jsonRequest, requestType , responseType,Request.Method.POST,
-                                                                                        url, signUpCallBack, getContext(), true,
-                                                                                        mActivity.findViewById(R.id.ll_main_view));
-        volleyWrapper.execute();
+//        VolleyWrapper<JsonRequest<JsonUser>, JsonResponse<JsonUser>> volleyWrapper = new VolleyWrapper<>(jsonRequest, requestType , responseType,Request.Method.POST,
+//                                                                                        url, signUpCallBack, getContext(), true,
+//                                                                                        mActivity.findViewById(R.id.ll_main_view));
+//        volleyWrapper.execute();
 
         Log.d(TAG, "callSignup - End");
     }

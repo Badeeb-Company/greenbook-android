@@ -2,24 +2,33 @@ package com.badeeb.greenbook.fragments;
 
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.LinearLayoutCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.badeeb.greenbook.R;
 import com.badeeb.greenbook.activities.MainActivity;
+import com.badeeb.greenbook.models.JsonRequest;
 import com.badeeb.greenbook.models.JsonResponse;
 import com.badeeb.greenbook.models.JsonUser;
 import com.badeeb.greenbook.models.User;
 import com.badeeb.greenbook.network.NonAuthorizedCallback;
+import com.badeeb.greenbook.network.VolleyResponse;
 import com.badeeb.greenbook.network.VolleyWrapper;
 import com.badeeb.greenbook.shared.AppSettings;
 import com.badeeb.greenbook.shared.Constants;
@@ -76,6 +85,7 @@ public class LoginFragment extends Fragment {
         mProgressDialog = UiUtils.createProgressDialog(mActivity);
 
         mActivity.hideToolbar();
+        mActivity.hideBottomNavigationActionBar();
 
         setupListeners(view);
 
@@ -107,6 +117,15 @@ public class LoginFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 goToSignup();
+            }
+        });
+
+        TextView skip = view.findViewById(R.id.tvSkip);
+        skip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mActivity.hideKeyboard();
+                goToSearch();
             }
         });
 
@@ -147,6 +166,8 @@ public class LoginFragment extends Fragment {
 
                 goToSearch();
 
+                mActivity.hideKeyboard();
+
                 mProgressDialog.dismiss();
 
                 Log.d(TAG, "callLoginApi - onSuccess - End");
@@ -165,12 +186,19 @@ public class LoginFragment extends Fragment {
         // Prepare response type
         Type responseType = new TypeToken<JsonResponse<JsonUser>>() {}.getType();
 
-//        VolleyWrapper<User, JsonResponse<JsonUser>> volleyWrapper = new VolleyWrapper<>(mUser, responseType, Request.Method.POST, url, callback, getContext(), true, mActivity.findViewById(R.id.ll_main_view));
-//        volleyWrapper.execute();
+        JsonRequest<User> request = new JsonRequest<>(mUser);
+
+        VolleyWrapper<JsonRequest<User>, JsonResponse<JsonUser>> volleyWrapper = new VolleyWrapper<>(request, responseType, Request.Method.POST, url, callback, getContext(), true, mActivity.findViewById(R.id.ll_main_view));
+        volleyWrapper.execute();
     }
 
     private void goToSearch() {
-
+        SearchFragment searchFragment = new SearchFragment();
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.main_frame, searchFragment, searchFragment.TAG);
+//        fragmentTransaction.addToBackStack(TAG);
+        fragmentTransaction.commit();
     }
 
     private boolean validateInput() {
@@ -200,5 +228,6 @@ public class LoginFragment extends Fragment {
 
         return valid;
     }
+
 
 }
