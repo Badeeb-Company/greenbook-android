@@ -165,8 +165,8 @@ public class LoginFragment extends Fragment {
         // Prepare response type
         Type responseType = new TypeToken<JsonResponse<JsonUser>>() {}.getType();
 
-        VolleyWrapper<User, JsonResponse<JsonUser>> volleyWrapper = new VolleyWrapper<>(mUser, responseType, Request.Method.POST, url, callback, getContext(), true, mActivity.findViewById(R.id.ll_main_view));
-        volleyWrapper.execute();
+//        VolleyWrapper<User, JsonResponse<JsonUser>> volleyWrapper = new VolleyWrapper<>(mUser, responseType, Request.Method.POST, url, callback, getContext(), true, mActivity.findViewById(R.id.ll_main_view));
+//        volleyWrapper.execute();
     }
 
     private void goToSearch() {

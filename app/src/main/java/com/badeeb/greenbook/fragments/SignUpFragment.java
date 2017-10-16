@@ -20,12 +20,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.toolbox.JsonRequest;
 import com.badeeb.greenbook.R;
 import com.badeeb.greenbook.activities.MainActivity;
+import com.badeeb.greenbook.models.JsonRequest;
 import com.badeeb.greenbook.models.JsonResponse;
 import com.badeeb.greenbook.models.JsonUser;
 import com.badeeb.greenbook.models.User;
@@ -44,9 +42,12 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.makeramen.roundedimageview.RoundedImageView;
 
+import org.json.JSONObject;
 import org.w3c.dom.Text;
 
 import java.io.FileNotFoundException;
@@ -127,9 +128,9 @@ public class SignUpFragment extends Fragment {
         bSignUp.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                if (! validateInput()) {
-                    return;
-                }
+//                if (! validateInput()) {
+//                    return;
+//                }
 
 //                if (mPhotoUri == null) {
 //                    mSnackBarDisplayer.displayError("Please select profile photo to continue");
@@ -200,8 +201,10 @@ public class SignUpFragment extends Fragment {
     private void callSignUp() {
         Log.d(TAG, "callSignup - Start");
         mProgressDialog.show();
-        reflectUiData();
-
+//        reflectUiData();
+        mUser.setEmail("asdf@asdf.com");
+        mUser.setName("ahmed");
+        mUser.setPassword("123455");
         JsonUser jsonUser = new JsonUser();
         jsonUser.setUser(mUser);
 
@@ -241,15 +244,19 @@ public class SignUpFragment extends Fragment {
 
         // Prepare response type
         String url = Constants.BASE_URL+"/users";
+        Type requestType = new TypeToken<JsonRequest<JsonUser>>() {}.getType();
         Type responseType = new TypeToken<JsonResponse<JsonUser>>() {}.getType();
 
-        JsonRequest<JsonUser> jsonRequest = new JsonRequest<JsonUser>() {
-            @Override
-            protected Response<JsonUser> parseNetworkResponse(NetworkResponse response) {
-                return null;
-            }
-        }
-        VolleyWrapper<JsonRequest<JsonUser>, JsonResponse<JsonUser>> volleyWrapper = new VolleyWrapper<>(mUser, responseType, Request.Method.POST,
+        JsonRequest<JsonUser> jsonRequest = new JsonRequest<JsonUser>(jsonUser);
+
+        // Create Gson object
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.excludeFieldsWithoutExposeAnnotation();
+        final Gson gson = gsonBuilder.create();
+
+        Log.d(TAG, "execute - Json Request"+ gson.toJson(jsonRequest,requestType));
+
+        VolleyWrapper<JsonRequest<JsonUser>, JsonResponse<JsonUser>> volleyWrapper = new VolleyWrapper<>(jsonRequest, requestType , responseType,Request.Method.POST,
                                                                                         url, signUpCallBack, getContext(), true,
                                                                                         mActivity.findViewById(R.id.ll_main_view));
         volleyWrapper.execute();
@@ -289,7 +296,7 @@ public class SignUpFragment extends Fragment {
         }
         else if (! Utils.isEmailValid(etEmail.getText().toString())) {
             // Email is wrong
-            etEmail.setBackgroundColor(redColor);
+            etEmail.setTextColor(redColor);
             etEmail.setError(getString(R.string.error_invalid_email));
             valid = false;
         }
@@ -300,7 +307,7 @@ public class SignUpFragment extends Fragment {
             valid = false;
         }
         else if (! Utils.isPasswordValid(etPassword.getText().toString())) {
-            etPassword.setBackgroundColor(redColor);
+            etPassword.setTextColor(redColor);
             etPassword.setError(getString(R.string.error_invalid_password));
             valid = false;
         }
@@ -309,8 +316,10 @@ public class SignUpFragment extends Fragment {
             etConfirmPassword.setError(getString(R.string.error_field_required));
             valid = false;
         }else if(!etConfirmPassword.getText().toString().equals(etPassword.getText().toString())){
-            etConfirmPassword.setBackgroundColor(redColor);
-            etPassword.setBackgroundColor(redColor);
+            etConfirmPassword.setTextColor(redColor);
+            etPassword.setTextColor(redColor);
+            mSnackBarDisplayer.displayError(getString(R.string.error_password_not_match));
+            valid = false;
         }
 
         if (etUsername.getText().toString().isEmpty()) {

@@ -40,6 +40,7 @@ public class VolleyWrapper <T, S> {
     private T jsonRequest;
     private S jsonResponse;
     private Type responseType;
+    private Type requestTypeJson;
     private int requestType; // POST, GET, ...etc
     private String url;
     private VolleyCallback<S> callback;
@@ -47,11 +48,12 @@ public class VolleyWrapper <T, S> {
     private boolean isSnackBarRequired;
     private View sankbarParentLayout;
 
-    public VolleyWrapper(T jsonRequest, Type responseType, int requestType,
+    public VolleyWrapper(T jsonRequest,Type requestTypeJSON, Type responseType, int requestType,
                          String url, VolleyCallback<S> callback, Context context,
                          boolean isSnackBarRequired, View sankbarParentLayout) {
         this.jsonRequest = jsonRequest;
         this.requestType = requestType;
+        this.requestTypeJson = requestTypeJSON;
         this.url = url;
         this.callback = callback;
         this.context = context;
@@ -74,7 +76,7 @@ public class VolleyWrapper <T, S> {
             final Gson gson = gsonBuilder.create();
 
             if (requestType != Request.Method.GET) {
-                jsonObject = new JSONObject(gson.toJson(jsonRequest));
+                jsonObject = new JSONObject(gson.toJson(jsonRequest,requestTypeJson));
 
                 Log.d(TAG, "execute - Json Request"+ gson.toJson(jsonRequest));
             }
