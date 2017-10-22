@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -79,6 +80,7 @@ public class LoginFragment extends Fragment {
         mActivity = (MainActivity) getActivity();
         mUser = new User();
         mAppSettings = AppSettings.getInstance();
+        mActivity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
         mEmail = view.findViewById(R.id.etEmail);
         mPassword = view.findViewById(R.id.etPassword);
@@ -125,7 +127,7 @@ public class LoginFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 mActivity.hideKeyboard();
-                goToSearch();
+                goToShopSearch();
             }
         });
 
@@ -137,7 +139,7 @@ public class LoginFragment extends Fragment {
         SignUpFragment signupFragment = new SignUpFragment();
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add(R.id.main_frame, signupFragment, signupFragment.TAG);
+        fragmentTransaction.replace(R.id.main_frame, signupFragment, signupFragment.TAG);
         fragmentTransaction.addToBackStack(TAG);
         fragmentTransaction.commit();
 
@@ -164,7 +166,7 @@ public class LoginFragment extends Fragment {
                 mAppSettings.saveUser(mUser);
                 mActivity.setUser(mUser);
 
-                goToSearch();
+                goToShopSearch();
 
                 mActivity.hideKeyboard();
 
@@ -191,14 +193,17 @@ public class LoginFragment extends Fragment {
         VolleyWrapper<JsonRequest<User>, JsonResponse<JsonUser>> volleyWrapper = new VolleyWrapper<>(request, responseType, Request.Method.POST, url, callback, getContext(), true, mActivity.findViewById(R.id.ll_main_view));
         volleyWrapper.execute();
     }
+    private void goToShopSearch() {
+        Fragment fragment = getFragmentManager().findFragmentByTag(ShopSearchFragment.TAG);
+        if (fragment != null && fragment instanceof ShopSearchFragment && fragment.isVisible())
+            return;
 
-    private void goToSearch() {
-        SearchFragment searchFragment = new SearchFragment();
-        FragmentManager fragmentManager = getFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.main_frame, searchFragment, searchFragment.TAG);
-//        fragmentTransaction.addToBackStack(TAG);
+        ShopSearchFragment shopSearchFragment = new ShopSearchFragment();
+        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.main_frame, shopSearchFragment, shopSearchFragment.TAG);
         fragmentTransaction.commit();
+
+        mActivity.changeNavigationIconsState(R.id.aiSearch);
     }
 
     private boolean validateInput() {

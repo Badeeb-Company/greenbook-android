@@ -19,6 +19,7 @@
     <string name="error_password_not_match">The two passwords not matched</string>
     <string name="error_field_required">This field is required</string>
     <string name="error_email_required">Email address is required</string>
+    <string name="error_uploading_image">Cannot upload photo, please choose another one.</string>
     <string name="signup_error">Error during signup, please try later</string>
     <string name="success_sign_up">Account is created Successfully</string>
 

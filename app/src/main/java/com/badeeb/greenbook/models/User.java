@@ -11,8 +11,7 @@ import java.util.ArrayList;
 
 public class User {
 
-    @Expose
-    @SerializedName("id")
+    @Expose(serialize = false, deserialize = true)
     private int id;
 
     @Expose

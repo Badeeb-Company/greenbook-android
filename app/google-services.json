@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "226726728640",
+    "firebase_url": "https://greenbook-e6f97.firebaseio.com",
+    "project_id": "greenbook-e6f97",
+    "storage_bucket": "greenbook-e6f97.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:226726728640:android:75e4f1b1c75430f9",
+        "android_client_info": {
+          "package_name": "com.badeeb.greenbook"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "226726728640-p8r7ihkb3rultjt40be487cn7lqb2ffr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.badeeb.greenbook",
+            "certificate_hash": "1a5c73410a853b1d7c17690a2ef3d127385f2275"
+          }
+        },
+        {
+          "client_id": "226726728640-umbf45j23oe0k74rn9h7c8qdrd0orkh1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA4Ac0C_kTiKxN2jpQ-BuLtO6P7qqXemMU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "226726728640-umbf45j23oe0k74rn9h7c8qdrd0orkh1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

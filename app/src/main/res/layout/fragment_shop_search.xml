@@ -2,15 +2,130 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     android:orientation="vertical"
     tools:context="com.badeeb.greenbook.fragments.ShopSearchFragment"
     android:id="@+id/shop_search_fragment">
 
+    <LinearLayout
+        android:layout_height="85dp"
+        android:layout_width="match_parent"
 
-    <TextView
+        android:background="@color/green"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="38dp"
+            android:layout_marginLeft="7.3dp"
+            android:layout_marginRight="6dp"
+            android:layout_marginBottom="2dp"
+            android:background="@drawable/rounded_corner_light_green">
+
+            <AutoCompleteTextView
+                android:id="@+id/actvCategorySearch"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="13.7dp"
+                android:background="@android:color/transparent"
+                android:hint="Choose category "
+                android:textColorHint="@color/hint_gray"
+                android:textColor="@color/white"
+                android:textSize="17sp"
+                android:layout_alignParentLeft="true"
+                android:ems="10">
+
+                <requestFocus />
+            </AutoCompleteTextView>
+
+            <ImageView
+                android:id="@+id/ivCategory"
+                android:layout_width="27dp"
+                android:layout_height="19.3dp"
+                android:src="@drawable/ic_search"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginLeft="5dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="38dp"
+            android:layout_marginLeft="7.3dp"
+            android:layout_marginRight="6dp"
+            android:background="@drawable/rounded_corner_light_green">
+
+            <ImageView
+                android:id="@+id/ivLocation"
+                android:layout_width="18dp"
+                android:layout_height="22dp"
+                android:src="@drawable/ic_location"
+                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="8dp"/>
+
+            <EditText
+                android:id="@+id/etLocationSearch"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:paddingBottom="7.5dp"
+                android:paddingTop="8.5dp"
+                android:layout_marginLeft="34.4dp"
+                android:background="@android:color/transparent"
+                android:layout_alignLeft="@id/ivLocation"
+                android:hint="Current Location"
+                android:textColorHint="@color/hint_gray"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                />
+
+            <ImageView
+                android:id="@+id/ivMap"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:src="@drawable/ic_maps"
+                android:layout_marginTop="5.5dp"
+                android:layout_marginBottom="7.5dp"
+                android:layout_marginRight="11.4dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:visibility="gone"/>
+
+        </RelativeLayout>
+
+
+    </LinearLayout>
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/category_form"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:clickable="true"
+        android:scrollbars="none">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rvCategoryList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="vertical"/>
+
+
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/shopList_form"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/red"
-        android:text="Shop Search Fragment" />
+        android:visibility="gone">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rvShopList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="vertical"/>
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 </LinearLayout>

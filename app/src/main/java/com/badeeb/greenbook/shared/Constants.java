@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
 
 public class Constants {
 
-    public static final String BASE_URL = "http://192.168.181.1:8081/api/v1";
+    public static final String BASE_URL = "https://staging-greenbook.herokuapp.com/api/v1/";
 
     // Volley constants
     public static final int VOLLEY_TIME_OUT = 8000; // Milliseconds
@@ -27,4 +27,7 @@ public class Constants {
 
     // Splash Screen timeout
     public static final int SPLASH_TIME_OUT = 3000;
+
+    //AutoComplete Constant
+    public static final int THRESHOLD = 1;
 }

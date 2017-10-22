@@ -117,20 +117,20 @@ public class VolleyWrapper <T, S> {
                                 String responseData = new String(response.data);
 
                                 JsonResponse errorResponse = gson.fromJson(responseData, JsonResponse.class);
+                                if(errorResponse != null && errorResponse.getJsonMeta() != null) {
+                                    if (isSnackBarRequired) {
+                                        UiUtils.showSnackBar(sankbarParentLayout,
+                                                errorResponse.getJsonMeta().getMessage(),
+                                                Snackbar.LENGTH_INDEFINITE, context.getResources().getColor(R.color.orange), R.drawable.btn_close,
+                                                new View.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(View view) {
 
-                                if (isSnackBarRequired) {
-                                    UiUtils.showSnackBar(sankbarParentLayout,
-                                            errorResponse.getJsonMeta().getMessage(),
-                                            Snackbar.LENGTH_INDEFINITE, context.getResources().getColor(R.color.orange), R.drawable.btn_close,
-                                            new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View view) {
-
-                                        }
-                                    });
-                                }
-                                else {
-                                    Toast.makeText(context, errorResponse.getJsonMeta().getMessage(), Toast.LENGTH_SHORT).show();
+                                                    }
+                                                });
+                                    } else {
+                                        Toast.makeText(context, errorResponse.getJsonMeta().getMessage(), Toast.LENGTH_SHORT).show();
+                                    }
                                 }
                             }
                             // Network Error Handling

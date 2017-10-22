@@ -38,16 +38,16 @@
 
     <style name="sign_up_horizontal_line" >
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">@dimen/sign_up_line_width</item>
+        <item name="android:layout_height">@dimen/sign_up_line_thickness</item>
         <item name="android:layout_marginRight" >@dimen/sign_up_line_margin_right</item>
         <item name="android:layout_marginLeft" >@dimen/sign_up_line_margin_left</item>
-        <item name="android:background" >@color/light_gray</item>
+        <item name="android:background" >@color/gray</item>
     </style>
 
     <style name="sign_up_vertical_line" >
-        <item name="android:layout_width">@dimen/sign_up_line_width</item>
+        <item name="android:layout_width">@dimen/sign_up_line_thickness</item>
         <item name="android:layout_height">match_parent</item>
-        <item name="android:background" >@color/light_gray</item>
+        <item name="android:background" >@color/gray</item>
     </style>
 
     <style name="sign_up_row_layout" >

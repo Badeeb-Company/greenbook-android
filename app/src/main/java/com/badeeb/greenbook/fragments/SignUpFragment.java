@@ -15,10 +15,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.badeeb.greenbook.R;
@@ -65,8 +65,7 @@ public class SignUpFragment extends Fragment {
     private User mUser;
     private OnPermissionsGrantedHandler onStoragePermissionGrantedHandler;
     private ProgressDialog mProgressDialog;
-//    private FirebaseStorage mFirebaseStorage = FirebaseStorage.getInstance();
-    private ErrorDisplayHandler mSnackBarDisplayer;
+    private FirebaseStorage mFirebaseStorage = FirebaseStorage.getInstance();
 
     private Button bSignUp;
     private EditText etUsername;
@@ -107,8 +106,8 @@ public class SignUpFragment extends Fragment {
         mActivity = (MainActivity) getActivity();
         mUser = new User();
         onStoragePermissionGrantedHandler = createOnStoragePermissionGrantedHandler();
-        mSnackBarDisplayer = createSnackBarDisplayer();
         mProgressDialog = UiUtils.createProgressDialog(getActivity(), "Signing up...");
+        mActivity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
         bSignUp = (Button) view.findViewById(R.id.signUp_bttn);
         etUsername = (EditText) view.findViewById(R.id.username);
@@ -128,22 +127,17 @@ public class SignUpFragment extends Fragment {
         bSignUp.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-//                if (! validateInput()) {
-//                    return;
-//                }
-
-//                if (mPhotoUri == null) {
-//                    mSnackBarDisplayer.displayError("Please select profile photo to continue");
-//                    return;
-//                }
+                if (! validateInput()) {
+                    return;
+                }
 
                 if (mPhotoChosen) {
                     if(Utils.isAllowedFileSize(mActivity, mPhotoUri)) {
                         uploadToFirebase();
                     }
+                }else {
+                    callSignUp();
                 }
-
-                callSignUp();
             }
         });
 
@@ -160,53 +154,52 @@ public class SignUpFragment extends Fragment {
 
     private void uploadToFirebase() {
         Log.d(TAG, "uploadToFirebase - Start");
-//        InputStream inputStream = null;
-//        try {
-//            inputStream = mActivity.getContentResolver().openInputStream(mPhotoUri);
-//        } catch (FileNotFoundException e) {
-//            e.printStackTrace();
-//        }
-//        byte[] inputData = Utils.getBytes(inputStream);
-//
-//        StorageReference storageRef = mFirebaseStorage.getReference();
-//        StorageReference imageReference = storageRef.child("clients/" + UUID.randomUUID());
-//        final ProgressDialog uploadPhotoProgressDialog = UiUtils.createProgressDialog(mActivity, "Uploading photo...");
-//
-//        uploadPhotoProgressDialog.show();
-//
-//        UploadTask uploadTask = imageReference.putBytes(inputData);
-//        uploadTask.addOnFailureListener(new OnFailureListener() {
-//            @Override
-//            public void onFailure(@NonNull Exception exception) {
-//                Log.d(TAG, "uploadToFirebase - upload photo failed !!");
-//
-//                Toast.makeText(mActivity, "Cannot upload photo, please choose another one.", Toast.LENGTH_LONG).show();
-//                uploadPhotoProgressDialog.dismiss();
-//            }
-//        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-//            @Override
-//            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-//                Log.d(TAG, "uploadToFirebase - photo uploaded successfully.");
-//
-//                Uri downloadUrl = taskSnapshot.getDownloadUrl();
-//                mUploadedPhotoUrl = downloadUrl.toString();
-//                uploadPhotoProgressDialog.dismiss();
-//                mPhotoChosen = false;
-//                callSignUp();
-//            }
-//        });
+        InputStream inputStream = null;
+        try {
+            inputStream = mActivity.getContentResolver().openInputStream(mPhotoUri);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        byte[] inputData = Utils.getBytes(inputStream);
+
+        StorageReference storageRef = mFirebaseStorage.getReferenceFromUrl("gs://greenbook-e6f97.appspot.com/");
+        StorageReference imageReference = storageRef.child("clients/" + UUID.randomUUID());
+        final ProgressDialog uploadPhotoProgressDialog = UiUtils.createProgressDialog(mActivity, "Uploading photo...");
+
+        uploadPhotoProgressDialog.show();
+
+        UploadTask uploadTask = imageReference.putBytes(inputData);
+        uploadTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                Log.d(TAG, "uploadToFirebase - upload photo failed !!");
+
+                mActivity.getmSnackBarDisplayer().displayError(getString(R.string.error_uploading_image));
+                uploadPhotoProgressDialog.dismiss();
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Log.d(TAG, "uploadToFirebase - photo uploaded successfully.");
+
+                Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                mUploadedPhotoUrl = downloadUrl.toString();
+
+                Log.d(TAG, "uploadToFirebase - mUploadedPhotoUrl: "+mUploadedPhotoUrl);
+
+                uploadPhotoProgressDialog.dismiss();
+                mPhotoChosen = false;
+                callSignUp();
+            }
+        });
         Log.d(TAG, "uploadToFirebase - End");
     }
 
     private void callSignUp() {
         Log.d(TAG, "callSignup - Start");
         mProgressDialog.show();
-//        reflectUiData();
-        mUser.setEmail("asdf@asdf.com");
-        mUser.setName("ahmed");
-        mUser.setPassword("123455");
-        JsonUser jsonUser = new JsonUser();
-        jsonUser.setUser(mUser);
+
+        reflectUiData();
 
         NonAuthorizedCallback<JsonResponse<JsonUser>> signUpCallBack = new NonAuthorizedCallback<JsonResponse<JsonUser>>() {
             @Override
@@ -226,7 +219,7 @@ public class SignUpFragment extends Fragment {
                 }
                 else {
                     // Invalid Signup
-                    mSnackBarDisplayer.displayError(getString(R.string.signup_error));
+                    mActivity.getmSnackBarDisplayer().displayError(getString(R.string.signup_error));
                 }
 
                 // Disable Progress bar
@@ -244,8 +237,10 @@ public class SignUpFragment extends Fragment {
 
         // Prepare response type
         String url = Constants.BASE_URL+"/users";
-        Type requestType = new TypeToken<JsonRequest<JsonUser>>() {}.getType();
         Type responseType = new TypeToken<JsonResponse<JsonUser>>() {}.getType();
+
+        JsonUser jsonUser = new JsonUser();
+        jsonUser.setUser(mUser);
 
         JsonRequest<JsonUser> jsonRequest = new JsonRequest<JsonUser>(jsonUser);
 
@@ -254,12 +249,12 @@ public class SignUpFragment extends Fragment {
         gsonBuilder.excludeFieldsWithoutExposeAnnotation();
         final Gson gson = gsonBuilder.create();
 
-        Log.d(TAG, "execute - Json Request"+ gson.toJson(jsonRequest,requestType));
+        Log.d(TAG, "execute - Json Request"+ gson.toJson(jsonRequest));
 
-//        VolleyWrapper<JsonRequest<JsonUser>, JsonResponse<JsonUser>> volleyWrapper = new VolleyWrapper<>(jsonRequest, requestType , responseType,Request.Method.POST,
-//                                                                                        url, signUpCallBack, getContext(), true,
-//                                                                                        mActivity.findViewById(R.id.ll_main_view));
-//        volleyWrapper.execute();
+        VolleyWrapper<JsonRequest<JsonUser>, JsonResponse<JsonUser>> volleyWrapper = new VolleyWrapper<>(jsonRequest, responseType,Request.Method.POST,
+                                                                                        url, signUpCallBack, getContext(), true,
+                                                                                        mActivity.findViewById(R.id.ll_main_view));
+        volleyWrapper.execute();
 
         Log.d(TAG, "callSignup - End");
     }
@@ -318,7 +313,7 @@ public class SignUpFragment extends Fragment {
         }else if(!etConfirmPassword.getText().toString().equals(etPassword.getText().toString())){
             etConfirmPassword.setTextColor(redColor);
             etPassword.setTextColor(redColor);
-            mSnackBarDisplayer.displayError(getString(R.string.error_password_not_match));
+            etConfirmPassword.setError(getString(R.string.error_password_not_match));
             valid = false;
         }
 
@@ -332,28 +327,6 @@ public class SignUpFragment extends Fragment {
         return valid;
     }
 
-    private ErrorDisplayHandler createSnackBarDisplayer() {
-        return new ErrorDisplayHandler(){
-            @Override
-            public void displayError(String message) {
-                UiUtils.showSnackBar(mActivity.findViewById(R.id.main_frame),message,Snackbar.LENGTH_INDEFINITE,
-                        getResources().getColor(R.color.orange),
-                        R.drawable.btn_close,new View.OnClickListener(){
-                            @Override
-                            public void onClick(View view) {
-                            }
-                        });
-            }
-
-
-            @Override
-            public void displayErrorWithAction(String message, int icon, View.OnClickListener onClickListener) {
-                UiUtils.showSnackBar(mActivity.findViewById(R.id.main_frame),message,Snackbar.LENGTH_INDEFINITE,
-                        getResources().getColor(R.color.orange),
-                        icon,onClickListener);
-            }
-        };
-    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
@@ -389,7 +362,7 @@ public class SignUpFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == IMAGE_GALLERY_REQUEST && resultCode == Activity.RESULT_OK) {
             if (data == null) {
-                Toast.makeText(mActivity, "Cannot select this photo, please choose another one", Toast.LENGTH_SHORT).show();
+                mActivity.getmSnackBarDisplayer().displayError(getString(R.string.error_uploading_image));
                 return;
             }
             mPhotoChosen = true;

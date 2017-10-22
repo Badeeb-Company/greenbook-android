@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8.3dp">
+
+        <ImageView
+            android:id="@+id/ivShopMainPhoto"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:src="@drawable/def_usr_img"
+            android:layout_marginTop="13dp"
+            android:layout_marginLeft="10dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginLeft="13dp">
+
+            <TextView
+                android:id="@+id/tvShopName"
+                android:layout_width="match_parent"
+                android:layout_height="24dp"
+                android:layout_marginTop="10dp"
+                android:textColor="#0ca55f"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:text="House of Bagels"
+                />
+
+            <TextView
+                android:id="@+id/tvDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingRight="22.5dp"
+                android:textColor="#808080"
+                android:textSize="14sp"
+                android:text="Classic Jewish deli since 1962 with baked sweets Brooklyn-style bagels."
+                />
+
+            <TextView
+                android:id="@+id/tvNearLocation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingRight="22.5dp"
+                android:textColor="#515151"
+                android:textSize="15sp"
+                android:text="5 km around you"
+                />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/sign_up_line_thickness"
+        android:background="@color/light_gray"
+        />
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        >
+
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tabs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorAccent"
+            app:tabMode="fixed"
+            app:tabGravity="fill"
+            app:tabIndicatorColor="@color/colorPrimaryDark"
+            app:tabTextColor="@color/white"
+            />
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        />
+</LinearLayout>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    
+    <ImageView
+        android:id="@+id/ivShopMainPhoto"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:src="@drawable/def_usr_img"
+        android:layout_marginTop="13dp"
+        android:layout_marginLeft="10dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginLeft="13dp">
+
+        <TextView
+            android:id="@+id/tvShopName"
+            android:layout_width="match_parent"
+            android:layout_height="24dp"
+            android:layout_marginTop="10dp"
+            android:textColor="#0ca55f"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:text="House of Bagels"
+            />
+
+        <TextView
+            android:id="@+id/tvDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingRight="22.5dp"
+            android:textColor="#808080"
+            android:textSize="14sp"
+            android:text="Classic Jewish deli since 1962 with baked sweets Brooklyn-style bagels."
+            />
+
+    </LinearLayout>
+
+</LinearLayout>
