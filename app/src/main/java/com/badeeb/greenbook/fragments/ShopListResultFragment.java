@@ -364,8 +364,8 @@ public class ShopListResultFragment extends Fragment {
     }
 
     private void fetchCurrentLocation() {
-        mLatitude = 46.152424377523;
-        mLongitude = 2.7470703125;
+        mLatitude = mActivity.getCurrentLocation().getLatitude();
+        mLongitude = mActivity.getCurrentLocation().getLongitude();
         isLocationSelected = true;
     }
 
