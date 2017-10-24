@@ -16,7 +16,7 @@ public class ShopLocation {
     private double lat;
 
     @Expose
-    @SerializedName("lng")
+    @SerializedName("long")
     private double lng;
 
     @Expose

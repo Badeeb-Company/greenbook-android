@@ -15,7 +15,7 @@ public class Photo {
     private int id;
 
     @Expose
-    @SerializedName("working_days")
+    @SerializedName("photo_url")
     private String photoURL;
 
     public Photo(){
@@ -36,5 +36,10 @@ public class Photo {
 
     public void setPhotoURL(String photoURL) {
         this.photoURL = photoURL;
+    }
+
+    @Override
+    public String toString() {
+        return id+" - "+photoURL+"\n";
     }
 }

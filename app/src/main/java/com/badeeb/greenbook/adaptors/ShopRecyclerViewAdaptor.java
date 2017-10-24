@@ -9,9 +9,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.badeeb.greenbook.R;
+import com.badeeb.greenbook.activities.MainActivity;
 import com.badeeb.greenbook.fragments.ShopListResultFragment;
-import com.badeeb.greenbook.fragments.ShopSearchFragment;
 import com.badeeb.greenbook.models.Shop;
+import com.badeeb.greenbook.shared.Utils;
 import com.badeeb.greenbook.view.ShopViewHolder;
 import com.bumptech.glide.Glide;
 
@@ -24,12 +25,12 @@ import java.util.List;
 public class ShopRecyclerViewAdaptor extends RecyclerView.Adapter<ShopViewHolder> {
     private final static String TAG = ShopRecyclerViewAdaptor.class.getName();
 
-    private Context mContext;
+    private MainActivity mActivity;
     private ShopListResultFragment mParentFragment;
     private List<Shop> mShopList;
 
-    public ShopRecyclerViewAdaptor(Context context, List<Shop> shopList, ShopListResultFragment parentFragment){
-        mContext = context;
+    public ShopRecyclerViewAdaptor(MainActivity mActivity, List<Shop> shopList, ShopListResultFragment parentFragment){
+        this.mActivity = mActivity;
         mShopList = shopList;
         mParentFragment = parentFragment;
     }
@@ -50,7 +51,11 @@ public class ShopRecyclerViewAdaptor extends RecyclerView.Adapter<ShopViewHolder
         Log.d(TAG, " onBindViewHolder - ShopName: "+shop.getName());
         holder.getTvShopName().setText(shop.getName());
         holder.getTvDescription().setText(shop.getDescription());
-        Glide.with(mContext).load(shop.getMainPhotoURL()).into(holder.getIvShopMainPhoto());
+
+        int distance = (int) Utils.distance(shop.getLocation().getLat(), shop.getLocation().getLng() ,
+                mActivity.getCurrentLocation().getLatitude(),mActivity.getCurrentLocation().getLongitude());
+        holder.getTvNearLocation().setText(distance+" Km around you");
+        Glide.with(mActivity).load(shop.getMainPhotoURL()).into(holder.getIvShopMainPhoto());
 
         setupListener(holder,position);
         Log.d(TAG, " onBindViewHolder - End ");

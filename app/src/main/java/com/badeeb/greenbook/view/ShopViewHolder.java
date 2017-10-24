@@ -17,6 +17,7 @@ public class ShopViewHolder extends RecyclerView.ViewHolder{
     private ImageView ivShopMainPhoto;
     private TextView tvShopName;
     private TextView tvDescription;
+    private TextView tvNearLocation;
 
 
     public ShopViewHolder(View itemView) {
@@ -25,7 +26,7 @@ public class ShopViewHolder extends RecyclerView.ViewHolder{
         ivShopMainPhoto = (ImageView) itemView.findViewById(R.id.ivShopMainPhoto);
         tvShopName = (TextView) itemView.findViewById(R.id.tvShopName);
         tvDescription = (TextView) itemView.findViewById(R.id.tvDescription);
-
+        tvNearLocation = (TextView) itemView.findViewById(R.id.tvNearLocation);
     }
 
     public static String getTAG() {
@@ -54,5 +55,13 @@ public class ShopViewHolder extends RecyclerView.ViewHolder{
 
     public void setTvDescription(TextView tvDescription) {
         this.tvDescription = tvDescription;
+    }
+
+    public TextView getTvNearLocation() {
+        return tvNearLocation;
+    }
+
+    public void setTvNearLocation(TextView tvNearLocation) {
+        this.tvNearLocation = tvNearLocation;
     }
 }

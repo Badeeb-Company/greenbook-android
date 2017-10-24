@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.util.Log;
 import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
@@ -18,6 +19,7 @@ import java.util.regex.Pattern;
  */
 
 public class Utils {
+    private final static String TAG = Utils.class.getName();
 
     private static final int MAX_PHOTO_FILE_SIZE = 4 * 1024 * 1024; // 15 MB
 
@@ -75,8 +77,8 @@ public class Utils {
         return matcher.matches();
     }
 
-    public static double distance(double lat1, double lat2, double lon1, double lon2) {
-
+    public static double distance(double lat1, double lon1, double lat2, double lon2) {
+        Log.d(TAG, " distance : lat1: "+lat1+" lng1: "+lon1+" - lat2: "+lat2+" lon2: "+lon2);
         final int R = 6371; // Radius of the earth
 
         double latDistance = Math.toRadians(lat2 - lat1);
@@ -87,6 +89,6 @@ public class Utils {
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         double distance = R * c ; // in km
 
-        return Math.sqrt(distance);
+        return Math.round(distance);
     }
 }

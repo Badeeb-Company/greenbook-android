@@ -20,6 +20,7 @@ import com.badeeb.greenbook.activities.MainActivity;
 import com.badeeb.greenbook.adaptors.FragmentViewPagerAdapter;
 import com.badeeb.greenbook.models.Shop;
 import com.badeeb.greenbook.shared.UiUtils;
+import com.badeeb.greenbook.shared.Utils;
 import com.bumptech.glide.Glide;
 
 import org.parceler.Parcels;
@@ -106,7 +107,9 @@ public class ShopDetailsFragment extends Fragment {
     }
 
     private String getShopDistance(){
-        return "5 Km around you";
+        int distance = (int) Utils.distance(mShop.getLocation().getLat(), mShop.getLocation().getLng() ,
+                mActivity.getCurrentLocation().getLatitude(),mActivity.getCurrentLocation().getLongitude());
+        return distance+" Km around you";
     }
 
 

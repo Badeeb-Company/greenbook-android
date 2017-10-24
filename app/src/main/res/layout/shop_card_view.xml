@@ -38,6 +38,16 @@
             android:text="Classic Jewish deli since 1962 with baked sweets Brooklyn-style bagels."
             />
 
+        <TextView
+            android:id="@+id/tvNearLocation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingRight="22.5dp"
+            android:textColor="#515151"
+            android:textSize="15sp"
+            android:text="5 km around you"
+            />
+
     </LinearLayout>
 
 </LinearLayout>
