@@ -51,7 +51,7 @@
 
     <dimen name="login_bttn_left_margin">27dp</dimen>
     <dimen name="login_bttn_right_margin">35dp</dimen>
-    <dimen name="login_bttn_top_margin">52dp</dimen>
+    <dimen name="login_bttn_top_margin">15dp</dimen>
 
     <dimen name="login_skip_top_margin">11dp</dimen>
 

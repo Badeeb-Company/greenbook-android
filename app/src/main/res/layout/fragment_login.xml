@@ -149,11 +149,39 @@
             android:layout_margin="5dp"
             />
 
-        <com.google.android.gms.common.SignInButton
-            android:id="@+id/g_sign_in_button"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="5dp" />
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/login_bttn_left_margin"
+                android:layout_marginRight="@dimen/login_bttn_right_margin"
+                android:layout_marginBottom="8dp"
+                android:text="Login with Google+"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:background="#df4930"
+                android:drawableLeft="@drawable/ic_google"
+                android:padding="12dp"
+                />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/login_bttn_left_margin"
+                android:layout_marginRight="@dimen/login_bttn_right_margin"
+                android:text="Login with Google"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:background="#507cc0"
+                android:drawableLeft="@drawable/ic_facebook"
+                android:padding="12dp"
+                />
+
+        </LinearLayout>
 
     </LinearLayout>
 
