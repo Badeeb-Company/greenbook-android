@@ -18,6 +18,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.badeeb.greenbook.R;
 import com.badeeb.greenbook.models.JsonResponse;
 import com.badeeb.greenbook.shared.Constants;
+import com.badeeb.greenbook.shared.ErrorDisplayHandler;
 import com.badeeb.greenbook.shared.UiUtils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -44,19 +45,19 @@ public class VolleyWrapper <T, S> {
     private String url;
     private VolleyCallback<S> callback;
     private Context context;
-    private boolean isSnackBarRequired;
+    private ErrorDisplayHandler errorDisplayHandler;
     private View sankbarParentLayout;
 
     public VolleyWrapper(T jsonRequest, Type responseType, int requestType,
                          String url, VolleyCallback<S> callback, Context context,
-                         boolean isSnackBarRequired, View sankbarParentLayout) {
+                         ErrorDisplayHandler errorDisplayHandler, View sankbarParentLayout) {
         this.jsonRequest = jsonRequest;
         this.requestType = requestType;
         this.url = url;
         this.callback = callback;
         this.context = context;
         this.responseType = responseType;
-        this.isSnackBarRequired = isSnackBarRequired;
+        this.errorDisplayHandler = errorDisplayHandler;
         this.sankbarParentLayout = sankbarParentLayout;
     }
 
@@ -109,8 +110,7 @@ public class VolleyWrapper <T, S> {
 
                             if (error instanceof AuthFailureError && error.networkResponse.statusCode == 401) {
                                 // Authorization issue
-                                UiUtils.showDialog(context, R.style.DialogTheme,
-                                        R.string.login_error, R.string.ok_btn_dialog, null);
+                                errorDisplayHandler.displayError(context.getResources().getString(R.string.login_error));
                             }
                             else if (error instanceof ServerError && error.networkResponse.statusCode != 404) {
                                 NetworkResponse response = error.networkResponse;
@@ -118,19 +118,8 @@ public class VolleyWrapper <T, S> {
 
                                 JsonResponse errorResponse = gson.fromJson(responseData, JsonResponse.class);
                                 if(errorResponse != null && errorResponse.getJsonMeta() != null) {
-                                    if (isSnackBarRequired) {
-                                        UiUtils.showSnackBar(sankbarParentLayout,
-                                                errorResponse.getJsonMeta().getMessage(),
-                                                Snackbar.LENGTH_INDEFINITE, context.getResources().getColor(R.color.orange), R.drawable.btn_close,
-                                                new View.OnClickListener() {
-                                                    @Override
-                                                    public void onClick(View view) {
 
-                                                    }
-                                                });
-                                    } else {
-                                        Toast.makeText(context, errorResponse.getJsonMeta().getMessage(), Toast.LENGTH_SHORT).show();
-                                    }
+                                    errorDisplayHandler.displayError(errorResponse.getJsonMeta().getMessage());
                                 }
                             }
                             // Network Error Handling

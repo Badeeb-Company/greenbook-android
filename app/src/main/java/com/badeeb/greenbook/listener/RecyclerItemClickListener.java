@@ -1,4 +1,4 @@
-package com.badeeb.greenbook;
+package com.badeeb.greenbook.listener;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;

@@ -3,10 +3,12 @@ package com.badeeb.greenbook.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import org.parceler.Parcel;
+
 /**
  * Created by Amr Alghawy on 10/14/2017.
  */
-
+@Parcel(Parcel.Serialization.BEAN)
 public class Review {
 
     @Expose

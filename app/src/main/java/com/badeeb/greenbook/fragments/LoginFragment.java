@@ -179,6 +179,7 @@ public class LoginFragment extends Fragment {
             public void onError() {
                 Log.d(TAG, "callLoginApi - onError - Start");
 
+                mActivity.getmSnackBarDisplayer().displayError("");
                 mProgressDialog.dismiss();
 
                 Log.d(TAG, "callLoginApi - onError - End");
@@ -190,7 +191,8 @@ public class LoginFragment extends Fragment {
 
         JsonRequest<User> request = new JsonRequest<>(mUser);
 
-        VolleyWrapper<JsonRequest<User>, JsonResponse<JsonUser>> volleyWrapper = new VolleyWrapper<>(request, responseType, Request.Method.POST, url, callback, getContext(), true, mActivity.findViewById(R.id.ll_main_view));
+        VolleyWrapper<JsonRequest<User>, JsonResponse<JsonUser>> volleyWrapper = new VolleyWrapper<>(request, responseType, Request.Method.POST, url,
+                        callback, getContext(), mActivity.getmSnackBarDisplayer(), mActivity.findViewById(R.id.ll_main_view));
         volleyWrapper.execute();
     }
     private void goToShopSearch() {

@@ -12,16 +12,23 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.badeeb.greenbook.R;
 import com.badeeb.greenbook.activities.MainActivity;
 import com.badeeb.greenbook.adaptors.FragmentViewPagerAdapter;
 import com.badeeb.greenbook.models.Shop;
 import com.badeeb.greenbook.shared.UiUtils;
+import com.bumptech.glide.Glide;
+
+import org.parceler.Parcels;
+import org.w3c.dom.Text;
 
 public class ShopDetailsFragment extends Fragment {
 
-    private final static String TAG = ShopDetailsFragment.class.getName();
+    public final static String TAG = ShopDetailsFragment.class.getName();
+    public final static String EXTRA_SHOP_OBJECT = "EXTRA_SHOP_OBJECT";
 
     private MainActivity mActivity;
     private ProgressDialog mProgressDialog;
@@ -30,6 +37,12 @@ public class ShopDetailsFragment extends Fragment {
 
     private TabLayout mTabLayout;
     private ViewPager mViewPager;
+
+    private ImageView ivShopMainPhoto;
+    private TextView tvShopName;
+    private TextView tvDescription;
+    private TextView tvNearLocation;
+
 
     public ShopDetailsFragment() {
         // Required empty public constructor
@@ -65,8 +78,33 @@ public class ShopDetailsFragment extends Fragment {
         this.mTabLayout = (TabLayout) view.findViewById(R.id.tabs);
         this.mTabLayout.setupWithViewPager(this.mViewPager);        // Assigns the ViewPager to TabLayout.
 
+        mShop = Parcels.unwrap(getArguments().getParcelable(EXTRA_SHOP_OBJECT));
+
+        initUiFields(view);
+
         setupListener();
     }
+
+    private void initUiFields(View view) {
+        ivShopMainPhoto = (ImageView)  view.findViewById(R.id.ivShopMainPhoto);
+        tvShopName = (TextView) view.findViewById(R.id.tvShopName);
+        tvDescription = (TextView) view.findViewById(R.id.tvDescription);
+        tvNearLocation = (TextView) view.findViewById(R.id.tvNearLocation);
+
+        fillUiFields();
+    }
+
+    private void fillUiFields() {
+        Glide.with(mActivity).load(mShop.getMainPhotoURL()).into(ivShopMainPhoto);
+        tvShopName.setText(mShop.getName());
+        tvDescription.setText(mShop.getDescription());
+        tvNearLocation.setText(getShopDistance());
+    }
+
+    private String getShopDistance(){
+        return "5 Km around you";
+    }
+
 
     public void setupListener(){
 
@@ -77,9 +115,20 @@ public class ShopDetailsFragment extends Fragment {
 
         FragmentViewPagerAdapter adapter = new FragmentViewPagerAdapter(getFragmentManager());
 
-        adapter.addFragment(new DetailsTabFragment(), "Details");
-        adapter.addFragment(new GalleryTabFragment(), "Gallery");
-        adapter.addFragment(new ReviewsTabFragment(), "Reviews");
+        DetailsTabFragment detailsTabFragment = new DetailsTabFragment();
+        GalleryTabFragment galleryTabFragment = new GalleryTabFragment();
+        ReviewsTabFragment reviewsTabFragment = new ReviewsTabFragment();
+
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(EXTRA_SHOP_OBJECT, Parcels.wrap(mShop));
+
+        detailsTabFragment.setArguments(bundle);
+        galleryTabFragment.setArguments(bundle);
+        reviewsTabFragment.setArguments(bundle);
+
+        adapter.addFragment(detailsTabFragment, "Details");
+        adapter.addFragment(galleryTabFragment, "Gallery");
+        adapter.addFragment(reviewsTabFragment, "Reviews");
 
         viewPager.setAdapter(adapter);
 

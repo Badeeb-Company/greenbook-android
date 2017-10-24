@@ -3,12 +3,14 @@ package com.badeeb.greenbook.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import org.parceler.Parcel;
+
 import java.util.ArrayList;
 
 /**
  * Created by Amr Alghawy on 10/14/2017.
  */
-
+@Parcel(Parcel.Serialization.BEAN)
 public class User {
 
     @Expose(serialize = false, deserialize = true)

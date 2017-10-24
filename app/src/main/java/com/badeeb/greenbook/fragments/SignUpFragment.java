@@ -231,6 +231,7 @@ public class SignUpFragment extends Fragment {
             @Override
             public void onError() {
                 Log.d(TAG, "SignUp request failed !!");
+                mActivity.getmSnackBarDisplayer().displayError("Internal server error, Please try again later");
                 mProgressDialog.dismiss();
             }
         };
@@ -252,7 +253,7 @@ public class SignUpFragment extends Fragment {
         Log.d(TAG, "execute - Json Request"+ gson.toJson(jsonRequest));
 
         VolleyWrapper<JsonRequest<JsonUser>, JsonResponse<JsonUser>> volleyWrapper = new VolleyWrapper<>(jsonRequest, responseType,Request.Method.POST,
-                                                                                        url, signUpCallBack, getContext(), true,
+                                                                                        url, signUpCallBack, getContext(), mActivity.getmSnackBarDisplayer(),
                                                                                         mActivity.findViewById(R.id.ll_main_view));
         volleyWrapper.execute();
 

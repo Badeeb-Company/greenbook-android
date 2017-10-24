@@ -1,6 +1,7 @@
 package com.badeeb.greenbook.adaptors;
 
 import android.content.Context;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -8,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.badeeb.greenbook.R;
+import com.badeeb.greenbook.fragments.ShopListResultFragment;
+import com.badeeb.greenbook.fragments.ShopSearchFragment;
 import com.badeeb.greenbook.models.Shop;
 import com.badeeb.greenbook.view.ShopViewHolder;
 import com.bumptech.glide.Glide;
@@ -22,11 +25,13 @@ public class ShopRecyclerViewAdaptor extends RecyclerView.Adapter<ShopViewHolder
     private final static String TAG = ShopRecyclerViewAdaptor.class.getName();
 
     private Context mContext;
+    private ShopListResultFragment mParentFragment;
     private List<Shop> mShopList;
 
-    public ShopRecyclerViewAdaptor(Context context, List<Shop> shopList){
+    public ShopRecyclerViewAdaptor(Context context, List<Shop> shopList, ShopListResultFragment parentFragment){
         mContext = context;
         mShopList = shopList;
+        mParentFragment = parentFragment;
     }
 
     @Override
@@ -46,7 +51,24 @@ public class ShopRecyclerViewAdaptor extends RecyclerView.Adapter<ShopViewHolder
         holder.getTvShopName().setText(shop.getName());
         holder.getTvDescription().setText(shop.getDescription());
         Glide.with(mContext).load(shop.getMainPhotoURL()).into(holder.getIvShopMainPhoto());
+
+        setupListener(holder,position);
         Log.d(TAG, " onBindViewHolder - End ");
+    }
+
+    private void setupListener(ShopViewHolder holder, final int position) {
+        holder.getTvShopName().setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                Log.d(TAG, "shop on select - Start");
+                Log.d(TAG, "shop on select - selected position: "+position);
+
+                mParentFragment.goToSelectedShop(position);
+
+                Log.d(TAG, "shop on select - end");
+            }
+        });
     }
 
     @Override

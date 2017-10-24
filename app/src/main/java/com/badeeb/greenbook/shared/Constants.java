@@ -15,15 +15,15 @@ import java.util.regex.Pattern;
 
 public class Constants {
 
-    public static final String BASE_URL = "https://staging-greenbook.herokuapp.com/api/v1/";
+    public static final String BASE_URL = "https://staging-greenbook.herokuapp.com/api/v1";
 
     // Volley constants
     public static final int VOLLEY_TIME_OUT = 8000; // Milliseconds
     public static final int VOLLEY_RETRY_COUNTER = 0;
 
     // Location updates constants
-    public static final int UPDATE_TIME = 10 * 1000;    // Millisecoonds
-    public static final int UPDATE_DISTANCE = 10;        // meters
+    public static final int UPDATE_TIME = 0;    // Millisecoonds
+    public static final int UPDATE_DISTANCE = 0;        // meters
 
     // Splash Screen timeout
     public static final int SPLASH_TIME_OUT = 3000;

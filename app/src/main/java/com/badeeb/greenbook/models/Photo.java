@@ -3,10 +3,12 @@ package com.badeeb.greenbook.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import org.parceler.Parcel;
+
 /**
  * Created by ahmed on 10/21/2017.
  */
-
+@Parcel(Parcel.Serialization.BEAN)
 public class Photo {
     @Expose
     @SerializedName("id")

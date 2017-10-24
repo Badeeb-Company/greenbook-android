@@ -27,6 +27,13 @@
     <string name="aiSearch">Search</string>
     <string name="aiFavorite">Favorite</string>
     <string name="aiProfile">Profile</string>
+    <string name="GPS_disabled_warning_title">GPS is Disabled</string>
+    <string name="GPS_disabled_warning_msg">You must allow location access to proceed using our services</string>
+    <string name="yes_msg">Yes</string>
+    <string name="no_msg">No</string>
+    <string name="confirm_btn_dialog">Confirm</string>
+    <string name="location_not_found">Cannot find your current location, Please try later</string>
+    <string name="pickup_location">Your pickup location</string>
 
 
 </resources>
