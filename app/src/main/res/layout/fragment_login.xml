@@ -140,6 +140,21 @@
                 />
         </LinearLayout>
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="or"
+            android:textColor="@color/black"
+            android:gravity="center"
+            android:layout_margin="5dp"
+            />
+
+        <com.google.android.gms.common.SignInButton
+            android:id="@+id/g_sign_in_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp" />
+
     </LinearLayout>
 
 </ScrollView>

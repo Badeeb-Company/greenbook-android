@@ -213,19 +213,19 @@ public class MainActivity extends AppCompatActivity {
 
         switch (itemId) {
             case R.id.aiSearch:
-                search.setIcon(getResources().getDrawable(R.drawable.ic_maps_pressed));
+                search.setIcon(getResources().getDrawable(R.drawable.ic_search_pressed));
                 favorite.setIcon(getResources().getDrawable(R.drawable.ic_fav_dimmed));
                 profile.setIcon(getResources().getDrawable(R.drawable.ic_profile_dimmed));
                 break;
             case R.id.aiFavorite:
                 favorite.setIcon(getResources().getDrawable(R.drawable.ic_fav_pressed));
-                search.setIcon(getResources().getDrawable(R.drawable.ic_maps_dimmed));
+                search.setIcon(getResources().getDrawable(R.drawable.ic_search_dimmed));
                 profile.setIcon(getResources().getDrawable(R.drawable.ic_profile_dimmed));
                 break;
             case R.id.aiProfile:
                 profile.setIcon(getResources().getDrawable(R.drawable.ic_profile_pressed));
                 favorite.setIcon(getResources().getDrawable(R.drawable.ic_fav_dimmed));
-                search.setIcon(getResources().getDrawable(R.drawable.ic_maps_dimmed));
+                search.setIcon(getResources().getDrawable(R.drawable.ic_search_dimmed));
                 break;
         }
     }

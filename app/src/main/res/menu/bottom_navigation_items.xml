@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/aiSearch"
-        android:icon="@drawable/ic_maps_pressed"
+        android:icon="@drawable/ic_search_pressed"
         android:title="@string/aiSearch"/>
     <item
         android:id="@+id/aiFavorite"
