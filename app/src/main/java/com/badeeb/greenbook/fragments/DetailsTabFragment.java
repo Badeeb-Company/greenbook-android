@@ -3,6 +3,7 @@ package com.badeeb.greenbook.fragments;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -34,6 +35,7 @@ public class DetailsTabFragment extends Fragment {
     private static final int REQUEST_CALL_PERMISSION = 100;
 
     private MainActivity mActivity;
+    private DetailsTabFragment mCurrentFragment;
     private Shop mShop;
 
     // listener
@@ -65,6 +67,7 @@ public class DetailsTabFragment extends Fragment {
         Log.d(TAG, "init - Start");
 
         mActivity = (MainActivity) getActivity();
+        mCurrentFragment = this;
         mShop = Parcels.unwrap(getArguments().getParcelable(ShopDetailsFragment.EXTRA_SHOP_OBJECT));
 
         if(mShop == null){
@@ -155,7 +158,7 @@ public class DetailsTabFragment extends Fragment {
                     return;
                 }
                 mSelectedMobileNumber = mShop.getPhoneNumber();
-                PermissionsChecker.checkPermissions(mActivity,onCallPermissionGrantedHandler,REQUEST_CALL_PERMISSION, Manifest.permission.CALL_PHONE);
+                PermissionsChecker.checkPermissions(mCurrentFragment,onCallPermissionGrantedHandler,REQUEST_CALL_PERMISSION, Manifest.permission.CALL_PHONE);
             }
         });
 
@@ -164,9 +167,13 @@ public class DetailsTabFragment extends Fragment {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if(requestCode == REQUEST_CALL_PERMISSION){
-            goCall();
+        Log.d(TAG, "onRequestPermissionsResult - start");
+        if(requestCode == REQUEST_CALL_PERMISSION) {
+            if(grantResults.length != 1 || grantResults[0] != PackageManager.PERMISSION_GRANTED){
+                mActivity.getmSnackBarDisplayer().displayError("You must allow permission to call the shop");
+            }else {
+                goCall();
+            }
         }
     }
 
@@ -182,6 +189,7 @@ public class DetailsTabFragment extends Fragment {
 
     @SuppressWarnings("MissingPermission")
     private void goCall() {
+        Log.d(TAG, "goCall - start");
         Intent callIntent = new Intent(Intent.ACTION_CALL);
         callIntent.setData(Uri.parse("tel:" + mSelectedMobileNumber));
         mActivity.startActivity(callIntent);
