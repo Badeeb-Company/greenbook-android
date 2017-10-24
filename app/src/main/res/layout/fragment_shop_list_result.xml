@@ -111,4 +111,29 @@
             android:scrollbars="vertical"/>
     </android.support.v4.widget.SwipeRefreshLayout>
 
+    <LinearLayout
+        android:id="@+id/llEmptyResult"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone"
+        >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_empty_search"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="No Search Result, please try again"
+            android:textSize="18sp"
+            android:textColor="#0ca55f"
+            />
+
+    </LinearLayout>
+
 </LinearLayout>

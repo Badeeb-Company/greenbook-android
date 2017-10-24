@@ -177,7 +177,7 @@ public class ShopSearchFragment extends Fragment {
         Log.d(TAG, "setupListeners - Start");
     }
 
-    private void goToShopResultListFragment(){
+    private void goToShopListResultFragment(){
         Log.d(TAG, "goToShopResultListFragment - Start");
 
         Bundle bundle = new Bundle();
@@ -438,7 +438,7 @@ public class ShopSearchFragment extends Fragment {
         Log.d(TAG, "onLocationFound - Start");
 
         // Go to next fragment
-        goToShopResultListFragment();
+        goToShopListResultFragment();
 
         mProgressDialog.dismiss();
 

@@ -32,6 +32,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -90,6 +91,7 @@ public class ShopListResultFragment extends Fragment {
     private ImageView ivSearch;
     private EditText etLocationSearch;
     private ImageView ivMap;
+    private LinearLayout llEmptyResult;
 
 
     @Override
@@ -104,6 +106,7 @@ public class ShopListResultFragment extends Fragment {
         View view =  inflater.inflate(R.layout.fragment_shop_list_result, container, false);
 
         init(view);
+
         return view;
     }
 
@@ -148,6 +151,8 @@ public class ShopListResultFragment extends Fragment {
         etLocationSearch = (EditText) view.findViewById(R.id.etLocationSearch);
         ivSearch = (ImageView) view.findViewById(R.id.ivSearch);
         ivMap = (ImageView) view.findViewById(R.id.ivMap);
+
+        llEmptyResult = (LinearLayout) view.findViewById(R.id.llEmptyResult);
     }
 
     private void loadBundleData(){
@@ -249,11 +254,17 @@ public class ShopListResultFragment extends Fragment {
                             + Arrays.toString(mShopList.toArray()));
                     mShopListAdaptor.notifyDataSetChanged();
 
+
+
                 } else {
                     //switch to empty search page
                     Log.d(TAG, "callSearchApi - NonAuthorizedCallback - onSuccess - empty search ");
                 }
                 mProgressDialog.dismiss();
+
+                if (mShopList != null && mShopList.size() == 0) {
+                    enableNoSearchFoundScreen();
+                }
 
             }
 
@@ -273,6 +284,11 @@ public class ShopListResultFragment extends Fragment {
         volleyWrapper.execute();
 
         Log.d(TAG, "callSearchApi - Start");
+    }
+
+    public void enableNoSearchFoundScreen() {
+        srlShopList.setVisibility(View.GONE);
+        llEmptyResult.setVisibility(View.VISIBLE);
     }
 
     private void prepareCategoryList() {
