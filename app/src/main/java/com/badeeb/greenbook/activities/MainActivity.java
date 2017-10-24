@@ -1,13 +1,17 @@
 package com.badeeb.greenbook.activities;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
+import android.location.LocationManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -27,7 +31,12 @@ import com.badeeb.greenbook.fragments.ShopSearchFragment;
 import com.badeeb.greenbook.models.User;
 import com.badeeb.greenbook.shared.AppSettings;
 import com.badeeb.greenbook.shared.ErrorDisplayHandler;
+import com.badeeb.greenbook.shared.OnPermissionsGrantedHandler;
 import com.badeeb.greenbook.shared.UiUtils;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
+
+import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -40,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
     private User mUser;
     private AppSettings mAppSettings;
     private ErrorDisplayHandler mSnackBarDisplayer;
+    private Location mCurrentLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -212,19 +222,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private enum PreviousStatus {NONE, AVAILABLE, CANCELLED}
-
-//    @Override
-//    public void onBackPressed() {
-//        Log.d(TAG, "onBackPressed - Start");
-//        super.onBackPressed();
-//
-//
-//
-//
-//        Log.d(TAG, "onBackPressed - End");
-//    }
-
     public ErrorDisplayHandler getmSnackBarDisplayer() {
         return mSnackBarDisplayer;
     }
@@ -250,5 +247,13 @@ public class MainActivity extends AppCompatActivity {
                         icon,onClickListener);
             }
         };
+    }
+
+    public Location getCurrentLocation() {
+        return mCurrentLocation;
+    }
+
+    public void setCurrentLocation(Location currentLocation) {
+        this.mCurrentLocation = currentLocation;
     }
 }
