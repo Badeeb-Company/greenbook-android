@@ -80,7 +80,6 @@ public class LoginFragment extends Fragment {
         mActivity = (MainActivity) getActivity();
         mUser = new User();
         mAppSettings = AppSettings.getInstance();
-        mActivity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
         mEmail = view.findViewById(R.id.etEmail);
         mPassword = view.findViewById(R.id.etPassword);

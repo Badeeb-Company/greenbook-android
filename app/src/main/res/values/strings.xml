@@ -9,7 +9,7 @@
     <string name="password">Password</string>
     <string name="login">Login</string>
     <string name="signup">Sign up</string>
-    <string name="username_hint">Username</string>
+    <string name="username_hint">Enter your full name</string>
     <string name="confirm_password_hint">Confirm Password</string>
     <string name="login_error">Invalid Username and Password</string>
     <string name="ok_btn_dialog">Ok</string>
