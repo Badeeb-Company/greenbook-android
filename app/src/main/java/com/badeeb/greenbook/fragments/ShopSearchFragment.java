@@ -81,7 +81,6 @@ public class ShopSearchFragment extends Fragment {
 
         mCategoryList = new ArrayList<Category>();
 
-
         initUIComponents(view);
 
         setupListener();

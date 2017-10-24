@@ -80,6 +80,7 @@
             <EditText
                 android:id="@+id/email"
                 android:hint="@string/email_address"
+                android:inputType="textEmailAddress"
                 style="@style/sign_up_input_text" />
         </LinearLayout>
 

@@ -70,6 +70,8 @@ public class ShopDetailsFragment extends Fragment {
         mActivity = (MainActivity) getActivity();
         mProgressDialog = UiUtils.createProgressDialog(mActivity);
 
+        mShop = Parcels.unwrap(getArguments().getParcelable(EXTRA_SHOP_OBJECT));
+
         // ViewPager
         this.mViewPager = (ViewPager) view.findViewById(R.id.viewpager);
         this.setupViewPager(this.mViewPager);    // Defines the number of tabs by setting appropriate fragment and tab name
@@ -77,8 +79,6 @@ public class ShopDetailsFragment extends Fragment {
         // Tabs
         this.mTabLayout = (TabLayout) view.findViewById(R.id.tabs);
         this.mTabLayout.setupWithViewPager(this.mViewPager);        // Assigns the ViewPager to TabLayout.
-
-        mShop = Parcels.unwrap(getArguments().getParcelable(EXTRA_SHOP_OBJECT));
 
         initUiFields(view);
 
@@ -95,10 +95,14 @@ public class ShopDetailsFragment extends Fragment {
     }
 
     private void fillUiFields() {
+        Log.d(TAG, "fillUiFields - Start");
+
         Glide.with(mActivity).load(mShop.getMainPhotoURL()).into(ivShopMainPhoto);
         tvShopName.setText(mShop.getName());
         tvDescription.setText(mShop.getDescription());
         tvNearLocation.setText(getShopDistance());
+
+        Log.d(TAG, "fillUiFields - end");
     }
 
     private String getShopDistance(){
@@ -118,6 +122,8 @@ public class ShopDetailsFragment extends Fragment {
         DetailsTabFragment detailsTabFragment = new DetailsTabFragment();
         GalleryTabFragment galleryTabFragment = new GalleryTabFragment();
         ReviewsTabFragment reviewsTabFragment = new ReviewsTabFragment();
+
+        Log.d(TAG, "setupViewPager - mShop"+mShop.getName());
 
         Bundle bundle = new Bundle();
         bundle.putParcelable(EXTRA_SHOP_OBJECT, Parcels.wrap(mShop));
