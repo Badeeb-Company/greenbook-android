@@ -178,7 +178,6 @@ public class LoginFragment extends Fragment {
             public void onError() {
                 Log.d(TAG, "callLoginApi - onError - Start");
 
-                mActivity.getmSnackBarDisplayer().displayError("");
                 mProgressDialog.dismiss();
 
                 Log.d(TAG, "callLoginApi - onError - End");

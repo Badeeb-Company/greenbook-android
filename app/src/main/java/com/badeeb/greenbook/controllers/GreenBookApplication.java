@@ -1,6 +1,8 @@
 package com.badeeb.greenbook.controllers;
 
 import android.app.Application;
+import com.crashlytics.android.Crashlytics;
+import io.fabric.sdk.android.Fabric;
 
 /**
  * Created by Amr Alghawy on 10/15/2017.
@@ -13,6 +15,7 @@ public class GreenBookApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        Fabric.with(this, new Crashlytics());
 
         sGreenBookApplication = this;
     }
