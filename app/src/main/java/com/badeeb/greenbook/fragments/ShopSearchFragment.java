@@ -227,6 +227,7 @@ public class ShopSearchFragment extends Fragment {
                 }
 
                 mProgressDialog.dismiss();
+                srlCategoryList.setRefreshing(false);
 
                 Log.d(TAG, "callCategoryListApi - onSuccess - End");
             }
@@ -238,6 +239,7 @@ public class ShopSearchFragment extends Fragment {
                 mActivity.getmSnackBarDisplayer().displayError("Error loading categories from the server");
 
                 mProgressDialog.dismiss();
+                srlCategoryList.setRefreshing(false);
 
                 Log.d(TAG, "callCategoryListApi - onError - End");
             }
