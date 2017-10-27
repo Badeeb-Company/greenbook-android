@@ -238,7 +238,7 @@ public class MainActivity extends AppCompatActivity {
         return new ErrorDisplayHandler(){
             @Override
             public void displayError(String message) {
-                UiUtils.showSnackBar(findViewById(R.id.main_frame),message, Snackbar.LENGTH_INDEFINITE,
+                UiUtils.showSnackBar(findViewById(R.id.main_frame),message, Snackbar.LENGTH_LONG,
                         getResources().getColor(R.color.orange),
                         R.drawable.btn_close,new View.OnClickListener(){
                             @Override
@@ -250,7 +250,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void displayErrorWithAction(String message, int icon, View.OnClickListener onClickListener) {
-                UiUtils.showSnackBar(findViewById(R.id.main_frame),message,Snackbar.LENGTH_INDEFINITE,
+                UiUtils.showSnackBar(findViewById(R.id.main_frame),message,Snackbar.LENGTH_LONG,
                         getResources().getColor(R.color.orange),
                         icon,onClickListener);
             }
