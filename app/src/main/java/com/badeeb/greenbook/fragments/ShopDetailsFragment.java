@@ -2,6 +2,7 @@ package com.badeeb.greenbook.fragments;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -13,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.badeeb.greenbook.R;
@@ -22,6 +24,7 @@ import com.badeeb.greenbook.models.Shop;
 import com.badeeb.greenbook.shared.UiUtils;
 import com.badeeb.greenbook.shared.Utils;
 import com.bumptech.glide.Glide;
+import com.makeramen.roundedimageview.RoundedImageView;
 
 import org.parceler.Parcels;
 import org.w3c.dom.Text;
@@ -35,11 +38,14 @@ public class ShopDetailsFragment extends Fragment {
     private ProgressDialog mProgressDialog;
 
     private Shop mShop;
+    boolean isFav = true;
 
     private TabLayout mTabLayout;
     private ViewPager mViewPager;
 
-    private ImageView ivShopMainPhoto;
+    private RoundedImageView rivShopMainPhoto;
+    private ImageView ivFavShop;
+    private RatingBar rbShopRate;
     private TextView tvShopName;
     private TextView tvDescription;
     private TextView tvNearLocation;
@@ -87,7 +93,9 @@ public class ShopDetailsFragment extends Fragment {
     }
 
     private void initUiFields(View view) {
-        ivShopMainPhoto = (ImageView)  view.findViewById(R.id.ivShopMainPhoto);
+        rivShopMainPhoto = (RoundedImageView)  view.findViewById(R.id.rivShopMainPhoto);
+        ivFavShop = (ImageView) view.findViewById(R.id.ivFav) ;
+        rbShopRate = (RatingBar) view.findViewById(R.id.rbShopRate) ;
         tvShopName = (TextView) view.findViewById(R.id.tvShopName);
         tvDescription = (TextView) view.findViewById(R.id.tvDescription);
         tvNearLocation = (TextView) view.findViewById(R.id.tvNearLocation);
@@ -98,7 +106,7 @@ public class ShopDetailsFragment extends Fragment {
     private void fillUiFields() {
         Log.d(TAG, "fillUiFields - Start");
 
-        Glide.with(mActivity).load(mShop.getMainPhotoURL()).into(ivShopMainPhoto);
+        Glide.with(mActivity).load(mShop.getMainPhotoURL()).into(rivShopMainPhoto);
         tvShopName.setText(mShop.getName());
         tvDescription.setText(mShop.getDescription());
         tvNearLocation.setText(getShopDistance());
@@ -114,7 +122,30 @@ public class ShopDetailsFragment extends Fragment {
 
 
     public void setupListener(){
+        Log.d(TAG, "setupListener - Start");
 
+        ivFavShop.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                Log.d(TAG, "setupListener - ivFavShop - icon pressed");
+                Drawable iconPressed = getResources().getDrawable(R.drawable.btn_fav_prassed);
+                Drawable iconNotPressed = getResources().getDrawable(R.drawable.ic_fav);
+
+                if(isFav) {
+                    Log.d(TAG, "setupListener - ivFavShop - change to pressed");
+                    // TODO - add favorite action
+                    ivFavShop.setImageDrawable(iconPressed);
+                    isFav = false;
+                }else{
+                    Log.d(TAG, "setupListener - ivFavShop - change to not pressed");
+                    // TODO - remove from favorite action
+                    ivFavShop.setImageDrawable(iconNotPressed);
+                    isFav = true;
+                }
+            }
+        });
+
+        Log.d(TAG, "setupListener - end");
     }
 
     private void setupViewPager(ViewPager viewPager) {

@@ -1,11 +1,17 @@
 package com.badeeb.greenbook.view;
 
+import android.graphics.drawable.Drawable;
+import android.media.Image;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.badeeb.greenbook.R;
+import com.makeramen.roundedimageview.RoundedImageView;
 
 /**
  * Created by ahmed on 10/21/2017.
@@ -14,31 +20,40 @@ import com.badeeb.greenbook.R;
 public class ShopViewHolder extends RecyclerView.ViewHolder{
     private final static String TAG = ShopViewHolder.class.getName();
 
-    private ImageView ivShopMainPhoto;
+    private RoundedImageView rivShopMainPhoto;
+    private ImageView ivFavShop;
+    private RatingBar rbShopRate;
     private TextView tvShopName;
     private TextView tvDescription;
     private TextView tvNearLocation;
+
+    private LinearLayout shopDetailsLinearLayout;
 
 
     public ShopViewHolder(View itemView) {
         super(itemView);
 
-        ivShopMainPhoto = (ImageView) itemView.findViewById(R.id.ivShopMainPhoto);
+        rivShopMainPhoto = (RoundedImageView) itemView.findViewById(R.id.rivShopMainPhoto);
+        ivFavShop = (ImageView) itemView.findViewById(R.id.ivFav);
+        rbShopRate = (RatingBar) itemView.findViewById(R.id.rbShopRate);
         tvShopName = (TextView) itemView.findViewById(R.id.tvShopName);
         tvDescription = (TextView) itemView.findViewById(R.id.tvDescription);
         tvNearLocation = (TextView) itemView.findViewById(R.id.tvNearLocation);
+
+        shopDetailsLinearLayout = (LinearLayout) itemView.findViewById(R.id.shopDetailsLinearLayout);
+
     }
 
     public static String getTAG() {
         return TAG;
     }
 
-    public ImageView getIvShopMainPhoto() {
-        return ivShopMainPhoto;
+    public RoundedImageView getRivShopMainPhoto() {
+        return rivShopMainPhoto;
     }
 
-    public void setIvShopMainPhoto(ImageView ivShopMainPhoto) {
-        this.ivShopMainPhoto = ivShopMainPhoto;
+    public void setRivShopMainPhoto(RoundedImageView rivShopMainPhoto) {
+        this.rivShopMainPhoto = rivShopMainPhoto;
     }
 
     public TextView getTvShopName() {
@@ -63,5 +78,29 @@ public class ShopViewHolder extends RecyclerView.ViewHolder{
 
     public void setTvNearLocation(TextView tvNearLocation) {
         this.tvNearLocation = tvNearLocation;
+    }
+
+    public ImageView getIvFavShop() {
+        return ivFavShop;
+    }
+
+    public void setIvFavShop(ImageView ivFavShop) {
+        this.ivFavShop = ivFavShop;
+    }
+
+    public RatingBar getRbShopRate() {
+        return rbShopRate;
+    }
+
+    public void setRbShopRate(RatingBar rbShopRate) {
+        this.rbShopRate = rbShopRate;
+    }
+
+    public LinearLayout getShopDetailsLinearLayout() {
+        return shopDetailsLinearLayout;
+    }
+
+    public void setShopDetailsLinearLayout(LinearLayout shopDetailsLinearLayout) {
+        this.shopDetailsLinearLayout = shopDetailsLinearLayout;
     }
 }

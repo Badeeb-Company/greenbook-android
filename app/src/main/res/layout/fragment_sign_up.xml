@@ -30,7 +30,7 @@
                 android:layout_gravity="center"
                 android:layout_marginBottom="@dimen/sign_up_profile_image_bottom_margin"
                 android:scaleType="centerCrop"
-                android:src="@drawable/def_usr_img"
+                android:src="@drawable/ic_img"
                 app:riv_oval="true" />
 
             <TextView

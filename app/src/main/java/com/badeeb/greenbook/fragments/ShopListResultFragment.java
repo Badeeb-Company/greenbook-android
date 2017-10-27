@@ -1,20 +1,9 @@
 package com.badeeb.greenbook.fragments;
 
-import android.Manifest;
 import android.app.ProgressDialog;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.location.Address;
 import android.location.Geocoder;
-import android.location.Location;
-import android.location.LocationManager;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.Settings;
-import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -39,6 +28,7 @@ import com.android.volley.Request;
 import com.badeeb.greenbook.R;
 import com.badeeb.greenbook.activities.MainActivity;
 import com.badeeb.greenbook.adaptors.ShopRecyclerViewAdaptor;
+import com.badeeb.greenbook.listener.RecyclerItemClickListener;
 import com.badeeb.greenbook.models.Category;
 import com.badeeb.greenbook.models.CategoryInquiry;
 import com.badeeb.greenbook.models.JsonResponse;
@@ -47,14 +37,7 @@ import com.badeeb.greenbook.models.ShopInquiry;
 import com.badeeb.greenbook.network.NonAuthorizedCallback;
 import com.badeeb.greenbook.network.VolleyWrapper;
 import com.badeeb.greenbook.shared.Constants;
-import com.badeeb.greenbook.shared.OnPermissionsGrantedHandler;
-import com.badeeb.greenbook.shared.PermissionsChecker;
 import com.badeeb.greenbook.shared.UiUtils;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationListener;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationServices;
 import com.google.gson.reflect.TypeToken;
 
 import org.parceler.Parcels;
@@ -142,6 +125,7 @@ public class ShopListResultFragment extends Fragment {
         rvShopList.setAdapter(mShopListAdaptor);
 
         mAutoCategorySearchAdaptor = new ArrayAdapter<Category>(mActivity, android.R.layout.select_dialog_item, mCategoryList);
+
         actvCategorySearch = (AutoCompleteTextView) view.findViewById(R.id.actvCategorySearch);
         actvCategorySearch.setAdapter(mAutoCategorySearchAdaptor);
         actvCategorySearch.setThreshold(Constants.THRESHOLD);
@@ -193,6 +177,20 @@ public class ShopListResultFragment extends Fragment {
                 goSearch();
             }
         });
+
+        // Adding OnItemTouchListener to recycler view
+//        rvShopList.addOnItemTouchListener(
+//                new RecyclerItemClickListener(getContext(), new RecyclerItemClickListener.OnItemClickListener() {
+//                    @Override public void onItemClick(View view, int position) {
+//                        Log.d(TAG, "setupListeners - rvShopList:onItemClick - Start");
+//                        // Get item that is selected
+//                        goToSelectedShop(position);
+//
+//                        Log.d(TAG, "setupListeners - rvShopList:onItemClick - End");
+//                    }
+//                })
+//        );
+
     }
 
     private void goSearch() {
@@ -312,7 +310,9 @@ public class ShopListResultFragment extends Fragment {
                 if (jsonResponse != null && jsonResponse.getResult() != null && jsonResponse.getResult().getCategoryList() != null) {
                     mCategoryList.clear();
                     mCategoryList.addAll(jsonResponse.getResult().getCategoryList());
-                    mAutoCategorySearchAdaptor.notifyDataSetChanged();
+                    Log.d(TAG, "callCategoryListApi - updated category list: "+ Arrays.toString(mCategoryList.toArray()));
+                    mAutoCategorySearchAdaptor.clear();
+                    mAutoCategorySearchAdaptor.addAll(mCategoryList);
                 } else {
                     mActivity.getmSnackBarDisplayer().displayError("Categories not loaded from the server");
                 }

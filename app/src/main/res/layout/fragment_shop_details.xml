@@ -5,61 +5,104 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:orientation="horizontal"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8.3dp">
-
-        <ImageView
-            android:id="@+id/ivShopMainPhoto"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:src="@drawable/def_usr_img"
-            android:layout_marginTop="13dp"
-            android:layout_marginLeft="10dp"/>
+        android:layout_height="wrap_content">
 
         <LinearLayout
+            android:id="@+id/shopDetailsLinearLayout"
+            android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginLeft="13dp">
+            android:layout_marginBottom="8.3dp">
 
-            <TextView
-                android:id="@+id/tvShopName"
-                android:layout_width="match_parent"
-                android:layout_height="24dp"
-                android:layout_marginTop="10dp"
-                android:textColor="#0ca55f"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:text="House of Bagels"
-                />
+            <com.makeramen.roundedimageview.RoundedImageView
+                android:id="@+id/rivShopMainPhoto"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                app:riv_oval="true"
+                android:layout_marginTop="13dp"
+                android:layout_marginLeft="10dp"/>
 
-            <TextView
-                android:id="@+id/tvDescription"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingRight="22.5dp"
-                android:textColor="#808080"
-                android:textSize="14sp"
-                android:text="Classic Jewish deli since 1962 with baked sweets Brooklyn-style bagels."
-                />
+                android:orientation="vertical"
+                android:layout_marginLeft="13dp">
 
-            <TextView
-                android:id="@+id/tvNearLocation"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingRight="22.5dp"
-                android:textColor="#515151"
-                android:textSize="15sp"
-                android:text="5 km around you"
-                />
+                    <TextView
+                        android:id="@+id/tvShopName"
+                        android:layout_width="match_parent"
+                        android:layout_height="24dp"
+                        android:layout_marginTop="10dp"
+                        android:textColor="#0ca55f"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:text="House of Bagels"
+                        />
 
-        </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        >
+                        <RatingBar
+                            android:id="@+id/rbShopRate"
+                            android:layout_width="wrap_content"
+                            android:layout_height="@dimen/rating_bar_height"
+                            android:progressTint="@color/dark_orange"
+                            style="@style/customRatingBar"
+                            android:rating="2.3"
+                            android:stepSize="@dimen/rating_step_size"
+                            />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="@dimen/rating_bar_height"
+                            android:layout_marginLeft="@dimen/left_margin_rating_value"
+                            android:text="2.3"
+                            android:textColor="@color/dark_gray"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/tvDescription"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingRight="22.5dp"
+                        android:textColor="#808080"
+                        android:textSize="14sp"
+                        android:text="Classic Jewish deli since 1962 with baked sweets Brooklyn-style bagels."
+                        />
+
+                    <TextView
+                        android:id="@+id/tvNearLocation"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingRight="22.5dp"
+                        android:textColor="#515151"
+                        android:textSize="15sp"
+                        android:text="5 km around you"
+                        />
+
+            </LinearLayout>
 
     </LinearLayout>
 
+        <ImageView
+            android:id="@+id/ivFav"
+            android:layout_width="27dp"
+            android:layout_height="19.3dp"
+            android:src="@drawable/ic_fav"
+            android:layout_marginTop="12dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginLeft="5dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"/>
+    </RelativeLayout>
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/sign_up_line_thickness"
