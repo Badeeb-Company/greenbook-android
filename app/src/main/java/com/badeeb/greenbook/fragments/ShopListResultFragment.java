@@ -184,7 +184,7 @@ public class ShopListResultFragment extends Fragment {
         ivMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                goToMapFragment();
             }
         });
         srlShopList.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -261,6 +261,7 @@ public class ShopListResultFragment extends Fragment {
                     Log.d(TAG, "callSearchApi - NonAuthorizedCallback - onSuccess - empty search ");
                 }
                 mProgressDialog.dismiss();
+                srlShopList.setRefreshing(false);
 
                 if (mShopList != null && mShopList.size() == 0) {
                     enableNoSearchFoundScreen();
@@ -273,6 +274,7 @@ public class ShopListResultFragment extends Fragment {
                 Log.d(TAG, "callSearchApi - NonAuthorizedCallback - onError");
                 mActivity.getmSnackBarDisplayer().displayError("Error while getting shops from the server");
                 mProgressDialog.dismiss();
+                srlShopList.setRefreshing(false);
             }
         };
 
@@ -407,5 +409,22 @@ public class ShopListResultFragment extends Fragment {
         Log.d(TAG, "goToSelectedShop - End");
     }
 
+    private void goToMapFragment() {
+
+        MapFragment mapFragment = new MapFragment();
+
+        Bundle bundle = new Bundle();
+        bundle.putDouble(MapFragment.EXTRA_CURRENT_LATITUDE, mLatitude);
+        bundle.putDouble(MapFragment.EXTRA_CURRENT_LONGITUDE, mLongitude);
+        bundle.putParcelable(MapFragment.EXTRA_SHOPS_LIST, Parcels.wrap(mShopList));
+        mapFragment.setArguments(bundle);
+
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.add(R.id.main_frame, mapFragment, mapFragment.TAG);
+        fragmentTransaction.addToBackStack(TAG);
+        fragmentTransaction.commit();
+
+    }
 
 }
