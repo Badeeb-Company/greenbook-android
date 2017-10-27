@@ -28,6 +28,7 @@ import com.android.volley.Request;
 import com.badeeb.greenbook.R;
 import com.badeeb.greenbook.activities.MainActivity;
 import com.badeeb.greenbook.adaptors.ShopRecyclerViewAdaptor;
+import com.badeeb.greenbook.listener.RecyclerItemClickListener;
 import com.badeeb.greenbook.models.Category;
 import com.badeeb.greenbook.models.CategoryInquiry;
 import com.badeeb.greenbook.models.JsonResponse;
@@ -120,7 +121,7 @@ public class ShopListResultFragment extends Fragment {
         rvShopList.setLayoutManager(mShopLayoutManager);
         rvShopList.setItemAnimator(new DefaultItemAnimator());
 
-        mShopListAdaptor = new ShopRecyclerViewAdaptor(mActivity, mShopList, this);
+        mShopListAdaptor = new ShopRecyclerViewAdaptor(mActivity, mShopList);
         rvShopList.setAdapter(mShopListAdaptor);
 
         mAutoCategorySearchAdaptor = new ArrayAdapter<Category>(mActivity, android.R.layout.select_dialog_item, mCategoryList);
@@ -176,6 +177,20 @@ public class ShopListResultFragment extends Fragment {
                 goSearch();
             }
         });
+
+        // Adding OnItemTouchListener to recycler view
+        rvShopList.addOnItemTouchListener(
+                new RecyclerItemClickListener(getContext(), new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override public void onItemClick(View view, int position) {
+                        Log.d(TAG, "setupListeners - rvShopList:onItemClick - Start");
+                        // Get item that is selected
+                        goToSelectedShop(position);
+
+                        Log.d(TAG, "setupListeners - rvShopList:onItemClick - End");
+                    }
+                })
+        );
+
     }
 
     private void goSearch() {

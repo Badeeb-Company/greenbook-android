@@ -66,6 +66,8 @@
     <!--Shop Card View-->
     <dimen name="rating_step_size">0.1</dimen>
     <dimen name="rating_bar_height">14dp</dimen>
+    <dimen name="left_margin_rating_value">7.5dp</dimen>
+
     <!--End-->
 
 

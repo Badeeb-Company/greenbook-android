@@ -1,12 +1,14 @@
 package com.badeeb.greenbook.adaptors;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.badeeb.greenbook.R;
 import com.badeeb.greenbook.activities.MainActivity;
@@ -26,13 +28,13 @@ public class ShopRecyclerViewAdaptor extends RecyclerView.Adapter<ShopViewHolder
     private final static String TAG = ShopRecyclerViewAdaptor.class.getName();
 
     private MainActivity mActivity;
-    private ShopListResultFragment mParentFragment;
     private List<Shop> mShopList;
 
-    public ShopRecyclerViewAdaptor(MainActivity mActivity, List<Shop> shopList, ShopListResultFragment parentFragment){
+    private boolean isFav = true;
+
+    public ShopRecyclerViewAdaptor(MainActivity mActivity, List<Shop> shopList){
         this.mActivity = mActivity;
         mShopList = shopList;
-        mParentFragment = parentFragment;
     }
 
     @Override
@@ -56,24 +58,34 @@ public class ShopRecyclerViewAdaptor extends RecyclerView.Adapter<ShopViewHolder
                 mActivity.getCurrentLocation().getLatitude(),mActivity.getCurrentLocation().getLongitude());
         holder.getTvNearLocation().setText(distance+" Km around you");
         Glide.with(mActivity).load(shop.getMainPhotoURL()).into(holder.getRivShopMainPhoto());
-
         setupListener(holder,position);
         Log.d(TAG, " onBindViewHolder - End ");
     }
 
     private void setupListener(ShopViewHolder holder, final int position) {
-        holder.getTvShopName().setOnClickListener(new View.OnClickListener() {
 
+        holder.getIvFavShop().setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                Log.d(TAG, "shop on select - Start");
-                Log.d(TAG, "shop on select - selected position: "+position);
-
-                mParentFragment.goToSelectedShop(position);
-
-                Log.d(TAG, "shop on select - end");
+                Log.d(TAG, "setupListener - ivFavShop - icon pressed");
+                Drawable iconPressed = mActivity.getResources().getDrawable(R.drawable.btn_fav_prassed);
+                Drawable iconNotPressed = mActivity.getResources().getDrawable(R.drawable.ic_fav);
+                ImageView selectedFav = view.findViewById(R.id.ivFav);
+                if(isFav) {
+                    Log.d(TAG, "setupListener - ivFavShop - change to pressed");
+                    // TODO - add favorite action
+                    selectedFav.setImageDrawable(iconPressed);
+                    isFav = false;
+                }else{
+                    Log.d(TAG, "setupListener - ivFavShop - change to not pressed");
+                    // TODO - remove from favorite action
+                    selectedFav.setImageDrawable(iconNotPressed);
+                    isFav = true;
+                }
             }
         });
+
+
     }
 
     @Override
