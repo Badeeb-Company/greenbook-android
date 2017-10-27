@@ -121,7 +121,7 @@ public class ShopListResultFragment extends Fragment {
         rvShopList.setLayoutManager(mShopLayoutManager);
         rvShopList.setItemAnimator(new DefaultItemAnimator());
 
-        mShopListAdaptor = new ShopRecyclerViewAdaptor(mActivity, mShopList);
+        mShopListAdaptor = new ShopRecyclerViewAdaptor(mActivity, mShopList, this);
         rvShopList.setAdapter(mShopListAdaptor);
 
         mAutoCategorySearchAdaptor = new ArrayAdapter<Category>(mActivity, android.R.layout.select_dialog_item, mCategoryList);
@@ -179,17 +179,17 @@ public class ShopListResultFragment extends Fragment {
         });
 
         // Adding OnItemTouchListener to recycler view
-        rvShopList.addOnItemTouchListener(
-                new RecyclerItemClickListener(getContext(), new RecyclerItemClickListener.OnItemClickListener() {
-                    @Override public void onItemClick(View view, int position) {
-                        Log.d(TAG, "setupListeners - rvShopList:onItemClick - Start");
-                        // Get item that is selected
-                        goToSelectedShop(position);
-
-                        Log.d(TAG, "setupListeners - rvShopList:onItemClick - End");
-                    }
-                })
-        );
+//        rvShopList.addOnItemTouchListener(
+//                new RecyclerItemClickListener(getContext(), new RecyclerItemClickListener.OnItemClickListener() {
+//                    @Override public void onItemClick(View view, int position) {
+//                        Log.d(TAG, "setupListeners - rvShopList:onItemClick - Start");
+//                        // Get item that is selected
+//                        goToSelectedShop(position);
+//
+//                        Log.d(TAG, "setupListeners - rvShopList:onItemClick - End");
+//                    }
+//                })
+//        );
 
     }
 

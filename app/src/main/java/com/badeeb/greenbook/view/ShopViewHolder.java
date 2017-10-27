@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
@@ -26,6 +27,9 @@ public class ShopViewHolder extends RecyclerView.ViewHolder{
     private TextView tvDescription;
     private TextView tvNearLocation;
 
+    private LinearLayout shopDetailsLinearLayout;
+
+
     public ShopViewHolder(View itemView) {
         super(itemView);
 
@@ -35,6 +39,8 @@ public class ShopViewHolder extends RecyclerView.ViewHolder{
         tvShopName = (TextView) itemView.findViewById(R.id.tvShopName);
         tvDescription = (TextView) itemView.findViewById(R.id.tvDescription);
         tvNearLocation = (TextView) itemView.findViewById(R.id.tvNearLocation);
+
+        shopDetailsLinearLayout = (LinearLayout) itemView.findViewById(R.id.shopDetailsLinearLayout);
 
     }
 
@@ -88,5 +94,13 @@ public class ShopViewHolder extends RecyclerView.ViewHolder{
 
     public void setRbShopRate(RatingBar rbShopRate) {
         this.rbShopRate = rbShopRate;
+    }
+
+    public LinearLayout getShopDetailsLinearLayout() {
+        return shopDetailsLinearLayout;
+    }
+
+    public void setShopDetailsLinearLayout(LinearLayout shopDetailsLinearLayout) {
+        this.shopDetailsLinearLayout = shopDetailsLinearLayout;
     }
 }

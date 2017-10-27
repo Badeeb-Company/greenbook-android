@@ -28,12 +28,14 @@ public class ShopRecyclerViewAdaptor extends RecyclerView.Adapter<ShopViewHolder
     private final static String TAG = ShopRecyclerViewAdaptor.class.getName();
 
     private MainActivity mActivity;
+    private ShopListResultFragment mParentFragment;
     private List<Shop> mShopList;
 
     private boolean isFav = true;
 
-    public ShopRecyclerViewAdaptor(MainActivity mActivity, List<Shop> shopList){
+    public ShopRecyclerViewAdaptor(MainActivity mActivity, List<Shop> shopList, ShopListResultFragment parentFragment){
         this.mActivity = mActivity;
+        mParentFragment = parentFragment;
         mShopList = shopList;
     }
 
@@ -63,6 +65,14 @@ public class ShopRecyclerViewAdaptor extends RecyclerView.Adapter<ShopViewHolder
     }
 
     private void setupListener(ShopViewHolder holder, final int position) {
+
+        holder.getShopDetailsLinearLayout().setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                Log.d(TAG, "setupListener - shop details linear layout - on click position:"+position);
+                mParentFragment.goToSelectedShop(position);
+            }
+        });
 
         holder.getIvFavShop().setOnClickListener(new View.OnClickListener(){
             @Override
