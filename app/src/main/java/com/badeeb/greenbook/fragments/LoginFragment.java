@@ -19,6 +19,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.QuickContactBadge;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -36,6 +37,8 @@ import com.badeeb.greenbook.shared.Constants;
 import com.badeeb.greenbook.shared.UiUtils;
 import com.badeeb.greenbook.shared.Utils;
 import com.google.gson.reflect.TypeToken;
+
+import org.w3c.dom.Text;
 
 import java.lang.reflect.Type;
 
@@ -130,6 +133,14 @@ public class LoginFragment extends Fragment {
             }
         });
 
+        TextView forgetPassword = view.findViewById(R.id.tvForgetPassword);
+        forgetPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                gotToForgetPasswordDialog();
+            }
+        });
+
         Log.d(TAG, "setupListeners - End");
     }
 
@@ -193,6 +204,7 @@ public class LoginFragment extends Fragment {
                         callback, getContext(), mActivity.getmSnackBarDisplayer(), mActivity.findViewById(R.id.ll_main_view));
         volleyWrapper.execute();
     }
+
     private void goToShopSearch() {
         Fragment fragment = getFragmentManager().findFragmentByTag(ShopSearchFragment.TAG);
         if (fragment != null && fragment instanceof ShopSearchFragment && fragment.isVisible())
@@ -234,5 +246,11 @@ public class LoginFragment extends Fragment {
         return valid;
     }
 
+    private void gotToForgetPasswordDialog() {
+        ForgetPasswordDialogFragment forgetPasswordDialogFragment = new ForgetPasswordDialogFragment();
+        forgetPasswordDialogFragment.setCancelable(false);
+        FragmentManager fragmentManager = getFragmentManager();
+        forgetPasswordDialogFragment.show(fragmentManager, forgetPasswordDialogFragment.TAG);
+    }
 
 }
