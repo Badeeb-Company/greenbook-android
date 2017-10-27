@@ -6,6 +6,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.badeeb.greenbook.R;
+import com.makeramen.roundedimageview.RoundedImageView;
 
 /**
  * Created by ahmed on 10/21/2017.
@@ -14,7 +15,7 @@ import com.badeeb.greenbook.R;
 public class ShopViewHolder extends RecyclerView.ViewHolder{
     private final static String TAG = ShopViewHolder.class.getName();
 
-    private ImageView ivShopMainPhoto;
+    private RoundedImageView rivShopMainPhoto;
     private TextView tvShopName;
     private TextView tvDescription;
     private TextView tvNearLocation;
@@ -23,7 +24,7 @@ public class ShopViewHolder extends RecyclerView.ViewHolder{
     public ShopViewHolder(View itemView) {
         super(itemView);
 
-        ivShopMainPhoto = (ImageView) itemView.findViewById(R.id.ivShopMainPhoto);
+        rivShopMainPhoto = (RoundedImageView) itemView.findViewById(R.id.rivShopMainPhoto);
         tvShopName = (TextView) itemView.findViewById(R.id.tvShopName);
         tvDescription = (TextView) itemView.findViewById(R.id.tvDescription);
         tvNearLocation = (TextView) itemView.findViewById(R.id.tvNearLocation);
@@ -33,12 +34,12 @@ public class ShopViewHolder extends RecyclerView.ViewHolder{
         return TAG;
     }
 
-    public ImageView getIvShopMainPhoto() {
-        return ivShopMainPhoto;
+    public RoundedImageView getRivShopMainPhoto() {
+        return rivShopMainPhoto;
     }
 
-    public void setIvShopMainPhoto(ImageView ivShopMainPhoto) {
-        this.ivShopMainPhoto = ivShopMainPhoto;
+    public void setRivShopMainPhoto(RoundedImageView rivShopMainPhoto) {
+        this.rivShopMainPhoto = rivShopMainPhoto;
     }
 
     public TextView getTvShopName() {

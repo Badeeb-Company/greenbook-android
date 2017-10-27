@@ -1,20 +1,9 @@
 package com.badeeb.greenbook.fragments;
 
-import android.Manifest;
 import android.app.ProgressDialog;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.location.Address;
 import android.location.Geocoder;
-import android.location.Location;
-import android.location.LocationManager;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.Settings;
-import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -47,14 +36,7 @@ import com.badeeb.greenbook.models.ShopInquiry;
 import com.badeeb.greenbook.network.NonAuthorizedCallback;
 import com.badeeb.greenbook.network.VolleyWrapper;
 import com.badeeb.greenbook.shared.Constants;
-import com.badeeb.greenbook.shared.OnPermissionsGrantedHandler;
-import com.badeeb.greenbook.shared.PermissionsChecker;
 import com.badeeb.greenbook.shared.UiUtils;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationListener;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationServices;
 import com.google.gson.reflect.TypeToken;
 
 import org.parceler.Parcels;
@@ -142,6 +124,7 @@ public class ShopListResultFragment extends Fragment {
         rvShopList.setAdapter(mShopListAdaptor);
 
         mAutoCategorySearchAdaptor = new ArrayAdapter<Category>(mActivity, android.R.layout.select_dialog_item, mCategoryList);
+
         actvCategorySearch = (AutoCompleteTextView) view.findViewById(R.id.actvCategorySearch);
         actvCategorySearch.setAdapter(mAutoCategorySearchAdaptor);
         actvCategorySearch.setThreshold(Constants.THRESHOLD);
@@ -310,7 +293,9 @@ public class ShopListResultFragment extends Fragment {
                 if (jsonResponse != null && jsonResponse.getResult() != null && jsonResponse.getResult().getCategoryList() != null) {
                     mCategoryList.clear();
                     mCategoryList.addAll(jsonResponse.getResult().getCategoryList());
-                    mAutoCategorySearchAdaptor.notifyDataSetChanged();
+                    Log.d(TAG, "callCategoryListApi - updated category list: "+ Arrays.toString(mCategoryList.toArray()));
+                    mAutoCategorySearchAdaptor.clear();
+                    mAutoCategorySearchAdaptor.addAll(mCategoryList);
                 } else {
                     mActivity.getmSnackBarDisplayer().displayError("Categories not loaded from the server");
                 }

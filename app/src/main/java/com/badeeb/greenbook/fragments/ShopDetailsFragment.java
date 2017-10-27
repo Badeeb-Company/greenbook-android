@@ -22,6 +22,7 @@ import com.badeeb.greenbook.models.Shop;
 import com.badeeb.greenbook.shared.UiUtils;
 import com.badeeb.greenbook.shared.Utils;
 import com.bumptech.glide.Glide;
+import com.makeramen.roundedimageview.RoundedImageView;
 
 import org.parceler.Parcels;
 import org.w3c.dom.Text;
@@ -39,7 +40,7 @@ public class ShopDetailsFragment extends Fragment {
     private TabLayout mTabLayout;
     private ViewPager mViewPager;
 
-    private ImageView ivShopMainPhoto;
+    private RoundedImageView rivShopMainPhoto;
     private TextView tvShopName;
     private TextView tvDescription;
     private TextView tvNearLocation;
@@ -87,7 +88,7 @@ public class ShopDetailsFragment extends Fragment {
     }
 
     private void initUiFields(View view) {
-        ivShopMainPhoto = (ImageView)  view.findViewById(R.id.ivShopMainPhoto);
+        rivShopMainPhoto = (RoundedImageView)  view.findViewById(R.id.rivShopMainPhoto);
         tvShopName = (TextView) view.findViewById(R.id.tvShopName);
         tvDescription = (TextView) view.findViewById(R.id.tvDescription);
         tvNearLocation = (TextView) view.findViewById(R.id.tvNearLocation);
@@ -98,7 +99,7 @@ public class ShopDetailsFragment extends Fragment {
     private void fillUiFields() {
         Log.d(TAG, "fillUiFields - Start");
 
-        Glide.with(mActivity).load(mShop.getMainPhotoURL()).into(ivShopMainPhoto);
+        Glide.with(mActivity).load(mShop.getMainPhotoURL()).into(rivShopMainPhoto);
         tvShopName.setText(mShop.getName());
         tvDescription.setText(mShop.getDescription());
         tvNearLocation.setText(getShopDistance());

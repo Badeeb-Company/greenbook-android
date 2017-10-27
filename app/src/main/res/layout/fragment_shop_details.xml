@@ -11,11 +11,11 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="8.3dp">
 
-        <ImageView
-            android:id="@+id/ivShopMainPhoto"
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/rivShopMainPhoto"
             android:layout_width="45dp"
             android:layout_height="45dp"
-            android:src="@drawable/def_usr_img"
+            app:riv_oval="true"
             android:layout_marginTop="13dp"
             android:layout_marginLeft="10dp"/>
 
@@ -25,15 +25,41 @@
             android:orientation="vertical"
             android:layout_marginLeft="13dp">
 
-            <TextView
-                android:id="@+id/tvShopName"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="24dp"
-                android:layout_marginTop="10dp"
-                android:textColor="#0ca55f"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:text="House of Bagels"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/tvShopName"
+                    android:layout_width="match_parent"
+                    android:layout_height="24dp"
+                    android:layout_marginTop="10dp"
+                    android:textColor="#0ca55f"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:text="House of Bagels"
+                    />
+
+                <ImageView
+                    android:id="@+id/ivFav"
+                    android:layout_width="27dp"
+                    android:layout_height="19.3dp"
+                    android:src="@drawable/ic_fav"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"/>
+            </RelativeLayout>
+
+            <RatingBar
+                android:id="@+id/rbShopRate"
+                android:layout_width="wrap_content"
+                android:layout_height="14dp"
+                android:progressTint="@color/dark_orange"
+                style="@style/customRatingBar"
+                android:rating="2.3"
+                android:stepSize="0.1"
                 />
 
             <TextView

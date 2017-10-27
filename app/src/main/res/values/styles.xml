@@ -131,4 +131,6 @@
 
     <!-- Login fragment - End -->
 
+    <style name="customRatingBar" parent="android:style/Widget.Material.RatingBar.Small">
+    </style>
 </resources>
