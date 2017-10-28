@@ -9,8 +9,7 @@
     <RelativeLayout
         android:id="@+id/llToolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:minHeight="50dp"
+        android:layout_height="50dp"
         android:background="@color/white"
         android:paddingLeft="12dp"
         >

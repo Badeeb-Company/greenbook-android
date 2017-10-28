@@ -5,6 +5,34 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal"
+        android:background="@color/green"
+        android:paddingLeft="14dp"
+        android:gravity="left|center"
+        >
+
+        <ImageView
+            android:id="@+id/ivToolbarBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/go_back_left_arrow"
+            />
+
+        <TextView
+            android:id="@+id/tvToolbarShopName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="14dp"
+            android:text="Shop Name"
+            android:textSize="18sp"
+            android:fontFamily="fonts/OpenSans-Regular.ttf"
+            />
+
+    </LinearLayout>
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -103,6 +131,7 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"/>
     </RelativeLayout>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/sign_up_line_thickness"
