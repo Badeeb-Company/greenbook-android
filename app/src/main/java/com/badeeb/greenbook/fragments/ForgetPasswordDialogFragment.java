@@ -100,6 +100,7 @@ public class ForgetPasswordDialogFragment extends DialogFragment {
 
                 // Validate Email address
                 if (validateInput()) {
+                    mProgressDialog.show();
                     callForgetPasswordApi();
                 }
             }
@@ -134,8 +135,8 @@ public class ForgetPasswordDialogFragment extends DialogFragment {
 
     private void callForgetPasswordApi() {
 
-//        String url = Constants.BASE_URL + "/users/password";
-        String url = "http://192.168.1.103:8080/api/v1" + "/users/password";
+        String url = Constants.BASE_URL + "/users/password";
+//        String url = "http://192.168.1.103:8080/api/v1" + "/users/password";
 
         Log.d(TAG, "callForgetPasswordApi - url: " + url);
 
