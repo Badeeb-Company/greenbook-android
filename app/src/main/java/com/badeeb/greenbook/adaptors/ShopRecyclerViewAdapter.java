@@ -1,8 +1,6 @@
 package com.badeeb.greenbook.adaptors;
 
-import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,8 +22,8 @@ import java.util.List;
  * Created by ahmed on 10/21/2017.
  */
 
-public class ShopRecyclerViewAdaptor extends RecyclerView.Adapter<ShopViewHolder> {
-    private final static String TAG = ShopRecyclerViewAdaptor.class.getName();
+public class ShopRecyclerViewAdapter extends RecyclerView.Adapter<ShopViewHolder> {
+    private final static String TAG = ShopRecyclerViewAdapter.class.getName();
 
     private MainActivity mActivity;
     private ShopListResultFragment mParentFragment;
@@ -33,7 +31,7 @@ public class ShopRecyclerViewAdaptor extends RecyclerView.Adapter<ShopViewHolder
 
     private boolean isFav = true;
 
-    public ShopRecyclerViewAdaptor(MainActivity mActivity, List<Shop> shopList, ShopListResultFragment parentFragment){
+    public ShopRecyclerViewAdapter(MainActivity mActivity, List<Shop> shopList, ShopListResultFragment parentFragment){
         this.mActivity = mActivity;
         mParentFragment = parentFragment;
         mShopList = shopList;

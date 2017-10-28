@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.badeeb.greenbook.R;
-import com.badeeb.greenbook.activities.MainActivity;
 import com.badeeb.greenbook.models.Photo;
 import com.badeeb.greenbook.view.GalleryViewHolder;
 import com.bumptech.glide.Glide;
@@ -20,13 +19,13 @@ import java.util.List;
  * Created by ahmed on 10/24/2017.
  */
 
-public class GalleryRecyclerViewAdaptor extends RecyclerView.Adapter<GalleryViewHolder>{
-    private final static String TAG = GalleryRecyclerViewAdaptor.class.getName();
+public class GalleryRecyclerViewAdapter extends RecyclerView.Adapter<GalleryViewHolder>{
+    private final static String TAG = GalleryRecyclerViewAdapter.class.getName();
 
     private List<Photo> mPhotoList;
     private Context mActivity;
 
-    public GalleryRecyclerViewAdaptor(Context activity, List<Photo> photoList){
+    public GalleryRecyclerViewAdapter(Context activity, List<Photo> photoList){
         mPhotoList = photoList;
         mActivity = activity;
     }

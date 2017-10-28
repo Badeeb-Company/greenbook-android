@@ -1,12 +1,9 @@
 package com.badeeb.greenbook.fragments;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,7 +12,7 @@ import android.view.ViewGroup;
 
 import com.badeeb.greenbook.R;
 import com.badeeb.greenbook.activities.MainActivity;
-import com.badeeb.greenbook.adaptors.GalleryRecyclerViewAdaptor;
+import com.badeeb.greenbook.adaptors.GalleryRecyclerViewAdapter;
 import com.badeeb.greenbook.models.Shop;
 import com.badeeb.greenbook.shared.Constants;
 
@@ -30,7 +27,7 @@ public class GalleryTabFragment extends Fragment {
     private Shop mShop;
 
     private RecyclerView rvGalleryPhotos;
-    private GalleryRecyclerViewAdaptor rvGalleryPhotosAdaptor;
+    private GalleryRecyclerViewAdapter rvGalleryPhotosAdaptor;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -66,7 +63,7 @@ public class GalleryTabFragment extends Fragment {
         rvGalleryPhotos.setLayoutManager(mLayoutManager);
         rvGalleryPhotos.setItemAnimator(new DefaultItemAnimator());
 
-        rvGalleryPhotosAdaptor = new GalleryRecyclerViewAdaptor(getContext(), mShop.getPhotos());
+        rvGalleryPhotosAdaptor = new GalleryRecyclerViewAdapter(getContext(), mShop.getPhotos());
         rvGalleryPhotos.setAdapter(rvGalleryPhotosAdaptor);
 
     }

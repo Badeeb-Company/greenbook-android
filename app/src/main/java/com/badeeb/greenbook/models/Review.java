@@ -21,7 +21,7 @@ public class Review {
 
     @Expose
     @SerializedName("rate")
-    private int rate;
+    private double rate;
 
     @Expose
     @SerializedName("created_at")
@@ -60,11 +60,11 @@ public class Review {
         this.description = description;
     }
 
-    public int getRate() {
+    public double getRate() {
         return rate;
     }
 
-    public void setRate(int rate) {
+    public void setRate(double rate) {
         this.rate = rate;
     }
 

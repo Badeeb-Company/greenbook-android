@@ -6,7 +6,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.badeeb.greenbook.R;
 import com.badeeb.greenbook.models.Category;
@@ -18,13 +17,13 @@ import java.util.List;
  * Created by ahmed on 10/20/2017.
  */
 
-public class CategoryRecyclerViewAdaptor extends RecyclerView.Adapter<CategoryViewHolder> {
-    private final static String TAG = CategoryRecyclerViewAdaptor.class.getName();
+public class CategoryRecyclerViewAdapter extends RecyclerView.Adapter<CategoryViewHolder> {
+    private final static String TAG = CategoryRecyclerViewAdapter.class.getName();
 
     public Context mContext;
     public List<Category> mCategoryList;
 
-    public CategoryRecyclerViewAdaptor(Context context, List<Category> categoryList){
+    public CategoryRecyclerViewAdapter(Context context, List<Category> categoryList){
         Log.d(TAG, " inside Constructor");
         mContext = context;
         mCategoryList = categoryList;
