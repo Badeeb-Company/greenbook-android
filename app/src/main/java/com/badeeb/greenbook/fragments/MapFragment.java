@@ -4,20 +4,24 @@ package com.badeeb.greenbook.fragments;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v7.content.res.AppCompatResources;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.badeeb.greenbook.R;
 import com.badeeb.greenbook.models.Category;
 import com.badeeb.greenbook.models.Shop;
+import com.bumptech.glide.Glide;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -28,6 +32,7 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.makeramen.roundedimageview.RoundedImageView;
 
 import org.parceler.Parcels;
 
@@ -143,6 +148,7 @@ public class MapFragment extends Fragment {
             marker.title(i+"");
             marker.icon(BitmapDescriptorFactory.fromBitmap(b));
             marker.anchor(0.5f, 0.5f);
+            marker.infoWindowAnchor(-4.4f, 0.3f);
 
             mMap.addMarker(marker);
         }
@@ -152,22 +158,25 @@ public class MapFragment extends Fragment {
 
             @Override
             public View getInfoWindow(Marker marker) {
-                return null;
-            }
-
-            @Override
-            public View getInfoContents(Marker marker) {
-
                 Log.d(TAG, "onMapReady - getInfoContents - Start");
                 if (! marker.getTitle().equalsIgnoreCase(HOME_MARKER_TITLE)) {
 
                     View v = getActivity().getLayoutInflater().inflate(R.layout.marker_info,null);
                     // Get Vendor index
                     int index = Integer.parseInt(marker.getTitle());
-//                    Vendor vendor = mVendorList.get(index);
-//                    // set vendor info
-//                    ((TextView) v.findViewById(R.id.vendor_name)).setText(vendor.getName());
-//                    ((TextView) v.findViewById(R.id.vendor_address)).setText(vendor.getAddress());
+
+                    Shop shop = mShopsList.get(index);
+
+                    ((TextView) v.findViewById(R.id.tvShopName)).setText(shop.getName());
+                    ((TextView) v.findViewById(R.id.tvRating)).setText(shop.getRate()+"");
+                    ((RatingBar) v.findViewById(R.id.rbShopRate)).setRating((float)shop.getRate());
+
+                    RoundedImageView shopImage = (RoundedImageView) v.findViewById(R.id.rivShopImage);
+
+                    Glide.with(getContext())
+                            .load(shop.getMainPhotoURL())
+                            .placeholder(R.drawable.pic_img)
+                            .into(shopImage);
 
                     return v;
                 }
@@ -175,6 +184,13 @@ public class MapFragment extends Fragment {
                 Log.d(TAG, "onMapReady - getInfoContents - End");
                 return null;
             }
+
+            @Override
+            public View getInfoContents(Marker marker) {
+                return null;
+            }
+
+
         });
 
     }
