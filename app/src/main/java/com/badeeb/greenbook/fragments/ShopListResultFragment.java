@@ -1,6 +1,5 @@
 package com.badeeb.greenbook.fragments;
 
-import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.location.Address;
 import android.location.Geocoder;
@@ -9,7 +8,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -23,13 +21,11 @@ import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.badeeb.greenbook.R;
 import com.badeeb.greenbook.activities.MainActivity;
-import com.badeeb.greenbook.adaptors.ShopRecyclerViewAdaptor;
-import com.badeeb.greenbook.listener.RecyclerItemClickListener;
+import com.badeeb.greenbook.adaptors.ShopRecyclerViewAdapter;
 import com.badeeb.greenbook.models.Category;
 import com.badeeb.greenbook.models.CategoryInquiry;
 import com.badeeb.greenbook.models.JsonResponse;
@@ -68,7 +64,7 @@ public class ShopListResultFragment extends Fragment {
 
     // UI Fields
     private RecyclerView rvShopList;
-    private ShopRecyclerViewAdaptor mShopListAdaptor;
+    private ShopRecyclerViewAdapter mShopListAdaptor;
     private SwipeRefreshLayout srlShopList;
     private AutoCompleteTextView actvCategorySearch;
     private ArrayAdapter<Category> mAutoCategorySearchAdaptor;
@@ -122,7 +118,7 @@ public class ShopListResultFragment extends Fragment {
         rvShopList.setLayoutManager(mShopLayoutManager);
         rvShopList.setItemAnimator(new DefaultItemAnimator());
 
-        mShopListAdaptor = new ShopRecyclerViewAdaptor(mActivity, mShopList, this);
+        mShopListAdaptor = new ShopRecyclerViewAdapter(mActivity, mShopList, this);
         rvShopList.setAdapter(mShopListAdaptor);
 
         mAutoCategorySearchAdaptor = new ArrayAdapter<Category>(mActivity, android.R.layout.select_dialog_item, mCategoryList);
@@ -389,11 +385,14 @@ public class ShopListResultFragment extends Fragment {
     }
 
 
-    // callled by the listener in ShopRecyclerViewAdaptor
+    // callled by the listener in ShopRecyclerViewAdapter
     public void goToSelectedShop(int position) {
         Log.d(TAG, "goToSelectedShop - Start");
+
         Shop selectShop = mShopList.get(position);
+
         ShopDetailsFragment shopDetailsFragment = new ShopDetailsFragment();
+
         Bundle bundle = new Bundle();
         bundle.putParcelable(ShopDetailsFragment.EXTRA_SHOP_OBJECT, Parcels.wrap(selectShop));
         shopDetailsFragment.setArguments(bundle);
@@ -406,7 +405,7 @@ public class ShopListResultFragment extends Fragment {
         fragmentTransaction.addToBackStack(TAG);
 
         fragmentTransaction.commit();
-//        disconnectGoogleApiClient();
+
         Log.d(TAG, "goToSelectedShop - End");
     }
 
