@@ -1,5 +1,6 @@
 package com.badeeb.greenbook.fragments;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.location.Address;
 import android.location.Geocoder;
@@ -421,7 +422,11 @@ public class ShopListResultFragment extends Fragment {
 
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add(R.id.main_frame, mapFragment, mapFragment.TAG);
+        // Animation part
+//        fragmentTransaction.setCustomAnimations(R.animator.card_flip_right_in, R.animator.card_flip_right_out,
+//                R.animator.card_flip_left_in, R.animator.card_flip_left_out);
+
+        fragmentTransaction.replace(R.id.main_frame, mapFragment, mapFragment.TAG);
         fragmentTransaction.addToBackStack(TAG);
         fragmentTransaction.commit();
 

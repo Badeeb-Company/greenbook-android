@@ -9,16 +9,20 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.content.res.AppCompatResources;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.badeeb.greenbook.R;
+import com.badeeb.greenbook.activities.MainActivity;
 import com.badeeb.greenbook.models.Category;
 import com.badeeb.greenbook.models.Shop;
 import com.bumptech.glide.Glide;
@@ -59,6 +63,9 @@ public class MapFragment extends Fragment {
 
     private List<Shop> mShopsList;
 
+    private MainActivity mActivity;
+    private FragmentManager fragmentManager;
+
     public MapFragment() {
         // Required empty public constructor
     }
@@ -85,15 +92,29 @@ public class MapFragment extends Fragment {
 
         mOnMapReadyCallback = createOnMapReayCallback();
 
-//        markerInfoLayout = (LinearLayout) view.findViewById(R.id.marker_info_layout);
-
         // Map Initialization
         MapsInitializer.initialize(getContext());
         mMapView = (MapView) view.findViewById(R.id.map);
         mMapView.onCreate(savedInstanceState);
         mMapView.getMapAsync(mOnMapReadyCallback);
 
+        mActivity = (MainActivity) getActivity();
+        fragmentManager = getFragmentManager();
+
+        setupListeners(view);
+
         Log.d(TAG, "init - End");
+    }
+
+    private void setupListeners(View view) {
+
+        ImageView back = view.findViewById(R.id.ivback);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fragmentManager.popBackStack();
+            }
+        });
     }
 
     private OnMapReadyCallback createOnMapReayCallback() {
@@ -157,11 +178,11 @@ public class MapFragment extends Fragment {
         mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter(){
 
             @Override
-            public View getInfoWindow(Marker marker) {
+            public View getInfoWindow(final Marker marker) {
                 Log.d(TAG, "onMapReady - getInfoContents - Start");
                 if (! marker.getTitle().equalsIgnoreCase(HOME_MARKER_TITLE)) {
 
-                    View v = getActivity().getLayoutInflater().inflate(R.layout.marker_info,null);
+                    final View v = getActivity().getLayoutInflater().inflate(R.layout.marker_info,null);
                     // Get Vendor index
                     int index = Integer.parseInt(marker.getTitle());
 
@@ -177,6 +198,24 @@ public class MapFragment extends Fragment {
                             .load(shop.getMainPhotoURL())
                             .placeholder(R.drawable.pic_img)
                             .into(shopImage);
+
+                    // Add Listener for close icon
+//                    ImageView ivClose = v.findViewById(R.id.ivClose);
+//                    ivClose.setOnTouchListener(new View.OnTouchListener() {
+//                        @Override
+//                        public boolean onTouch(View v1, MotionEvent event) {
+//                            Log.d(TAG, "ivClose - onTouch - Close Button");
+//                            marker.hideInfoWindow();
+//                            return true;
+//                        }
+//                    });
+//                    ivClose.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View v1) {
+//                            Log.d(TAG, "ivClose - onClick - Close Button");
+//                            marker.hideInfoWindow();
+//                        }
+//                    });
 
                     return v;
                 }
