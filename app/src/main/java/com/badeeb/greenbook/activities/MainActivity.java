@@ -25,6 +25,7 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 
 import com.badeeb.greenbook.R;
+import com.badeeb.greenbook.adaptors.PlaceAutocompleteAdapter;
 import com.badeeb.greenbook.fragments.FavoriteFragment;
 import com.badeeb.greenbook.fragments.LoginFragment;
 import com.badeeb.greenbook.fragments.ProfileFragment;
@@ -36,6 +37,9 @@ import com.badeeb.greenbook.shared.OnPermissionsGrantedHandler;
 import com.badeeb.greenbook.shared.UiUtils;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.places.Places;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 
 import java.util.TimerTask;
 
@@ -51,6 +55,9 @@ public class MainActivity extends AppCompatActivity {
     private AppSettings mAppSettings;
     private ErrorDisplayHandler mSnackBarDisplayer;
     private Location mCurrentLocation;
+
+    // PlaceAutoComplete Attributes
+    private GoogleApiClient mPlaceGoogleApiClient;
 
     private String mState;
 
@@ -89,11 +96,24 @@ public class MainActivity extends AppCompatActivity {
         else {
             // Go to login screen
         }
+
+        initPlaceAutoComplete();
+
         goToLogin();
 
         setupListener();
 
         Log.d(TAG, "init - End");
+    }
+
+    public void initPlaceAutoComplete(){
+        Log.d(TAG, "initPlaceAutoComplete - start ");
+        mPlaceGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addApi(Places.GEO_DATA_API)
+                .build();
+
+
+        Log.d(TAG, "initPlaceAutoComplete - end ");
     }
 
     private void goToLogin() {
@@ -270,6 +290,22 @@ public class MainActivity extends AppCompatActivity {
 
     public void setCurrentLocation(Location currentLocation) {
         this.mCurrentLocation = currentLocation;
+    }
+
+    public GoogleApiClient getmPlaceGoogleApiClient() {
+        return mPlaceGoogleApiClient;
+    }
+
+    public void connectPlaceGoogleApiClient(){
+        if(mPlaceGoogleApiClient != null && !mPlaceGoogleApiClient.isConnected()){
+            mPlaceGoogleApiClient.connect();
+        }
+    }
+
+    public void disconnectPlaceGoogleApiClient(){
+        if(mPlaceGoogleApiClient != null && mPlaceGoogleApiClient.isConnected()){
+            mPlaceGoogleApiClient.disconnect();
+        }
     }
 
     public String getState() {

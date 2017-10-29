@@ -66,9 +66,9 @@
                 android:layout_marginLeft="8dp"
                 android:layout_marginTop="8dp"/>
 
-            <EditText
-                android:id="@+id/etLocationSearch"
-                android:layout_width="wrap_content"
+            <AutoCompleteTextView
+                android:id="@+id/actvLocationSearch"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:paddingBottom="7.5dp"
                 android:paddingTop="8.5dp"
@@ -77,8 +77,12 @@
                 android:layout_alignLeft="@id/ivLocation"
                 android:hint="Current Location"
                 android:textColorHint="@color/hint_gray"
+                android:dropDownWidth="320dp"
                 android:textColor="@color/white"
                 android:textSize="16sp"
+                android:singleLine="true"
+                android:layout_toLeftOf="@+id/ivMap"
+                android:layout_toRightOf="@+id/ivLocation"
                 />
 
             <ImageView
@@ -88,6 +92,7 @@
                 android:src="@drawable/ic_maps"
                 android:layout_marginTop="5.5dp"
                 android:layout_marginBottom="7.5dp"
+                android:layout_marginLeft="8dp"
                 android:layout_marginRight="11.4dp"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"

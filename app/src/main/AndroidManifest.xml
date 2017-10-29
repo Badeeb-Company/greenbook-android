@@ -18,6 +18,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".activities.MainActivity"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize"
             />
         <activity android:name=".activities.SplashActivity">
@@ -32,6 +33,10 @@
             android:name="io.fabric.ApiKey"
             android:value="f504520c3612b6ce65332ace9b90e34abdf486a2" />
 
+        <!--<meta-data-->
+            <!--android:name="com.google.android.geo.API_KEY"-->
+            <!--android:value="AIzaSyBBg2DSWnC3UPWo2oCDqC9eMlV7A4nGa4w" />-->
+
 
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
@@ -44,6 +49,7 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key"/>
+
 
     </application>
 
