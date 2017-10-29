@@ -109,6 +109,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void setUser(User user) {
         this.mUser = user;
+
+        // Fill owned shops
     }
 
     public void hideToolbar() {

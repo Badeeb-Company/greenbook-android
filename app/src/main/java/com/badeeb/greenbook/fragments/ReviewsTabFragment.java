@@ -224,6 +224,7 @@ public class ReviewsTabFragment extends Fragment {
 
         Bundle bundle = new Bundle();
         bundle.putParcelable(ReviewMngFragment.EXTRA_SHOP_OBJECT, Parcels.wrap(mShop));
+        bundle.putString(ReviewMngFragment.EXTRA_ACTION, ReviewMngFragment.ACTION_ADD);
         reviewMngFragment.setArguments(bundle);
 
         FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();

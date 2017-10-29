@@ -67,13 +67,17 @@ public class ReviewRecyclerViewAdapter extends RecyclerView.Adapter<ReviewViewHo
 
         if (review.getReply() == null || review.getReply().isEmpty()) {
             holder.getIvReplyIcon().setVisibility(View.GONE);
-            holder.getTvReviewReply().setVisibility(View.GONE);
+            holder.getTvShopOwnerReplyView().setVisibility(View.GONE);
+            holder.getEtShopOwnerReplyText().setVisibility(View.GONE);
             holder.getLlOwnerReply().setVisibility(View.GONE);
         }
         else {
             holder.getIvReplyIcon().setVisibility(View.VISIBLE);
-            holder.getTvReviewReply().setVisibility(View.VISIBLE);
+            holder.getTvShopOwnerReplyView().setVisibility(View.VISIBLE);
+            holder.getEtShopOwnerReplyText().setVisibility(View.GONE);
             holder.getLlOwnerReply().setVisibility(View.VISIBLE);
+
+            holder.getTvShopOwnerReplyView().setText(review.getReply());
         }
 
         if (user == null || user.getId() != review.getUser().getId()) {
@@ -84,6 +88,9 @@ public class ReviewRecyclerViewAdapter extends RecyclerView.Adapter<ReviewViewHo
             holder.getTvReviewEdit().setVisibility(View.VISIBLE);
             holder.getTvReviewDelete().setVisibility(View.VISIBLE);
         }
+
+
+//        if (user.getOwnedShops())
 
         setupListeners(holder, review);
     }

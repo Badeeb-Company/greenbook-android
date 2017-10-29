@@ -41,6 +41,7 @@ import com.google.gson.reflect.TypeToken;
 import org.w3c.dom.Text;
 
 import java.lang.reflect.Type;
+import java.util.HashSet;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -52,6 +53,7 @@ public class LoginFragment extends Fragment {
     private MainActivity mActivity;
     private FragmentManager mFragmentManager;
     private User mUser;
+    private HashSet<Integer> ownedShops;
     private AppSettings mAppSettings;
 
     private EditText mEmail;
@@ -84,6 +86,7 @@ public class LoginFragment extends Fragment {
         mActivity = (MainActivity) getActivity();
         mFragmentManager = getFragmentManager();
         mUser = new User();
+        ownedShops = new HashSet<>();
         mAppSettings = AppSettings.getInstance();
 
         mEmail = view.findViewById(R.id.etEmail);

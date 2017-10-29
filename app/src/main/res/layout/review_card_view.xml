@@ -171,12 +171,28 @@
                         />
 
                     <TextView
-                        android:id="@+id/tvShopOwnerReply"
+                        android:id="@+id/tvShopOwnerReplyView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="reply"
                         android:textSize="13sp"
                         android:textColor="#a9a9a9"
+                        />
+
+                    <EditText
+                        android:id="@+id/etShopOwnerReplyText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minWidth="226dp"
+                        android:minHeight="34dp"
+                        android:hint="Write a Reply"
+                        android:textColorHint="#b2b2b2"
+                        android:inputType="textCapSentences|textMultiLine"
+                        android:ems="10"
+                        android:scrollHorizontally="false"
+                        android:gravity="top|left"
+                        android:padding="11dp"
+                        android:background="@drawable/rounded_border_gray"
                         />
 
                 </LinearLayout>
