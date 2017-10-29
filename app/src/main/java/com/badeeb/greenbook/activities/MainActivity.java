@@ -52,6 +52,8 @@ public class MainActivity extends AppCompatActivity {
     private ErrorDisplayHandler mSnackBarDisplayer;
     private Location mCurrentLocation;
 
+    private String mState;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate - Start");
@@ -76,7 +78,10 @@ public class MainActivity extends AppCompatActivity {
         // Bottom Navigation bar
         mBottomNavigationView = (BottomNavigationView) findViewById(R.id.btvNavigation);
 
+        mState = "";
+
         // Check if user was logged in before or not
+        mAppSettings.clearUserInfo();
         if (mAppSettings.isLoggedIn()) {
             mUser = mAppSettings.getUser();
             // Go to Search screen directly
@@ -263,5 +268,13 @@ public class MainActivity extends AppCompatActivity {
 
     public void setCurrentLocation(Location currentLocation) {
         this.mCurrentLocation = currentLocation;
+    }
+
+    public String getState() {
+        return mState;
+    }
+
+    public void setState(String state) {
+        this.mState = state;
     }
 }

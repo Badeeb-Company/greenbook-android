@@ -31,4 +31,6 @@ public class Constants {
     //AutoComplete Constant
     public static final int THRESHOLD = 1;
     public static final int GALLERY_PHOTOS_PER_LINE = 3 ;
+
+    public static final String GO_TO_ADD_REVIEW = "GO_TO_ADD_REVIEW";
 }

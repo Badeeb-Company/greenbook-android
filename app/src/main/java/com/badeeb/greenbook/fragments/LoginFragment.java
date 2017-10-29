@@ -50,6 +50,7 @@ public class LoginFragment extends Fragment {
     public static final String TAG = LoginFragment.class.getSimpleName();
 
     private MainActivity mActivity;
+    private FragmentManager mFragmentManager;
     private User mUser;
     private AppSettings mAppSettings;
 
@@ -81,6 +82,7 @@ public class LoginFragment extends Fragment {
         Log.d(TAG, "init - Start");
 
         mActivity = (MainActivity) getActivity();
+        mFragmentManager = getFragmentManager();
         mUser = new User();
         mAppSettings = AppSettings.getInstance();
 
@@ -147,8 +149,7 @@ public class LoginFragment extends Fragment {
     private void goToSignup() {
 
         SignUpFragment signupFragment = new SignUpFragment();
-        FragmentManager fragmentManager = getFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.main_frame, signupFragment, signupFragment.TAG);
         fragmentTransaction.addToBackStack(TAG);
         fragmentTransaction.commit();
@@ -176,7 +177,13 @@ public class LoginFragment extends Fragment {
                 mAppSettings.saveUser(mUser);
                 mActivity.setUser(mUser);
 
-                goToShopSearch();
+                if (mActivity.getState().equals(Constants.GO_TO_ADD_REVIEW)) {
+                    // pop back stack
+                    mFragmentManager.popBackStack();
+                }
+                else {
+                    goToShopSearch();
+                }
 
                 mActivity.hideKeyboard();
 
@@ -211,7 +218,7 @@ public class LoginFragment extends Fragment {
             return;
 
         ShopSearchFragment shopSearchFragment = new ShopSearchFragment();
-        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.main_frame, shopSearchFragment, shopSearchFragment.TAG);
         fragmentTransaction.commit();
 
@@ -249,8 +256,7 @@ public class LoginFragment extends Fragment {
     private void gotToForgetPasswordDialog() {
         ForgetPasswordDialogFragment forgetPasswordDialogFragment = new ForgetPasswordDialogFragment();
         forgetPasswordDialogFragment.setCancelable(false);
-        FragmentManager fragmentManager = getFragmentManager();
-        forgetPasswordDialogFragment.show(fragmentManager, forgetPasswordDialogFragment.TAG);
+        forgetPasswordDialogFragment.show(mFragmentManager, forgetPasswordDialogFragment.TAG);
     }
 
 }

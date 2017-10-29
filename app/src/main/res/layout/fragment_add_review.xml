@@ -1,0 +1,132 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:clickable="true"
+    android:focusable="true"
+    android:background="@color/white"
+    >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/green"
+        android:paddingLeft="14dp"
+        android:gravity="left|center"
+        >
+
+        <ImageView
+            android:id="@+id/ivToolbarBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/go_back_left_arrow"
+            android:layout_alignParentLeft="true"
+            />
+
+        <TextView
+            android:id="@+id/tvToolbarTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="14dp"
+            android:text="Write a Review"
+            android:textSize="17sp"
+            android:fontFamily="fonts/OpenSans-Regular.ttf"
+            android:layout_toRightOf="@id/ivToolbarBack"
+            />
+
+        <TextView
+            android:id="@+id/tvToolbarAddReview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="21dp"
+            android:text="Add"
+            android:textSize="14sp"
+            android:fontFamily="fonts/OpenSans-Regular.ttf"
+            android:layout_alignParentRight="true"
+            />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="15dp"
+        android:paddingLeft="14dp"
+        android:paddingBottom="15dp"
+        android:gravity="left|center"
+        >
+        
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/rivImage"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:src="@drawable/pic_img"
+            android:scaleType="centerCrop"
+            />
+
+        <TextView
+            android:id="@+id/tvReviewerName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="14dp"
+            android:text="Name"
+            android:textColor="@color/green"
+            android:textSize="17sp"
+            android:fontFamily="fonts/OpenSans-Bold.ttf"
+            />
+        
+    </LinearLayout>
+    
+    <EditText
+        android:id="@+id/etReviewDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minWidth="325dp"
+        android:minHeight="123dp"
+        android:layout_marginLeft="17dp"
+        android:layout_marginRight="18dp"
+        android:layout_marginBottom="20dp"
+        android:hint="Write a Review"
+        android:textColorHint="#b2b2b2"
+        android:inputType="textCapSentences|textMultiLine"
+        android:ems="10"
+        android:scrollHorizontally="false"
+        android:gravity="top|left"
+        android:padding="11dp"
+        android:background="@drawable/rounded_border_gray"
+        />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/login_line_thickness"
+        android:background="#979797"
+        />
+
+    <RatingBar
+        android:id="@+id/rbShopRate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
+        android:numStars="5"
+        android:rating="0"
+        android:progressTint="@color/dark_orange"
+        android:secondaryProgressTint="@color/dark_orange"
+        android:stepSize="@dimen/rating_step_size"
+        android:layout_gravity="center"
+        android:isIndicator="false"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="22dp"
+        android:text="Tap a Star to Rate"
+        android:textColor="#4a4a4a"
+        android:textSize="15sp"
+        android:fontFamily="fonts/OpenSans-Regular.ttf"
+        />
+
+</LinearLayout>

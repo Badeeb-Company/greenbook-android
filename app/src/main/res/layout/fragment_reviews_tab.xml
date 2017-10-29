@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/white"
-    android:orientation="vertical"
-    android:clickable="true">
+    android:clickable="true"
+    android:focusable="true"
+    >
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rvReviews"
@@ -12,4 +15,14 @@
         android:layout_height="match_parent"
         android:scrollbars="vertical" />
 
-</LinearLayout>
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fabAddReview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="16dp"
+        android:src="@drawable/ic_add_white"
+        app:backgroundTint="#FEB900"
+        />
+
+</android.support.design.widget.CoordinatorLayout>

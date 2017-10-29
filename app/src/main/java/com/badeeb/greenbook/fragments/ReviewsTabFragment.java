@@ -2,9 +2,13 @@ package com.badeeb.greenbook.fragments;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -31,6 +35,7 @@ import com.google.gson.reflect.TypeToken;
 import org.parceler.Parcels;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -40,12 +45,15 @@ public class ReviewsTabFragment extends Fragment {
 
     private MainActivity mActivity;
     private ProgressDialog mProgressDialog;
+    private FragmentManager mFragmentManager;
     private Shop mShop;
 
     private RecyclerView mRecyclerView;
     private ReviewRecyclerViewAdapter mReviewRecyclerViewAdapter;
     private List<Review> mReviewsList;
     private int mReviewsPerLine;
+
+    private FloatingActionButton mFabAddReview;
 
 
     public ReviewsTabFragment() {
@@ -78,12 +86,15 @@ public class ReviewsTabFragment extends Fragment {
 
         mActivity = (MainActivity) getActivity();
         mProgressDialog = UiUtils.createProgressDialog(mActivity);
+        mFragmentManager = getFragmentManager();
+        mReviewsList = new ArrayList<>();
+        mFabAddReview = view.findViewById(R.id.fabAddReview);
 
         loadBundleData();
 
         initRecyclerView(view);
 
-        setupListeners(view);
+        setupListeners();
 
         prepareReviewsList();
 
@@ -111,10 +122,42 @@ public class ReviewsTabFragment extends Fragment {
 
     }
 
-    private void setupListeners(View view) {
+    private void setupListeners() {
         Log.d(TAG, "setupListeners - Start");
 
+        mFabAddReview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mActivity.getUser() != null) {
+                    goToAddReview();
+                }
+                else {
+                    askUserToLoginDialog();
+                }
+            }
+        });
+
         Log.d(TAG, "setupListeners - End");
+    }
+
+    private void askUserToLoginDialog() {
+        DialogInterface.OnClickListener positiveListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                mActivity.setState(Constants.GO_TO_ADD_REVIEW);
+                goToLogin();
+            }
+        };
+
+        DialogInterface.OnClickListener negativeListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+            }
+        };
+
+        UiUtils.showDialog(getContext(), R.style.DialogTheme,
+                R.string.ask_user_to_login_title, R.string.ask_user_to_login_msg,
+                R.string.ok_btn_dialog, positiveListener, R.string.cancel, negativeListener);
     }
 
     private void prepareReviewsList() {
@@ -168,6 +211,48 @@ public class ReviewsTabFragment extends Fragment {
                 mActivity.getmSnackBarDisplayer(), mActivity.findViewById(R.id.ll_main_view));
         volleyWrapper.execute();
 
+    }
+
+    private void goToAddReview() {
+
+        Log.d(TAG, "goToAddReview - Start");
+
+        AddReviewFragment addReviewFragment = new AddReviewFragment();
+
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(AddReviewFragment.EXTRA_SHOP_OBJECT, Parcels.wrap(mShop));
+        addReviewFragment.setArguments(bundle);
+
+        FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
+
+        fragmentTransaction.add(R.id.main_frame, addReviewFragment, addReviewFragment.TAG);
+
+        fragmentTransaction.addToBackStack(TAG);
+
+        fragmentTransaction.commit();
+
+        Log.d(TAG, "goToAddReview - End");
+    }
+
+    private void goToLogin() {
+
+        Log.d(TAG, "goToAddReview - Start");
+
+        LoginFragment loginFragment = new LoginFragment();
+
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(AddReviewFragment.EXTRA_SHOP_OBJECT, Parcels.wrap(mShop));
+        loginFragment.setArguments(bundle);
+
+        FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
+
+        fragmentTransaction.add(R.id.main_frame, loginFragment, loginFragment.TAG);
+
+        fragmentTransaction.addToBackStack(TAG);
+
+        fragmentTransaction.commit();
+
+        Log.d(TAG, "goToAddReview - End");
     }
 
 }
