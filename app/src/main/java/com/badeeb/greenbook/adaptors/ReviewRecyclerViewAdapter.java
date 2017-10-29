@@ -70,6 +70,7 @@ public class ReviewRecyclerViewAdapter extends RecyclerView.Adapter<ReviewViewHo
             holder.getTvShopOwnerReplyView().setVisibility(View.GONE);
             holder.getEtShopOwnerReplyText().setVisibility(View.GONE);
             holder.getLlOwnerReply().setVisibility(View.GONE);
+            holder.getTvReviewReply().setVisibility(View.GONE);
         }
         else {
             holder.getIvReplyIcon().setVisibility(View.VISIBLE);
@@ -77,6 +78,7 @@ public class ReviewRecyclerViewAdapter extends RecyclerView.Adapter<ReviewViewHo
             holder.getEtShopOwnerReplyText().setVisibility(View.GONE);
             holder.getLlOwnerReply().setVisibility(View.VISIBLE);
 
+            holder.getTvReviewReply().setVisibility(View.VISIBLE);
             holder.getTvShopOwnerReplyView().setText(review.getReply());
         }
 
