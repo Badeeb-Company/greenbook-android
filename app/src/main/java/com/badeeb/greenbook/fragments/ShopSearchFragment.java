@@ -36,7 +36,7 @@ import com.badeeb.greenbook.R;
 import com.badeeb.greenbook.adaptors.PlaceAutocompleteAdapter;
 import com.badeeb.greenbook.listener.RecyclerItemClickListener;
 import com.badeeb.greenbook.activities.MainActivity;
-import com.badeeb.greenbook.adaptors.CategoryRecyclerViewAdaptor;
+import com.badeeb.greenbook.adaptors.CategoryRecyclerViewAdapter;
 import com.badeeb.greenbook.models.Category;
 import com.badeeb.greenbook.models.CategoryInquiry;
 import com.badeeb.greenbook.models.JsonResponse;
@@ -89,7 +89,7 @@ public class ShopSearchFragment extends Fragment {
 
     // UI Fields
     private RecyclerView rvCategoryList;
-    private CategoryRecyclerViewAdaptor mCategoryListAdaptor;
+    private CategoryRecyclerViewAdapter mCategoryListAdaptor;
     private SwipeRefreshLayout srlCategoryList;
     private AutoCompleteTextView actvLocationSearch;
     private PlaceAutocompleteAdapter mPlaceAutocompleteAdapter;
@@ -156,7 +156,7 @@ public class ShopSearchFragment extends Fragment {
         rvCategoryList.setLayoutManager(mLayoutManager);
         rvCategoryList.setItemAnimator(new DefaultItemAnimator());
 
-        mCategoryListAdaptor = new CategoryRecyclerViewAdaptor(mActivity, mCategoryList);
+        mCategoryListAdaptor = new CategoryRecyclerViewAdapter(mActivity, mCategoryList);
         rvCategoryList.setAdapter(mCategoryListAdaptor);
 
         srlCategoryList = (SwipeRefreshLayout) view.findViewById(R.id.category_form);

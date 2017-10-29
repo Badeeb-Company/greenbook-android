@@ -15,7 +15,7 @@ public abstract class AuthorizedCallback<T> implements VolleyCallback<T> {
     }
 
     public void requestHeader(HashMap<String, String> headers) {
-        headers.put("Authorization", "Token token=" + token);
+        headers.put("Authorization", token);
     }
 
 }

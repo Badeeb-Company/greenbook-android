@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:clickable="true"
+    android:focusable="true"
+    android:background="@color/white"
+    android:orientation="vertical"
+    >
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="15dp"
+        >
+
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/ivImage"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/ic_img"
+            android:layout_alignParentLeft="true"
+            android:scaleType="centerCrop"
+            app:riv_oval="true"
+            />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_toRightOf="@+id/ivImage"
+            >
+
+
+            <LinearLayout
+                android:id="@+id/llOfShopReview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_toRightOf="@+id/ivImage"
+                android:layout_marginLeft="14dp"
+                >
+
+                <TextView
+                    android:id="@+id/tvReviewerName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Shop Name"
+                    android:textSize="18sp"
+                    android:textColor="#0ca55f"
+                    android:fontFamily="fonts/OpenSans-Bold.ttf"
+                    />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="3dp"
+                    >
+
+                    <RatingBar
+                        android:id="@+id/rbReviewRate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/rating_bar_height"
+                        android:progressTint="@color/dark_orange"
+                        style="@style/customRatingBar"
+                        android:rating="5"
+                        android:stepSize="@dimen/rating_step_size"
+                        />
+
+                    <TextView
+                        android:id="@+id/tvReviewRating"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/rating_bar_height"
+                        android:layout_marginLeft="@dimen/left_margin_rating_value"
+                        android:text="5.0"
+                        android:textColor="@color/dark_gray"
+                        android:textSize="12sp"
+                        android:fontFamily="fonts/roboto.bold.ttf"
+                        />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tvReviewDescription"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="I've never waited so long for a bagel in my life. Between the blue hairs with never ending"
+                    android:textColor="@color/black"
+                    android:textSize="14sp"
+                    android:fontFamily="fonts/OpenSans-Regular.ttf"
+                    />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/llOfReviewReply"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="1dp"
+                >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginTop="6dp"
+                    android:layout_marginBottom="7dp"
+                    android:gravity="left|center"
+                    >
+
+
+                    <ImageView
+                        android:id="@+id/ivReplyIcon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/reply_copy_4"
+                        android:paddingTop="7dp"
+                        android:layout_gravity="center"
+                        />
+
+                    <TextView
+                        android:id="@+id/tvReviewReply"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="1 Reply"
+                        android:textColor="@color/green"
+                        android:textSize="12sp"
+                        android:fontFamily="fonts/OpenSans-Regular.ttf"
+                        android:layout_marginLeft="9dp"
+                        />
+
+                    <TextView
+                        android:id="@+id/tvReviewEdit"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Edit"
+                        android:textColor="@color/green"
+                        android:textSize="12sp"
+                        android:fontFamily="fonts/OpenSans-Regular.ttf"
+                        android:layout_marginLeft="12dp"
+                        />
+
+                    <TextView
+                        android:id="@+id/tvReviewDelete"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Delete"
+                        android:textColor="@color/green"
+                        android:textSize="12sp"
+                        android:fontFamily="fonts/OpenSans-Regular.ttf"
+                        android:layout_marginLeft="13dp"
+                        />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/llOwnerReply"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginLeft="14dp"
+                    >
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Shop Owner"
+                        android:textColor="#1e1e1e"
+                        android:textSize="14sp"
+                        android:fontFamily="fonts/Montserrat-Regular.otf"
+                        />
+
+                    <TextView
+                        android:id="@+id/tvShopOwnerReply"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="reply"
+                        android:textSize="13sp"
+                        android:textColor="#a9a9a9"
+                        />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="3 min"
+            android:textSize="14sp"
+            android:textColor="#b52c32"
+            android:fontFamily="fonts/OpenSans-Light.ttf"
+            android:layout_alignParentRight="true"
+            android:paddingTop="5dp"
+            />
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.8dp"
+        android:background="@color/light_gray"
+        />
+
+</LinearLayout>

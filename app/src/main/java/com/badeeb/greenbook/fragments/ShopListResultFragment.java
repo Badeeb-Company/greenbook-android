@@ -8,7 +8,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -29,8 +28,8 @@ import com.android.volley.Request;
 import com.badeeb.greenbook.R;
 import com.badeeb.greenbook.activities.MainActivity;
 import com.badeeb.greenbook.adaptors.PlaceAutocompleteAdapter;
-import com.badeeb.greenbook.adaptors.ShopRecyclerViewAdaptor;
 import com.badeeb.greenbook.listener.RecyclerItemClickListener;
+import com.badeeb.greenbook.adaptors.ShopRecyclerViewAdapter;
 import com.badeeb.greenbook.models.Category;
 import com.badeeb.greenbook.models.CategoryInquiry;
 import com.badeeb.greenbook.models.JsonResponse;
@@ -82,7 +81,7 @@ public class ShopListResultFragment extends Fragment {
 
     // UI Fields
     private RecyclerView rvShopList;
-    private ShopRecyclerViewAdaptor mShopListAdaptor;
+    private ShopRecyclerViewAdapter mShopListAdaptor;
     private SwipeRefreshLayout srlShopList;
     private AutoCompleteTextView actvCategorySearch;
     private ArrayAdapter<Category> mAutoCategorySearchAdaptor;
@@ -143,7 +142,7 @@ public class ShopListResultFragment extends Fragment {
         rvShopList.setLayoutManager(mShopLayoutManager);
         rvShopList.setItemAnimator(new DefaultItemAnimator());
 
-        mShopListAdaptor = new ShopRecyclerViewAdaptor(mActivity, mShopList, this);
+        mShopListAdaptor = new ShopRecyclerViewAdapter(mActivity, mShopList, this);
         rvShopList.setAdapter(mShopListAdaptor);
 
         mAutoCategorySearchAdaptor = new ArrayAdapter<Category>(mActivity, android.R.layout.select_dialog_item, mCategoryList);
@@ -202,7 +201,7 @@ public class ShopListResultFragment extends Fragment {
         ivMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                goToMapFragment();
             }
         });
         srlShopList.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -334,6 +333,7 @@ public class ShopListResultFragment extends Fragment {
                     Log.d(TAG, "callSearchApi - NonAuthorizedCallback - onSuccess - empty search ");
                 }
                 mProgressDialog.dismiss();
+                srlShopList.setRefreshing(false);
 
                 if (mShopList != null && mShopList.size() == 0) {
                     enableNoSearchFoundScreen();
@@ -346,6 +346,7 @@ public class ShopListResultFragment extends Fragment {
                 Log.d(TAG, "callSearchApi - NonAuthorizedCallback - onError");
                 mActivity.getmSnackBarDisplayer().displayError("Error while getting shops from the server");
                 mProgressDialog.dismiss();
+                srlShopList.setRefreshing(false);
             }
         };
 
@@ -435,11 +436,14 @@ public class ShopListResultFragment extends Fragment {
     }
 
 
-    // callled by the listener in ShopRecyclerViewAdaptor
+    // callled by the listener in ShopRecyclerViewAdapter
     public void goToSelectedShop(int position) {
         Log.d(TAG, "goToSelectedShop - Start");
+
         Shop selectShop = mShopList.get(position);
+
         ShopDetailsFragment shopDetailsFragment = new ShopDetailsFragment();
+
         Bundle bundle = new Bundle();
         bundle.putParcelable(ShopDetailsFragment.EXTRA_SHOP_OBJECT, Parcels.wrap(selectShop));
         shopDetailsFragment.setArguments(bundle);
@@ -462,4 +466,27 @@ public class ShopListResultFragment extends Fragment {
         mActivity.disconnectPlaceGoogleApiClient();
         super.onDestroy();
     }
+
+    private void goToMapFragment() {
+
+        MapFragment mapFragment = new MapFragment();
+
+        Bundle bundle = new Bundle();
+        bundle.putDouble(MapFragment.EXTRA_CURRENT_LATITUDE, mLatitude);
+        bundle.putDouble(MapFragment.EXTRA_CURRENT_LONGITUDE, mLongitude);
+        bundle.putParcelable(MapFragment.EXTRA_SHOPS_LIST, Parcels.wrap(mShopList));
+        mapFragment.setArguments(bundle);
+
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        // Animation part
+//        fragmentTransaction.setCustomAnimations(R.animator.card_flip_right_in, R.animator.card_flip_right_out,
+//                R.animator.card_flip_left_in, R.animator.card_flip_left_out);
+
+        fragmentTransaction.replace(R.id.main_frame, mapFragment, mapFragment.TAG);
+        fragmentTransaction.addToBackStack(TAG);
+        fragmentTransaction.commit();
+
+    }
+
 }

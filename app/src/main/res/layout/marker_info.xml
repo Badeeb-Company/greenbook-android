@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/marker_info_layout"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minWidth="274dp"
+    android:minHeight="125dp"
+    android:background="@drawable/ic_combined_shape">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingLeft="32dp"
+        android:paddingTop="25dp"
+        android:paddingRight="26dp"
+        >
+
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/rivShopImage"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:scaleType="fitCenter"
+            app:riv_oval="true"
+            android:src="@drawable/pic_img"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginLeft="8dp"
+            >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                >
+
+                <TextView
+                    android:id="@+id/tvShopName"
+                    android:layout_width="170dp"
+                    android:layout_height="wrap_content"
+                    android:text="House of Bagels"
+                    android:textSize="18sp"
+                    android:fontFamily="fonts/roboto.bold.ttf"
+                    android:textStyle="bold"
+                    android:textColor="#0ca55f"
+                    android:layout_marginRight="6dp"
+                    android:layout_weight="0.9"
+                    />
+
+                <ImageView
+                    android:id="@+id/ivClose"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minWidth="2dp"
+                    android:minHeight="14dp"
+                    android:src="@drawable/btn_close_black"
+                    android:layout_weight="0.1"
+                    />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="3dp"
+                >
+
+                <RatingBar
+                    android:id="@+id/rbShopRate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/rating_bar_height"
+                    android:progressTint="@color/dark_orange"
+                    style="@style/customRatingBar"
+                    android:rating="5"
+                    android:stepSize="@dimen/rating_step_size"
+                    />
+
+                <TextView
+                    android:id="@+id/tvRating"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/rating_bar_height"
+                    android:layout_marginLeft="@dimen/left_margin_rating_value"
+                    android:text="5"
+                    android:textColor="@color/dark_gray"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    />
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

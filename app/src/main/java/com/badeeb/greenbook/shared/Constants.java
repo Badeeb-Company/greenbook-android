@@ -37,4 +37,7 @@ public class Constants {
 
     public static final LatLngBounds BOUNDS_MIDDLE_EAST = new LatLngBounds(
             new LatLng(22.001018, 25.000663), new LatLng(31.487536, 35.096937));
+
+
+    public static final String GO_TO_ADD_REVIEW = "GO_TO_ADD_REVIEW";
 }

@@ -35,5 +35,12 @@
     <string name="location_not_found">Cannot find your current location, Please try later</string>
     <string name="pickup_location">Your pickup location</string>
 
+    <string name="ask_user_to_login_title">Login error</string>
+    <string name="ask_user_to_login_msg">You have to login first to be able to add a review</string>
+    <string name="cancel">Cancel</string>
+
+    <string name="review_delete_title">Review delete warning</string>
+    <string name="review_delete_msg">Are you sure?</string>
+    <string name="succes_review_deletion">Review is deleted successfully</string>
 
 </resources>

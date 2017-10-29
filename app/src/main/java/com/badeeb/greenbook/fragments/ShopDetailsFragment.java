@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -36,6 +37,7 @@ public class ShopDetailsFragment extends Fragment {
 
     private MainActivity mActivity;
     private ProgressDialog mProgressDialog;
+    private FragmentManager fragmentManager;
 
     private Shop mShop;
     boolean isFav = true;
@@ -49,6 +51,8 @@ public class ShopDetailsFragment extends Fragment {
     private TextView tvShopName;
     private TextView tvDescription;
     private TextView tvNearLocation;
+    private ImageView ivToolbarBack;
+    private TextView tvToolbarShopName;
 
 
     public ShopDetailsFragment() {
@@ -76,6 +80,7 @@ public class ShopDetailsFragment extends Fragment {
     public void init(View view){
         mActivity = (MainActivity) getActivity();
         mProgressDialog = UiUtils.createProgressDialog(mActivity);
+        fragmentManager = getFragmentManager();
 
         mShop = Parcels.unwrap(getArguments().getParcelable(EXTRA_SHOP_OBJECT));
 
@@ -99,6 +104,8 @@ public class ShopDetailsFragment extends Fragment {
         tvShopName = (TextView) view.findViewById(R.id.tvShopName);
         tvDescription = (TextView) view.findViewById(R.id.tvDescription);
         tvNearLocation = (TextView) view.findViewById(R.id.tvNearLocation);
+        ivToolbarBack = view.findViewById(R.id.ivToolbarBack);
+        tvToolbarShopName = view.findViewById(R.id.tvToolbarShopName);
 
         fillUiFields();
     }
@@ -110,6 +117,7 @@ public class ShopDetailsFragment extends Fragment {
         tvShopName.setText(mShop.getName());
         tvDescription.setText(mShop.getDescription());
         tvNearLocation.setText(getShopDistance());
+        tvToolbarShopName.setText(mShop.getName());
 
         Log.d(TAG, "fillUiFields - end");
     }
@@ -142,6 +150,13 @@ public class ShopDetailsFragment extends Fragment {
                     ivFavShop.setImageDrawable(iconNotPressed);
                     isFav = true;
                 }
+            }
+        });
+
+        ivToolbarBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fragmentManager.popBackStack();
             }
         });
 

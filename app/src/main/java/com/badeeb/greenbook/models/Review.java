@@ -21,7 +21,7 @@ public class Review {
 
     @Expose
     @SerializedName("rate")
-    private int rate;
+    private double rate;
 
     @Expose
     @SerializedName("created_at")
@@ -35,6 +35,10 @@ public class Review {
     @SerializedName("reply")
     private String reply;
 
+    @Expose
+    @SerializedName("date_replied")
+    private String replyDate;
+
     public Review() {
         this.id = 0;
         this.description = "";
@@ -42,6 +46,7 @@ public class Review {
         this.createdAt = "";
         this.user  = new User();
         this.reply = "";
+        this.replyDate = "";
     }
 
     public int getId() {
@@ -60,11 +65,11 @@ public class Review {
         this.description = description;
     }
 
-    public int getRate() {
+    public double getRate() {
         return rate;
     }
 
-    public void setRate(int rate) {
+    public void setRate(double rate) {
         this.rate = rate;
     }
 
@@ -90,5 +95,13 @@ public class Review {
 
     public void setReply(String reply) {
         this.reply = reply;
+    }
+
+    public String getReplyDate() {
+        return replyDate;
+    }
+
+    public void setReplyDate(String replyDate) {
+        this.replyDate = replyDate;
     }
 }

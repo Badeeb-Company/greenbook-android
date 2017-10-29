@@ -59,8 +59,7 @@ public class MainActivity extends AppCompatActivity {
     // PlaceAutoComplete Attributes
     private GoogleApiClient mPlaceGoogleApiClient;
 
-
-
+    private String mState;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,7 +85,10 @@ public class MainActivity extends AppCompatActivity {
         // Bottom Navigation bar
         mBottomNavigationView = (BottomNavigationView) findViewById(R.id.btvNavigation);
 
+        mState = "";
+
         // Check if user was logged in before or not
+        mAppSettings.clearUserInfo();
         if (mAppSettings.isLoggedIn()) {
             mUser = mAppSettings.getUser();
             // Go to Search screen directly
@@ -304,4 +306,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public String getState() {
+        return mState;
+    }
+
+    public void setState(String state) {
+        this.mState = state;
+    }
 }
