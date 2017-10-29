@@ -3,7 +3,6 @@ package com.badeeb.greenbook.fragments;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -24,8 +23,10 @@ import com.badeeb.greenbook.adaptors.ReviewRecyclerViewAdapter;
 import com.badeeb.greenbook.models.JsonRequest;
 import com.badeeb.greenbook.models.JsonResponse;
 import com.badeeb.greenbook.models.Review;
+import com.badeeb.greenbook.models.ReviewManage;
 import com.badeeb.greenbook.models.ReviewsInquiry;
 import com.badeeb.greenbook.models.Shop;
+import com.badeeb.greenbook.network.AuthorizedCallback;
 import com.badeeb.greenbook.network.NonAuthorizedCallback;
 import com.badeeb.greenbook.network.VolleyWrapper;
 import com.badeeb.greenbook.shared.Constants;
@@ -44,6 +45,7 @@ public class ReviewsTabFragment extends Fragment {
     public final static String TAG = ReviewsTabFragment.class.getName();
 
     private MainActivity mActivity;
+    private Context mContext;
     private ProgressDialog mProgressDialog;
     private FragmentManager mFragmentManager;
     private Shop mShop;
@@ -85,6 +87,7 @@ public class ReviewsTabFragment extends Fragment {
         Log.d(TAG, "init - Start");
 
         mActivity = (MainActivity) getActivity();
+        mContext = getContext();
         mProgressDialog = UiUtils.createProgressDialog(mActivity);
         mFragmentManager = getFragmentManager();
         mReviewsList = new ArrayList<>();
@@ -104,7 +107,7 @@ public class ReviewsTabFragment extends Fragment {
     private void initRecyclerView(View view) {
 
         mRecyclerView = view.findViewById(R.id.rvReviews);
-        mReviewRecyclerViewAdapter = new ReviewRecyclerViewAdapter(getContext(), mShop, mReviewsList);
+        mReviewRecyclerViewAdapter = new ReviewRecyclerViewAdapter(getContext(), mShop, mReviewsList, this, mActivity.getUser());
         mReviewsPerLine = 1;
 
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getContext(), mReviewsPerLine);
@@ -217,15 +220,15 @@ public class ReviewsTabFragment extends Fragment {
 
         Log.d(TAG, "goToAddReview - Start");
 
-        AddReviewFragment addReviewFragment = new AddReviewFragment();
+        ReviewMngFragment reviewMngFragment = new ReviewMngFragment();
 
         Bundle bundle = new Bundle();
-        bundle.putParcelable(AddReviewFragment.EXTRA_SHOP_OBJECT, Parcels.wrap(mShop));
-        addReviewFragment.setArguments(bundle);
+        bundle.putParcelable(ReviewMngFragment.EXTRA_SHOP_OBJECT, Parcels.wrap(mShop));
+        reviewMngFragment.setArguments(bundle);
 
         FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
 
-        fragmentTransaction.add(R.id.main_frame, addReviewFragment, addReviewFragment.TAG);
+        fragmentTransaction.add(R.id.main_frame, reviewMngFragment, reviewMngFragment.TAG);
 
         fragmentTransaction.addToBackStack(TAG);
 
@@ -241,7 +244,7 @@ public class ReviewsTabFragment extends Fragment {
         LoginFragment loginFragment = new LoginFragment();
 
         Bundle bundle = new Bundle();
-        bundle.putParcelable(AddReviewFragment.EXTRA_SHOP_OBJECT, Parcels.wrap(mShop));
+        bundle.putParcelable(ReviewMngFragment.EXTRA_SHOP_OBJECT, Parcels.wrap(mShop));
         loginFragment.setArguments(bundle);
 
         FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
@@ -255,4 +258,98 @@ public class ReviewsTabFragment extends Fragment {
         Log.d(TAG, "goToAddReview - End");
     }
 
+    public void prepareDeleteReview(final Review review) {
+        Log.d(TAG, "goToAddReview - Start");
+
+        DialogInterface.OnClickListener positiveListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                prepareDeleteReviewApi(review);
+            }
+        };
+
+        DialogInterface.OnClickListener negativeListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                // TODO
+            }
+        };
+
+        UiUtils.showDialog(getContext(), R.style.DialogTheme, R.string.review_delete_title, R.string.review_delete_msg,
+                R.string.yes_msg, positiveListener, R.string.no_msg, negativeListener);
+
+        Log.d(TAG, "goToAddReview - End");
+    }
+
+    private void prepareDeleteReviewApi(Review review) {
+        mProgressDialog.show();
+        callDeleteReviewApi(review);
+    }
+
+    private void callDeleteReviewApi(Review review) {
+
+        String url = Constants.BASE_URL + "/shops/" + mShop.getId() + "/reviews/" + review.getId();
+
+        Log.d(TAG, "callDeleteReviewApi - url: " + url);
+
+        AuthorizedCallback<JsonResponse<ReviewManage>> callback = new AuthorizedCallback<JsonResponse<ReviewManage>>(mActivity.getUser().getToken()) {
+            @Override
+            public void onSuccess(JsonResponse<ReviewManage> jsonResponse) {
+                Log.d(TAG, "callDeleteReviewApi - onSuccess - Start");
+
+                UiUtils.showDialog(mContext, R.style.DialogTheme, R.string.succes_review_deletion, R.string.ok_btn_dialog, null);
+
+                // Refresh reviews list
+                prepareReviewsList();
+
+                mActivity.hideKeyboard();
+
+                mProgressDialog.dismiss();
+
+                Log.d(TAG, "callDeleteReviewApi - onSuccess - End");
+            }
+
+            @Override
+            public void onError() {
+                Log.d(TAG, "callDeleteReviewApi - onError - Start");
+
+                mProgressDialog.dismiss();
+
+                Log.d(TAG, "callDeleteReviewApi - onError - End");
+            }
+        };
+
+        // Prepare response type
+        Type responseType = new TypeToken<JsonResponse<ReviewManage>>() {}.getType();
+        ReviewManage reviewManage = new ReviewManage();
+        JsonRequest<ReviewManage> request = new JsonRequest<>(reviewManage);
+
+        VolleyWrapper<JsonRequest<ReviewManage>, JsonResponse<ReviewManage>> volleyWrapper = new VolleyWrapper<>
+                (request, responseType, Request.Method.DELETE,
+                        url, callback, getContext(),
+                        mActivity.getmSnackBarDisplayer(), mActivity.findViewById(R.id.ll_main_view));
+        volleyWrapper.execute();
+    }
+
+    public void goToEditReview(Review review) {
+        Log.d(TAG, "goToEditReview - Start");
+
+        ReviewMngFragment reviewMngFragment = new ReviewMngFragment();
+
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(ReviewMngFragment.EXTRA_SHOP_OBJECT, Parcels.wrap(mShop));
+        bundle.putString(ReviewMngFragment.EXTRA_ACTION, ReviewMngFragment.ACTION_EDIT);
+        bundle.putParcelable(ReviewMngFragment.EXTRA_REVIEW_OBJECT, Parcels.wrap(review));
+        reviewMngFragment.setArguments(bundle);
+
+        FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
+
+        fragmentTransaction.add(R.id.main_frame, reviewMngFragment, reviewMngFragment.TAG);
+
+        fragmentTransaction.addToBackStack(TAG);
+
+        fragmentTransaction.commit();
+
+        Log.d(TAG, "goToEditReview - End");
+    }
 }

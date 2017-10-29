@@ -46,6 +46,17 @@
             android:layout_alignParentRight="true"
             />
 
+        <TextView
+            android:id="@+id/tvToolbarEditReview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="21dp"
+            android:text="Update"
+            android:textSize="14sp"
+            android:fontFamily="fonts/OpenSans-Regular.ttf"
+            android:layout_alignParentRight="true"
+            android:visibility="gone"
+            />
     </RelativeLayout>
 
     <LinearLayout
@@ -113,7 +124,7 @@
         android:rating="0"
         android:progressTint="@color/dark_orange"
         android:secondaryProgressTint="@color/dark_orange"
-        android:stepSize="@dimen/rating_step_size"
+        android:stepSize="1.0"
         android:layout_gravity="center"
         android:isIndicator="false"
         />

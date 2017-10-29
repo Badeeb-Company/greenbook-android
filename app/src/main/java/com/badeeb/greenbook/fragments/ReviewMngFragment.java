@@ -3,7 +3,6 @@ package com.badeeb.greenbook.fragments;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -39,11 +38,15 @@ import java.lang.reflect.Type;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class AddReviewFragment extends Fragment {
+public class ReviewMngFragment extends Fragment {
 
-    public final static String TAG = AddReviewFragment.class.getName();
+    public final static String TAG = ReviewMngFragment.class.getName();
 
     public final static String EXTRA_SHOP_OBJECT = "EXTRA_SHOP_OBJECT";
+    public final static String EXTRA_ACTION = "EXTRA_ACTION";
+    public final static String ACTION_EDIT  = "ACTION_EDIT";
+    public final static String ACTION_ADD = "ACTION_ADD";
+    public final static String EXTRA_REVIEW_OBJECT = "EXTRA_REVIEW_OBJECT";
 
     private MainActivity mActivity;
     private ProgressDialog mProgressDialog;
@@ -51,6 +54,7 @@ public class AddReviewFragment extends Fragment {
     private Context mContext;
     private Shop mShop;
     private Review mReview;
+    private String mAction;
 
 
     private ImageView ivToolbarBack;
@@ -59,8 +63,9 @@ public class AddReviewFragment extends Fragment {
     private TextView tvReviewerName;
     private EditText etReviewDescription;
     private RatingBar rbShopRate;
+    private TextView tvToolbarEditReview;
 
-    public AddReviewFragment() {
+    public ReviewMngFragment() {
         // Required empty public constructor
     }
 
@@ -70,7 +75,7 @@ public class AddReviewFragment extends Fragment {
                              Bundle savedInstanceState) {
         Log.d(TAG, "onCreateView - Start");
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_add_review, container, false);
+        View view = inflater.inflate(R.layout.fragment_mng_review, container, false);
 
         init(view);
 
@@ -98,7 +103,14 @@ public class AddReviewFragment extends Fragment {
     }
 
     private void loadBundleData() {
-        mShop = Parcels.unwrap(getArguments().getParcelable(AddReviewFragment.EXTRA_SHOP_OBJECT));
+        mShop = Parcels.unwrap(getArguments().getParcelable(ReviewMngFragment.EXTRA_SHOP_OBJECT));
+
+        mAction = getArguments().getString(ReviewMngFragment.EXTRA_ACTION);
+
+        if (mAction.equals(ReviewMngFragment.ACTION_EDIT)) {
+            // load review
+            mReview = Parcels.unwrap(getArguments().getParcelable(ReviewMngFragment.EXTRA_REVIEW_OBJECT));
+        }
     }
 
     private void initUi(View view) {
@@ -116,6 +128,20 @@ public class AddReviewFragment extends Fragment {
 
         etReviewDescription = view.findViewById(R.id.etReviewDescription);
         rbShopRate = view.findViewById(R.id.rbShopRate);
+
+        tvToolbarEditReview = view.findViewById(R.id.tvToolbarEditReview);
+
+        if (mAction.equals(ReviewMngFragment.ACTION_EDIT)) {
+            tvToolbarAddReview.setVisibility(View.GONE);
+            tvToolbarEditReview.setVisibility(View.VISIBLE);
+
+            etReviewDescription.setText(mReview.getDescription());
+            rbShopRate.setRating((float) mReview.getRate());
+        }
+        else {
+            tvToolbarAddReview.setVisibility(View.VISIBLE);
+            tvToolbarEditReview.setVisibility(View.GONE);
+        }
     }
 
     private void setupListeners() {
@@ -132,6 +158,13 @@ public class AddReviewFragment extends Fragment {
             public void onClick(View v) {
 
                 prepareAddReview();
+            }
+        });
+
+        tvToolbarEditReview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                prepareEditReview();
             }
         });
     }
@@ -221,7 +254,64 @@ public class AddReviewFragment extends Fragment {
                 callback, getContext(), mActivity.getmSnackBarDisplayer(), mActivity.findViewById(R.id.ll_main_view));
         volleyWrapper.execute();
 
+    }
 
+    private void prepareEditReview() {
+        mProgressDialog.show();
+
+        mReview.setRate(rbShopRate.getRating());
+        mReview.setDescription(etReviewDescription.getText().toString());
+
+        callEditReviewApi();
+    }
+
+    private void callEditReviewApi() {
+        if (! validateInput()) {
+            mProgressDialog.dismiss();
+            return;
+        }
+
+        String url = Constants.BASE_URL + "/shops/" + mShop.getId() + "/reviews/" + mReview.getId();
+
+        Log.d(TAG, "callAddReviewApi - url: " + url);
+
+        AuthorizedCallback<JsonResponse<ReviewManage>> callback = new AuthorizedCallback<JsonResponse<ReviewManage>>(mActivity.getUser().getToken()) {
+            @Override
+            public void onSuccess(JsonResponse<ReviewManage> jsonResponse) {
+                Log.d(TAG, "callAddReviewApi - onSuccess - Start");
+
+                mActivity.getmSnackBarDisplayer().displayError("Review is updated");
+                mFragmentManager.popBackStack();
+
+                mActivity.hideKeyboard();
+
+                mProgressDialog.dismiss();
+
+                Log.d(TAG, "callAddReviewApi - onSuccess - End");
+            }
+
+            @Override
+            public void onError() {
+                Log.d(TAG, "callAddReviewApi - onError - Start");
+
+                mProgressDialog.dismiss();
+
+                Log.d(TAG, "callAddReviewApi - onError - End");
+            }
+        };
+
+        // Prepare response type
+        Type responseType = new TypeToken<JsonResponse<ReviewManage>>() {}.getType();
+
+        ReviewManage reviewManage = new ReviewManage();
+        reviewManage.setReview(mReview);
+
+        JsonRequest<ReviewManage> request = new JsonRequest<>(reviewManage);
+
+        VolleyWrapper<JsonRequest<ReviewManage>, JsonResponse<ReviewManage>> volleyWrapper =
+                new VolleyWrapper<>(request, responseType, Request.Method.PUT, url,
+                        callback, getContext(), mActivity.getmSnackBarDisplayer(), mActivity.findViewById(R.id.ll_main_view));
+        volleyWrapper.execute();
     }
 
 }

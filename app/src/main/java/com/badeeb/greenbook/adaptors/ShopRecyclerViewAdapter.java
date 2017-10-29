@@ -57,8 +57,14 @@ public class ShopRecyclerViewAdapter extends RecyclerView.Adapter<ShopViewHolder
         int distance = (int) Utils.distance(shop.getLocation().getLat(), shop.getLocation().getLng() ,
                 mActivity.getCurrentLocation().getLatitude(),mActivity.getCurrentLocation().getLongitude());
         holder.getTvNearLocation().setText(distance+" Km around you");
-        Glide.with(mActivity).load(shop.getMainPhotoURL()).into(holder.getRivShopMainPhoto());
-        setupListener(holder,position);
+
+        Glide.with(mActivity)
+                .load(shop.getMainPhotoURL())
+                .asBitmap()
+                .into(holder.getRivShopMainPhoto());
+
+        setupListener(holder, position);
+
         Log.d(TAG, " onBindViewHolder - End ");
     }
 
