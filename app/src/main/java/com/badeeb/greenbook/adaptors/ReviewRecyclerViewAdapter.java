@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.badeeb.greenbook.R;
+import com.badeeb.greenbook.activities.MainActivity;
 import com.badeeb.greenbook.fragments.ReviewsTabFragment;
 import com.badeeb.greenbook.models.Review;
 import com.badeeb.greenbook.models.Shop;
@@ -28,13 +29,15 @@ public class ReviewRecyclerViewAdapter extends RecyclerView.Adapter<ReviewViewHo
     private List<Review> reviewsList;
     private ReviewsTabFragment reviewsTabFragment;
     private User user;
+    private MainActivity mActivity;
 
-    public ReviewRecyclerViewAdapter(Context context, Shop shop, List<Review> reviewsList, ReviewsTabFragment reviewsTabFragment, User user) {
+    public ReviewRecyclerViewAdapter(Context context, Shop shop, List<Review> reviewsList, ReviewsTabFragment reviewsTabFragment, User user, MainActivity mActivity) {
         this.context = context;
         this.shop = shop;
         this.reviewsList = reviewsList;
         this.reviewsTabFragment = reviewsTabFragment;
         this.user = user;
+        this.mActivity = mActivity;
     }
 
     @Override
@@ -65,6 +68,8 @@ public class ReviewRecyclerViewAdapter extends RecyclerView.Adapter<ReviewViewHo
         holder.getTvReviewRating().setText(review.getRate() + "");
         holder.getTvReviewDescription().setText(review.getDescription());
 
+        holder.getEtShopOwnerReplyText().setText(review.getReply());
+
         if (review.getReply() == null || review.getReply().isEmpty()) {
             holder.getIvReplyIcon().setVisibility(View.GONE);
             holder.getTvShopOwnerReplyView().setVisibility(View.GONE);
@@ -92,7 +97,19 @@ public class ReviewRecyclerViewAdapter extends RecyclerView.Adapter<ReviewViewHo
         }
 
 
-//        if (user.getOwnedShops())
+        if (user != null && mActivity.getmOwnedShopsSet().contains(shop.getId())) {
+            // Check if owner is replied before or not
+            if (review != null && (review.getReply() == null || review.getReply().isEmpty())) {
+                holder.getEtShopOwnerReplyText().setVisibility(View.VISIBLE);
+                holder.getIvReplyIcon().setVisibility(View.VISIBLE);
+                holder.getTvReviewReply().setVisibility(View.VISIBLE);
+                holder.getEtShopOwnerReplyText().setVisibility(View.VISIBLE);
+                holder.getLlOwnerReply().setVisibility(View.VISIBLE);
+            }
+//            else if (review != null && review.getReply() != null && ! review.getReply().isEmpty()) {
+//                // show reply
+//            }
+        }
 
         setupListeners(holder, review);
     }

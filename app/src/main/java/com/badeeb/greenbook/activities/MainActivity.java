@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
     private BottomNavigationView mBottomNavigationView;
 
     private User mUser;
-    private HashSet<Integer> mOwnedShops;
+    private HashSet<Integer> mOwnedShopsSet;
     private AppSettings mAppSettings;
     private ErrorDisplayHandler mSnackBarDisplayer;
     private Location mCurrentLocation;
@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
         mBottomNavigationView = (BottomNavigationView) findViewById(R.id.btvNavigation);
 
         mState = "";
-        mOwnedShops = new HashSet<>();
+        mOwnedShopsSet = new HashSet<>();
 
         // Check if user was logged in before or not
         mAppSettings.clearUserInfo();
@@ -134,13 +134,19 @@ public class MainActivity extends AppCompatActivity {
     public void setUser(User user) {
         this.mUser = user;
 
+        Shop s = new Shop();
+        s.setId(4);
+        user.getOwnedShops().add(s);
+
         // Fill owned shops
         for (Shop shop : user.getOwnedShops()) {
-            this.mOwnedShops.add(shop.getId());
+            this.mOwnedShopsSet.add(shop.getId());
         }
     }
 
-
+    public HashSet<Integer> getmOwnedShopsSet() {
+        return mOwnedShopsSet;
+    }
 
     public void hideToolbar() {
         mtoolbar.setVisibility(View.GONE);
