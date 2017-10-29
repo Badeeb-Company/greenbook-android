@@ -175,4 +175,6 @@ public class ShopDetailsFragment extends Fragment {
         Log.d(TAG, "setupViewPager - End");
     }
 
+
+
 }

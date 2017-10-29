@@ -26,11 +26,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.badeeb.greenbook.R;
+import com.badeeb.greenbook.adaptors.PlaceAutocompleteAdapter;
 import com.badeeb.greenbook.listener.RecyclerItemClickListener;
 import com.badeeb.greenbook.activities.MainActivity;
 import com.badeeb.greenbook.adaptors.CategoryRecyclerViewAdaptor;
@@ -44,10 +47,20 @@ import com.badeeb.greenbook.shared.OnPermissionsGrantedHandler;
 import com.badeeb.greenbook.shared.PermissionsChecker;
 import com.badeeb.greenbook.shared.UiUtils;
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.places.AutocompletePrediction;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.PlaceBuffer;
+import com.google.android.gms.location.places.Places;
+import com.google.android.gms.location.places.ui.*;
 import com.google.gson.reflect.TypeToken;
 import org.parceler.Parcels;
 import java.lang.reflect.Type;
@@ -64,17 +77,22 @@ import java.util.TimerTask;
 public class ShopSearchFragment extends Fragment {
 
     public static final String TAG = ShopSearchFragment.class.getSimpleName();
+    private static final int PLACE_AUTOCOMPLETE_REQUEST_CODE = 100;
 
     private MainActivity mActivity;
 
     private List<Category> mCategoryList;
     private Category mSelectedCategory;
+    private String mSelectedPlaceName;
+    private double mSelectedPlacesLatitude;
+    private double mSelectedPlaceLongitude;
 
     // UI Fields
     private RecyclerView rvCategoryList;
     private CategoryRecyclerViewAdaptor mCategoryListAdaptor;
     private SwipeRefreshLayout srlCategoryList;
-    private EditText etLocationSearch;
+    private AutoCompleteTextView actvLocationSearch;
+    private PlaceAutocompleteAdapter mPlaceAutocompleteAdapter;
 
     // Location Attributes
     private static final int PERM_LOCATION_RQST_CODE = 100;
@@ -126,6 +144,8 @@ public class ShopSearchFragment extends Fragment {
         locationChangeReceiver = new LocationChangeReceiver();
         locationListener = createLocationListener();
 
+        mActivity.connectPlaceGoogleApiClient();
+
         Log.d(TAG, "init - End");
     }
 
@@ -142,8 +162,12 @@ public class ShopSearchFragment extends Fragment {
         srlCategoryList = (SwipeRefreshLayout) view.findViewById(R.id.category_form);
         srlCategoryList.setVisibility(View.VISIBLE);
 
-        etLocationSearch = (EditText) view.findViewById(R.id.etLocationSearch);
+        actvLocationSearch = (AutoCompleteTextView) view.findViewById(R.id.actvLocation);
+        mPlaceAutocompleteAdapter = new PlaceAutocompleteAdapter(mActivity,mActivity.getmPlaceGoogleApiClient(),Constants.BOUNDS_MIDDLE_EAST, null);
+        actvLocationSearch.setAdapter(mPlaceAutocompleteAdapter);
+
     }
+
 
     public void setupListener() {
         Log.d(TAG, "setupListeners - Start");
@@ -174,15 +198,72 @@ public class ShopSearchFragment extends Fragment {
                     }
                 })
         );
+
+        actvLocationSearch.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Log.d(TAG, "actvLocationSearch - setOnItemClickListener - start ");
+                final AutocompletePrediction item = mPlaceAutocompleteAdapter.getItem(i);
+                final String placeId = item.getPlaceId();
+                final CharSequence primaryText = item.getPrimaryText(null);
+
+                Log.i(TAG, "Autocomplete item selected: " + primaryText);
+
+            /*
+             Issue a request to the Places Geo Data API to retrieve a Place object with additional
+             details about the place.
+              */
+                PendingResult<PlaceBuffer> placeResult = Places.GeoDataApi
+                        .getPlaceById(mActivity.getmPlaceGoogleApiClient(), placeId);
+                placeResult.setResultCallback(mUpdatePlaceDetailsCallback);
+
+                Toast.makeText(mActivity, "Clicked: " + primaryText,
+                        Toast.LENGTH_SHORT).show();
+                Log.i(TAG, "Called getPlaceById to get Place details for " + placeId);
+                Log.d(TAG, "actvLocationSearch - setOnItemClickListener - end ");
+            }
+        });
+
         Log.d(TAG, "setupListeners - Start");
     }
 
+    private ResultCallback<PlaceBuffer> mUpdatePlaceDetailsCallback
+            = new ResultCallback<PlaceBuffer>() {
+        @Override
+        public void onResult(PlaceBuffer places) {
+            Log.d(TAG, "mUpdatePlaceDetailsCallback - onResult - start ");
+            if (!places.getStatus().isSuccess()) {
+                Log.d(TAG, "mUpdatePlaceDetailsCallback - onResult - status not success ");
+                // Request did not complete successfully
+                Log.e(TAG, "Place query did not complete. Error: " + places.getStatus().toString());
+                places.release();
+                return;
+            }
+            // Get the Place object from the buffer.
+            final Place place = places.get(0);
+
+            Log.i(TAG, "Place details received: " + place.getName());
+
+            mSelectedPlaceName = place.getName().toString();
+            mSelectedPlacesLatitude = place.getLatLng().latitude;
+            mSelectedPlaceLongitude = place.getLatLng().longitude;
+
+            Log.i(TAG, "location after autocomplete - lat: " + mSelectedPlacesLatitude+" - lng: "+mSelectedPlaceLongitude);
+
+            places.release();
+
+            Log.d(TAG, "mUpdatePlaceDetailsCallback - onResult - end ");
+        }
+    };
+
     private void goToShopListResultFragment(){
         Log.d(TAG, "goToShopResultListFragment - Start");
-
+        Log.d(TAG, "mSelectedPlace: "+mSelectedPlaceName);
         Bundle bundle = new Bundle();
         bundle.putParcelable(ShopListResultFragment.EXTRA_SELECTED_CATEGORY, Parcels.wrap(mSelectedCategory));
-        bundle.putString(ShopListResultFragment.EXTRA_SELECTED_ADRESS, etLocationSearch.getText().toString());
+        bundle.putString(ShopListResultFragment.EXTRA_SELECTED_ADRESS, mSelectedPlaceName);
+        bundle.putDouble(ShopListResultFragment.EXTRA_SELECTED_LATITUDE, mSelectedPlacesLatitude);
+        bundle.putDouble(ShopListResultFragment.EXTRA_SELECTED_LONGITUDE, mSelectedPlaceLongitude);
 
         ShopListResultFragment shopListResultFragment = new ShopListResultFragment();
         shopListResultFragment.setArguments(bundle);
@@ -195,6 +276,8 @@ public class ShopSearchFragment extends Fragment {
         fragmentTransaction.addToBackStack(TAG);
 
         fragmentTransaction.commit();
+
+        mActivity.disconnectPlaceGoogleApiClient();
 
         Log.d(TAG, "goToShopResultListFragment - End");
     }
@@ -484,4 +567,11 @@ public class ShopSearchFragment extends Fragment {
         };
     }
     //----------------------------------------------------------------------------------------------
+
+
+    @Override
+    public void onDestroy() {
+        mActivity.disconnectPlaceGoogleApiClient();
+        super.onDestroy();
+    }
 }
