@@ -31,6 +31,7 @@ import java.util.Date;
 import java.util.List;
 
 public class DetailsTabFragment extends Fragment {
+
     public final static String TAG = DetailsTabFragment.class.getName();
     private static final int REQUEST_CALL_PERMISSION = 100;
 

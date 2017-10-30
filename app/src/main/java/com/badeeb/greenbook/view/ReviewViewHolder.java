@@ -30,6 +30,7 @@ public class ReviewViewHolder extends RecyclerView.ViewHolder {
     private TextView tvShopOwnerReplyView;
     private TextView etShopOwnerReplyText;
     private TextView tvReviewReply;
+    private TextView tvReviewTime;
 
     public ReviewViewHolder(View itemView) {
         super(itemView);
@@ -50,6 +51,8 @@ public class ReviewViewHolder extends RecyclerView.ViewHolder {
 
         tvReviewEdit = itemView.findViewById(R.id.tvReviewEdit);
         tvReviewDelete = itemView.findViewById(R.id.tvReviewDelete);
+
+        tvReviewTime = itemView.findViewById(R.id.tvReviewTime);
     }
 
     public ImageView getIvImage() {
@@ -154,5 +157,13 @@ public class ReviewViewHolder extends RecyclerView.ViewHolder {
 
     public void setTvReviewReply(TextView tvReviewReply) {
         this.tvReviewReply = tvReviewReply;
+    }
+
+    public TextView gettvReviewTime() {
+        return tvReviewTime;
+    }
+
+    public void setvReviewTime(TextView tvReviewTime) {
+        this.tvReviewTime = tvReviewTime;
     }
 }

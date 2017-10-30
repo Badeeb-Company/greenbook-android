@@ -13,10 +13,15 @@ import com.badeeb.greenbook.fragments.ReviewsTabFragment;
 import com.badeeb.greenbook.models.Review;
 import com.badeeb.greenbook.models.Shop;
 import com.badeeb.greenbook.models.User;
+import com.badeeb.greenbook.shared.Utils;
 import com.badeeb.greenbook.view.ReviewViewHolder;
 import com.bumptech.glide.Glide;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 /**
  * Created by Amr Alghawy on 10/28/2017.
@@ -95,10 +100,9 @@ public class ReviewRecyclerViewAdapter extends RecyclerView.Adapter<ReviewViewHo
                 showShopOwnerUI(holder);
                 holder.getTvShopOwnerReplyView().setVisibility(View.GONE);
             }
-//            else if (review != null && review.getReply() != null && ! review.getReply().isEmpty()) {
-//                // show reply
-//            }
         }
+
+        holder.gettvReviewTime().setText(getTimeString(review.getCreatedAt()));
 
         setupListeners(holder, review);
     }
@@ -151,5 +155,27 @@ public class ReviewRecyclerViewAdapter extends RecyclerView.Adapter<ReviewViewHo
         holder.getLlOwnerReply().setVisibility(View.VISIBLE);
 
         holder.getTvShopOwnerReplyView().setVisibility(View.VISIBLE);
+    }
+
+    private String getTimeString(String time) {
+
+        String res = "";
+
+        if (time != null && ! time.isEmpty()) {
+
+            TimeZone.setDefault(TimeZone.getTimeZone("GMT"));
+
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
+            try {
+                Date reviewDate = sdf.parse(time);
+
+                res = Utils.getFormattedDate(reviewDate);
+
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return res;
     }
 }

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -11,6 +12,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -90,5 +93,33 @@ public class Utils {
         double distance = R * c ; // in km
 
         return Math.round(distance);
+    }
+
+    public static String getFormattedDate(Date date) {
+        Calendar now = Calendar.getInstance();
+
+        Calendar dateTime = Calendar.getInstance();
+        dateTime.setTime(date);
+
+        String timeFormatString = "h:mmaa";
+
+        int daysDifference = now.get(Calendar.DATE) - dateTime.get(Calendar.DATE);
+        if (daysDifference == 0) {
+            int hoursDifference = now.get(Calendar.HOUR) - dateTime.get(Calendar.HOUR);
+            if (hoursDifference > 0) {
+                return hoursDifference + " hrs";
+            } else {
+                int minutesDifference = now.get(Calendar.MINUTE) - dateTime.get(Calendar.MINUTE);
+                if (minutesDifference > 0) {
+                    return minutesDifference + " mins";
+                } else {
+                    return "Just now";
+                }
+            }
+        } else if (daysDifference == 1) {
+            return "Yesterday at " + DateFormat.format(timeFormatString, dateTime);
+        } else {
+            return DateFormat.format("MMMM dd 'at' h:mmaa", dateTime).toString();
+        }
     }
 }
