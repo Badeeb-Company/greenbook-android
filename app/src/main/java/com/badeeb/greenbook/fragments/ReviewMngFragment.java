@@ -113,7 +113,7 @@ public class ReviewMngFragment extends Fragment {
 
         mAction = getArguments().getString(ReviewMngFragment.EXTRA_ACTION);
 
-        if (mAction.equals(ReviewMngFragment.ACTION_EDIT)) {
+        if (mAction.equals(ReviewMngFragment.ACTION_EDIT) || ReviewMngFragment.ACTION_OWNER_REPLY.equals(mAction)) {
             // load review
             mReview = Parcels.unwrap(getArguments().getParcelable(ReviewMngFragment.EXTRA_REVIEW_OBJECT));
         }
@@ -195,10 +195,17 @@ public class ReviewMngFragment extends Fragment {
 
         mProgressDialog.show();
 
-        mReview.setRate(rbShopRate.getRating());
-        mReview.setDescription(etReviewDescription.getText().toString());
+        if (ReviewMngFragment.ACTION_OWNER_REPLY.equals(mAction)) {
+            // Add a reply
+            callAddOwnerReplyApi();
+        }
+        else {
+            // Add a review
+            mReview.setRate(rbShopRate.getRating());
+            mReview.setDescription(etReviewDescription.getText().toString());
 
-        callAddReviewApi();
+            callAddReviewApi();
+        }
     }
 
     private boolean validateInput() {
@@ -403,8 +410,7 @@ public class ReviewMngFragment extends Fragment {
         bundle.putInt(ShopDetailsFragment.EXTRA_OPEN_TAB, 2);
         shopDetailsFragment.setArguments(bundle);
 
-        FragmentManager fragmentManager = getFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
 
         fragmentTransaction.replace(R.id.main_frame, shopDetailsFragment, shopDetailsFragment.TAG);
 
