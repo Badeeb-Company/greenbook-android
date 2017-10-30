@@ -353,4 +353,13 @@ public class ReviewsTabFragment extends Fragment {
 
         Log.d(TAG, "goToEditReview - End");
     }
+
+    @Override
+    public void onResume() {
+        Log.d(TAG, "in OnReusme");
+        super.onResume();
+        prepareReviewsList();
+    }
+
+
 }
