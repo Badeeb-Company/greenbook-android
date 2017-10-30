@@ -12,16 +12,19 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -62,6 +65,7 @@ import java.util.List;
 public class ShopListResultFragment extends Fragment {
     public final static String TAG = ShopListResultFragment.class.getName();
     public final static String EXTRA_SELECTED_CATEGORY = "EXTRA_SELECTED_CATEGORY";
+    public final static String EXTRA_SELECTED_CATEGORY_LIST = "EXTRA_SELECTED_CATEGORY_LIST";
     public final static String EXTRA_SELECTED_ADRESS = "EXTRA_SELECTED_ADRESS";
     public final static String EXTRA_SELECTED_LATITUDE = "EXTRA_SELECTED_LATITUDE";
     public final static String EXTRA_SELECTED_LONGITUDE = "EXTRA_SELECTED_LONGITUDE";
@@ -126,7 +130,7 @@ public class ShopListResultFragment extends Fragment {
 
         loadBundleData();
 
-        prepareCategoryList();
+//        prepareCategoryList();
 
         setupListener();
 
@@ -169,6 +173,9 @@ public class ShopListResultFragment extends Fragment {
         double lng = getArguments().getDouble(EXTRA_SELECTED_LONGITUDE);
 
         Category category = Parcels.unwrap(getArguments().getParcelable(EXTRA_SELECTED_CATEGORY));
+        mCategoryList = Parcels.unwrap(getArguments().getParcelable(EXTRA_SELECTED_CATEGORY_LIST));
+        mAutoCategorySearchAdaptor.clear();
+        mAutoCategorySearchAdaptor.addAll(mCategoryList);
 
         if(category != null){
             Log.d(TAG, "category selected EXTRA: "+category.getName());
@@ -188,13 +195,23 @@ public class ShopListResultFragment extends Fragment {
 
 
     private void setupListener(){
-        ivSearch.setOnClickListener(new View.OnClickListener() {
 
+        actvCategorySearch.setOnEditorActionListener(new AutoCompleteTextView.OnEditorActionListener() {
             @Override
-            public void onClick(View view) {
-                Log.d(TAG, "ivCategory onClick - Start");
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                if (i == EditorInfo.IME_ACTION_SEARCH) {
+                    goSearch();
+                    return true;
+                }
+                return false;
+            }
+        });
+
+        actvCategorySearch.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                mSelectedCategory = mCategoryList.get(i);
                 goSearch();
-                Log.d(TAG, "ivCategory onClick - End");
             }
         });
 
@@ -258,9 +275,12 @@ public class ShopListResultFragment extends Fragment {
             mLongitude = place.getLatLng().longitude;
             isLocationSelected = true;
 
+
             Log.i(TAG, "location after autocomplete - lat: " + mLatitude+" - lng: "+mLongitude);
 
             places.release();
+
+            goSearch();
 
             Log.d(TAG, "mUpdatePlaceDetailsCallback - onResult - end ");
         }
@@ -270,6 +290,7 @@ public class ShopListResultFragment extends Fragment {
     private void goSearch() {
         Log.d(TAG, "goSearch - Start");
 
+        mActivity.hideKeyboard();
         mProgressDialog.show();
 
         prepareSearchLocation();
@@ -281,24 +302,35 @@ public class ShopListResultFragment extends Fragment {
             return;
         }
 
-        fetchSelectedCategory();
+        if(!fetchSelectedCategory()){
+            mActivity.getmSnackBarDisplayer().displayError("The entered category does not exist");
+            mProgressDialog.dismiss();
+            enableNoSearchFoundScreen();
+            return;
+        }
 
         callSearchApi();
         Log.d(TAG, "goSearch - end");
     }
 
-    private void fetchSelectedCategory() {
+    private boolean fetchSelectedCategory() {
         String selectedCategory = actvCategorySearch.getText().toString();
-        if (!"".equals(selectedCategory)) {
-            Log.d(TAG, "goSearch - categorySearch selected : " + selectedCategory);
 
+        if (selectedCategory != null && !selectedCategory.isEmpty()) {
+            Log.d(TAG, "goSearch - categorySearch selected : " + selectedCategory+" - category list: "+Arrays.toString(mCategoryList.toArray()));
             for (Category category : mCategoryList) {
+                Log.d(TAG, "goSearch - categorySearch - category.getName() : " + category.getName().toUpperCase()
+                +" - selectedCategory: "+selectedCategory.toUpperCase());
                 if (category.getName().toUpperCase().equals(selectedCategory.toUpperCase())) {
                     Log.d(TAG, "goSearch - selectCategoryId: " + category.getName());
                     mSelectedCategory = category;
+                    return true;
                 }
             }
         }
+
+
+        return false;
     }
 
 
@@ -337,6 +369,8 @@ public class ShopListResultFragment extends Fragment {
 
                 if (mShopList != null && mShopList.size() == 0) {
                     enableNoSearchFoundScreen();
+                }else{
+                    disableNoSearchFoundScreen();
                 }
 
             }
@@ -363,6 +397,11 @@ public class ShopListResultFragment extends Fragment {
     public void enableNoSearchFoundScreen() {
         srlShopList.setVisibility(View.GONE);
         llEmptyResult.setVisibility(View.VISIBLE);
+    }
+
+    public void disableNoSearchFoundScreen() {
+        srlShopList.setVisibility(View.VISIBLE);
+        llEmptyResult.setVisibility(View.GONE);
     }
 
     private void prepareCategoryList() {
@@ -423,7 +462,7 @@ public class ShopListResultFragment extends Fragment {
 
         String searchLocation = actvLocationSearch.getText().toString();
 
-        if ("".equals(searchLocation)) {
+        if (searchLocation == null || searchLocation.isEmpty()) {
 
             fetchCurrentLocation();
         }

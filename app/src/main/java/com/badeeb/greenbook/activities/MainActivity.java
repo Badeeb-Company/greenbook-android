@@ -134,10 +134,6 @@ public class MainActivity extends AppCompatActivity {
     public void setUser(User user) {
         this.mUser = user;
 
-        Shop s = new Shop();
-        s.setId(4);
-        user.getOwnedShops().add(s);
-
         // Fill owned shops
         for (Shop shop : user.getOwnedShops()) {
             this.mOwnedShopsSet.add(shop.getId());

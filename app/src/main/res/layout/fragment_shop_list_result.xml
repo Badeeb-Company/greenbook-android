@@ -22,22 +22,6 @@
             android:layout_marginBottom="2dp"
             android:background="@drawable/rounded_corner_light_green">
 
-            <AutoCompleteTextView
-                android:id="@+id/actvCategorySearch"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="13.7dp"
-                android:background="@android:color/transparent"
-                android:hint="Choose category "
-                android:textColorHint="@color/hint_gray"
-                android:textColor="@color/white"
-                android:textSize="16sp"
-                android:layout_alignParentLeft="true"
-                android:ems="10">
-
-                <requestFocus />
-            </AutoCompleteTextView>
-
             <ImageView
                 android:id="@+id/ivSearch"
                 android:layout_width="27dp"
@@ -45,9 +29,34 @@
                 android:src="@drawable/ic_search_pressed"
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="15dp"
-                android:layout_marginLeft="5dp"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"/>
+                android:layout_marginLeft="5dp"/>
+
+            <View
+                android:layout_width="0.5dp"
+                android:layout_height="23dp"
+                android:layout_marginTop="9.7dp"
+                android:layout_marginLeft="35dp"
+                android:background="@color/gray"
+                />
+
+            <AutoCompleteTextView
+                android:id="@+id/actvCategorySearch"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="45dp"
+                android:background="@android:color/transparent"
+                android:hint="Choose category "
+                android:imeOptions="actionSearch"
+                android:inputType="text"
+                android:textColorHint="@color/hint_gray"
+                android:textColor="@color/monsoon"
+                android:textSize="16sp"
+                android:ems="10">
+                ando
+                <requestFocus />
+            </AutoCompleteTextView>
+
+
         </RelativeLayout>
 
         <RelativeLayout
@@ -65,6 +74,13 @@
                 android:layout_marginBottom="8dp"
                 android:layout_marginLeft="8dp"
                 android:layout_marginTop="8dp"/>
+            <View
+                android:layout_width="0.5dp"
+                android:layout_height="23dp"
+                android:layout_marginTop="9.7dp"
+                android:layout_marginLeft="35dp"
+                android:background="@color/gray"
+                />
 
             <AutoCompleteTextView
                 android:id="@+id/actvLocationSearch"
@@ -72,13 +88,13 @@
                 android:layout_height="match_parent"
                 android:paddingBottom="7.5dp"
                 android:paddingTop="8.5dp"
-                android:layout_marginLeft="34.4dp"
+                android:layout_marginLeft="35.4dp"
                 android:background="@android:color/transparent"
                 android:layout_alignLeft="@id/ivLocation"
                 android:hint="Current Location"
                 android:textColorHint="@color/hint_gray"
                 android:dropDownWidth="320dp"
-                android:textColor="@color/white"
+                android:textColor="@color/monsoon"
                 android:textSize="16sp"
                 android:singleLine="true"
                 android:layout_toLeftOf="@+id/ivMap"

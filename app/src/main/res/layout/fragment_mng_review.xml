@@ -1,12 +1,11 @@
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:clickable="true"
     android:focusable="true"
-    android:background="@color/white"
-    >
+    android:background="@color/white">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -87,6 +86,7 @@
             android:layout_height="45dp"
             android:src="@drawable/pic_img"
             android:scaleType="centerCrop"
+            app:riv_oval="true"
             />
 
         <TextView

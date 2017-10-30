@@ -33,9 +33,9 @@
             android:name="io.fabric.ApiKey"
             android:value="f504520c3612b6ce65332ace9b90e34abdf486a2" />
 
-        <!--<meta-data-->
-            <!--android:name="com.google.android.geo.API_KEY"-->
-            <!--android:value="AIzaSyBBg2DSWnC3UPWo2oCDqC9eMlV7A4nGa4w" />-->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyAeWCXDWuETlAXheheqSlFtlRu_3pSikME" />
 
 
         <!--
@@ -46,9 +46,9 @@
              sign the APK for publishing.
              You can define the keys for the debug and release targets in src/debug/ and src/release/.
         -->
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_maps_key"/>
+        <!--<meta-data-->
+            <!--android:name="com.google.android.geo.API_KEY"-->
+            <!--android:value="@string/google_maps_key"/>-->
 
 
     </application>

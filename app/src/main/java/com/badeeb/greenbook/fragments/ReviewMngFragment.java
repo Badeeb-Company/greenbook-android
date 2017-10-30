@@ -128,6 +128,7 @@ public class ReviewMngFragment extends Fragment {
         rivImage = view.findViewById(R.id.rivImage);
         Glide.with(getContext())
                 .load(mActivity.getUser().getImageURL())
+                .asBitmap()
                 .placeholder(R.drawable.pic_img)
                 .into(rivImage);
 
@@ -252,7 +253,7 @@ public class ReviewMngFragment extends Fragment {
                 Log.d(TAG, "callAddReviewApi - onSuccess - Start");
 
                 mActivity.getmSnackBarDisplayer().displayError("Thanks");
-                mFragmentManager.popBackStack();
+                goToReviewsTab();
 
                 mActivity.hideKeyboard();
 
@@ -311,7 +312,7 @@ public class ReviewMngFragment extends Fragment {
                 Log.d(TAG, "callAddReviewApi - onSuccess - Start");
 
                 mActivity.getmSnackBarDisplayer().displayError("Review is updated");
-                mFragmentManager.popBackStack();
+                goToReviewsTab();
 
                 mActivity.hideKeyboard();
 

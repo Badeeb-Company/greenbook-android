@@ -40,6 +40,7 @@ import com.makeramen.roundedimageview.RoundedImageView;
 
 import org.parceler.Parcels;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 /**
@@ -188,14 +189,18 @@ public class MapFragment extends Fragment {
 
                     Shop shop = mShopsList.get(index);
 
+                    DecimalFormat df = new DecimalFormat("#.#");
+
+
                     ((TextView) v.findViewById(R.id.tvShopName)).setText(shop.getName());
-                    ((TextView) v.findViewById(R.id.tvRating)).setText(shop.getRate()+"");
+                    ((TextView) v.findViewById(R.id.tvRating)).setText(df.format(shop.getRate())+"");
                     ((RatingBar) v.findViewById(R.id.rbShopRate)).setRating((float)shop.getRate());
 
                     RoundedImageView shopImage = (RoundedImageView) v.findViewById(R.id.rivShopImage);
 
                     Glide.with(getContext())
                             .load(shop.getMainPhotoURL())
+                            .asBitmap()
                             .placeholder(R.drawable.pic_img)
                             .into(shopImage);
 
