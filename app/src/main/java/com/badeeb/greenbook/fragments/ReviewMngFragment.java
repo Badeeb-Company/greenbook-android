@@ -191,6 +191,7 @@ public class ReviewMngFragment extends Fragment {
     }
 
     private void prepareAddReview() {
+
         mProgressDialog.show();
 
         if (ReviewMngFragment.ACTION_OWNER_REPLY.equals(mAction)) {
