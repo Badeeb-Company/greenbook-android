@@ -6,6 +6,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -112,7 +113,7 @@ public class ReviewMngFragment extends Fragment {
 
         mAction = getArguments().getString(ReviewMngFragment.EXTRA_ACTION);
 
-        if (mAction.equals(ReviewMngFragment.ACTION_EDIT) || ReviewMngFragment.ACTION_OWNER_REPLY.equals(mAction)) {
+        if (mAction.equals(ReviewMngFragment.ACTION_EDIT)) {
             // load review
             mReview = Parcels.unwrap(getArguments().getParcelable(ReviewMngFragment.EXTRA_REVIEW_OBJECT));
         }
@@ -194,17 +195,10 @@ public class ReviewMngFragment extends Fragment {
 
         mProgressDialog.show();
 
-        if (ReviewMngFragment.ACTION_OWNER_REPLY.equals(mAction)) {
-            // Add a reply
-            callAddOwnerReplyApi();
-        }
-        else {
-            // Add a review
-            mReview.setRate(rbShopRate.getRating());
-            mReview.setDescription(etReviewDescription.getText().toString());
+        mReview.setRate(rbShopRate.getRating());
+        mReview.setDescription(etReviewDescription.getText().toString());
 
-            callAddReviewApi();
-        }
+        callAddReviewApi();
     }
 
     private boolean validateInput() {
@@ -360,7 +354,8 @@ public class ReviewMngFragment extends Fragment {
                 Log.d(TAG, "callAddOwnerReplyApi - onSuccess - Start");
 
                 mActivity.getmSnackBarDisplayer().displayError("Reply is published");
-                mFragmentManager.popBackStack();
+
+                goToReviewsTab();
 
                 mActivity.hideKeyboard();
 
@@ -392,6 +387,33 @@ public class ReviewMngFragment extends Fragment {
                         callback, getContext(), mActivity.getmSnackBarDisplayer(), mActivity.findViewById(R.id.ll_main_view));
         volleyWrapper.execute();
 
+    }
+
+
+    public void goToReviewsTab() {
+        Log.d(TAG, "goToReviewsTab - Start");
+
+        mFragmentManager.popBackStack();
+        mFragmentManager.popBackStack();
+
+        ShopDetailsFragment shopDetailsFragment = new ShopDetailsFragment();
+
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(ShopDetailsFragment.EXTRA_SHOP_OBJECT, Parcels.wrap(mShop));
+        bundle.putInt(ShopDetailsFragment.EXTRA_OPEN_TAB, 2);
+        shopDetailsFragment.setArguments(bundle);
+
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+        fragmentTransaction.replace(R.id.main_frame, shopDetailsFragment, shopDetailsFragment.TAG);
+
+        fragmentTransaction.addToBackStack(TAG);
+
+        fragmentTransaction.commit();
+
+        mActivity.disconnectPlaceGoogleApiClient();
+        Log.d(TAG, "goToReviewsTab - End");
     }
 
 }

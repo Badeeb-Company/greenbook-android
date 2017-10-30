@@ -21,6 +21,7 @@ import com.badeeb.greenbook.models.Shop;
 import com.badeeb.greenbook.models.WorkingDay;
 import com.badeeb.greenbook.shared.OnPermissionsGrantedHandler;
 import com.badeeb.greenbook.shared.PermissionsChecker;
+import com.badeeb.greenbook.shared.Utils;
 
 import org.parceler.Parcels;
 
@@ -112,7 +113,7 @@ public class DetailsTabFragment extends Fragment {
         Log.d(TAG, "getShopWorkingStatus - Start");
 
         String[] daysOfWeek = {"","SUNDAY","MONDAY","TUESDAY","WEDNESDAY","THURSDAY","FRIDAY","SATURDAY"};
-        SimpleDateFormat timeParser = new SimpleDateFormat("HH:mm");
+        SimpleDateFormat timeParser = new SimpleDateFormat("hh:mm a");
         Calendar calendar = Calendar.getInstance();
         int day = calendar.get(Calendar.DAY_OF_WEEK);
 
@@ -120,15 +121,19 @@ public class DetailsTabFragment extends Fragment {
         if(shopWorkingDays != null) {
             try {
                 for(WorkingDay workDay : shopWorkingDays) {
-                    if (daysOfWeek[day].equals(workDay.getName())){
+                    Log.d(TAG, "getShopWorkingStatus - workDay: "+workDay.getName()+" - day: "+day);
+                    if (daysOfWeek[day].equals(workDay.getName().toUpperCase())){
 
                         Date currentDate = calendar.getTime();
                         Date openAt = timeParser.parse(workDay.getOpenedAt());
                         Date closeAt = timeParser.parse(workDay.getClosedAt()) ;
+                        SimpleDateFormat df = new SimpleDateFormat("dd-mm-yyyy hh:mm a");
+                        Log.d(TAG, "getShopWorkingStatus - openAt: "+df.format(openAt)+" - current: "+df.format(currentDate)+" - closeAt: "+df.format(closeAt));
 
-                        Log.d(TAG, "getShopWorkingStatus - openAt: "+workDay.getOpenedAt()+" - current: "+timeParser.format(currentDate)+" - closeAt: "+workDay.getClosedAt());
+                        Log.d(TAG, "getShopWorkingStatus - after openAt: "+ Utils.compareTimes(openAt,currentDate)+" - before closeAt: "+Utils.compareTimes(currentDate,closeAt));
 
-                        if(currentDate.after(openAt) && currentDate.before(closeAt)){
+
+                        if(Utils.compareTimes(openAt,currentDate) < 0 && Utils.compareTimes(currentDate,closeAt) < 0){
                             return "Opened now";
                         }else{
                             return "Closed now";
@@ -146,6 +151,7 @@ public class DetailsTabFragment extends Fragment {
         Log.d(TAG, "getShopWorkingStatus - end");
         return "Not Determined";
     }
+
 
 
     private void setupListener() {

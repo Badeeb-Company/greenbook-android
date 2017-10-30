@@ -12,6 +12,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Date;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.regex.Matcher;
@@ -93,6 +94,16 @@ public class Utils {
         double distance = R * c ; // in km
 
         return Math.round(distance);
+    }
+
+    public static int compareTimes(Date d1, Date d2)
+    {
+        int     t1;
+        int     t2;
+
+        t1 = (int) (d1.getTime() % (24*60*60*1000L));
+        t2 = (int) (d2.getTime() % (24*60*60*1000L));
+        return (t1 - t2);
     }
 
     public static String getFormattedDate(Date date) {

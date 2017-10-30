@@ -22,6 +22,7 @@ import com.badeeb.greenbook.shared.ErrorDisplayHandler;
 import com.badeeb.greenbook.shared.UiUtils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSyntaxException;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -147,6 +148,8 @@ public class VolleyWrapper <T, S> {
             MyVolley.getInstance(context).addToRequestQueue(jsonObjectRequest);
 
         } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (JsonSyntaxException  e){
             e.printStackTrace();
         }
 

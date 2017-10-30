@@ -34,6 +34,7 @@ public class ShopDetailsFragment extends Fragment {
 
     public final static String TAG = ShopDetailsFragment.class.getName();
     public final static String EXTRA_SHOP_OBJECT = "EXTRA_SHOP_OBJECT";
+    public final static String EXTRA_OPEN_TAB = "EXTRA_OPEN_TAB";
 
     private MainActivity mActivity;
     private ProgressDialog mProgressDialog;
@@ -83,10 +84,12 @@ public class ShopDetailsFragment extends Fragment {
         fragmentManager = getFragmentManager();
 
         mShop = Parcels.unwrap(getArguments().getParcelable(EXTRA_SHOP_OBJECT));
+        int selectedTab = getArguments().getInt(EXTRA_OPEN_TAB,0);
 
         // ViewPager
         this.mViewPager = (ViewPager) view.findViewById(R.id.viewpager);
         this.setupViewPager(this.mViewPager);    // Defines the number of tabs by setting appropriate fragment and tab name
+        mViewPager.setCurrentItem(selectedTab);
 
         // Tabs
         this.mTabLayout = (TabLayout) view.findViewById(R.id.tabs);
