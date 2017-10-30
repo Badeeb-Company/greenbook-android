@@ -107,7 +107,7 @@ public class ReviewsTabFragment extends Fragment {
     private void initRecyclerView(View view) {
 
         mRecyclerView = view.findViewById(R.id.rvReviews);
-        mReviewRecyclerViewAdapter = new ReviewRecyclerViewAdapter(getContext(), mShop, mReviewsList, this, mActivity.getUser());
+        mReviewRecyclerViewAdapter = new ReviewRecyclerViewAdapter(getContext(), mShop, mReviewsList, this, mActivity.getUser(), mActivity);
         mReviewsPerLine = 1;
 
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getContext(), mReviewsPerLine);

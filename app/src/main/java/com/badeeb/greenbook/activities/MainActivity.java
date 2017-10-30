@@ -30,6 +30,7 @@ import com.badeeb.greenbook.fragments.FavoriteFragment;
 import com.badeeb.greenbook.fragments.LoginFragment;
 import com.badeeb.greenbook.fragments.ProfileFragment;
 import com.badeeb.greenbook.fragments.ShopSearchFragment;
+import com.badeeb.greenbook.models.Shop;
 import com.badeeb.greenbook.models.User;
 import com.badeeb.greenbook.shared.AppSettings;
 import com.badeeb.greenbook.shared.ErrorDisplayHandler;
@@ -41,6 +42,7 @@ import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 
+import java.util.HashSet;
 import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity {
@@ -52,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
     private BottomNavigationView mBottomNavigationView;
 
     private User mUser;
+    private HashSet<Integer> mOwnedShopsSet;
     private AppSettings mAppSettings;
     private ErrorDisplayHandler mSnackBarDisplayer;
     private Location mCurrentLocation;
@@ -86,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
         mBottomNavigationView = (BottomNavigationView) findViewById(R.id.btvNavigation);
 
         mState = "";
+        mOwnedShopsSet = new HashSet<>();
 
         // Check if user was logged in before or not
         mAppSettings.clearUserInfo();
@@ -130,7 +134,18 @@ public class MainActivity extends AppCompatActivity {
     public void setUser(User user) {
         this.mUser = user;
 
+        Shop s = new Shop();
+        s.setId(4);
+        user.getOwnedShops().add(s);
+
         // Fill owned shops
+        for (Shop shop : user.getOwnedShops()) {
+            this.mOwnedShopsSet.add(shop.getId());
+        }
+    }
+
+    public HashSet<Integer> getmOwnedShopsSet() {
+        return mOwnedShopsSet;
     }
 
     public void hideToolbar() {

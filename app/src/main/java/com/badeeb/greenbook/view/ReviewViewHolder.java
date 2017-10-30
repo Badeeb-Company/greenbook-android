@@ -29,6 +29,7 @@ public class ReviewViewHolder extends RecyclerView.ViewHolder {
     private TextView tvReviewDelete;
     private TextView tvShopOwnerReplyView;
     private EditText etShopOwnerReplyText;
+    private TextView tvReviewReply;
 
     public ReviewViewHolder(View itemView) {
         super(itemView);
@@ -43,6 +44,7 @@ public class ReviewViewHolder extends RecyclerView.ViewHolder {
         ivReplyIcon = itemView.findViewById(R.id.ivReplyIcon);
 
         llOwnerReply = itemView.findViewById(R.id.llOwnerReply);
+        tvReviewReply = itemView.findViewById(R.id.tvReviewReply);
         tvShopOwnerReplyView = itemView.findViewById(R.id.tvShopOwnerReplyView);
         etShopOwnerReplyText = itemView.findViewById(R.id.etShopOwnerReplyText);
 
@@ -144,5 +146,13 @@ public class ReviewViewHolder extends RecyclerView.ViewHolder {
 
     public void setEtShopOwnerReplyText(EditText etShopOwnerReplyText) {
         this.etShopOwnerReplyText = etShopOwnerReplyText;
+    }
+
+    public TextView getTvReviewReply() {
+        return tvReviewReply;
+    }
+
+    public void setTvReviewReply(TextView tvReviewReply) {
+        this.tvReviewReply = tvReviewReply;
     }
 }
