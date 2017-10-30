@@ -353,4 +353,26 @@ public class ReviewsTabFragment extends Fragment {
 
         Log.d(TAG, "goToEditReview - End");
     }
+
+    public void goToShopOwnerReply(Review review) {
+        Log.d(TAG, "goToShopOwnerReply - Start");
+
+        ReviewMngFragment reviewMngFragment = new ReviewMngFragment();
+
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(ReviewMngFragment.EXTRA_SHOP_OBJECT, Parcels.wrap(mShop));
+        bundle.putString(ReviewMngFragment.EXTRA_ACTION, ReviewMngFragment.ACTION_OWNER_REPLY);
+        bundle.putParcelable(ReviewMngFragment.EXTRA_REVIEW_OBJECT, Parcels.wrap(review));
+        reviewMngFragment.setArguments(bundle);
+
+        FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
+
+        fragmentTransaction.add(R.id.main_frame, reviewMngFragment, reviewMngFragment.TAG);
+
+        fragmentTransaction.addToBackStack(TAG);
+
+        fragmentTransaction.commit();
+
+        Log.d(TAG, "goToShopOwnerReply - End");
+    }
 }

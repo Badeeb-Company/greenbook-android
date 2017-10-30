@@ -71,19 +71,11 @@ public class ReviewRecyclerViewAdapter extends RecyclerView.Adapter<ReviewViewHo
         holder.getEtShopOwnerReplyText().setText(review.getReply());
 
         if (review.getReply() == null || review.getReply().isEmpty()) {
-            holder.getIvReplyIcon().setVisibility(View.GONE);
-            holder.getTvShopOwnerReplyView().setVisibility(View.GONE);
-            holder.getEtShopOwnerReplyText().setVisibility(View.GONE);
-            holder.getLlOwnerReply().setVisibility(View.GONE);
-            holder.getTvReviewReply().setVisibility(View.GONE);
+            hideShopOwnerUI(holder);
         }
         else {
-            holder.getIvReplyIcon().setVisibility(View.VISIBLE);
-            holder.getTvShopOwnerReplyView().setVisibility(View.VISIBLE);
+            showShopOwnerUI(holder);
             holder.getEtShopOwnerReplyText().setVisibility(View.GONE);
-            holder.getLlOwnerReply().setVisibility(View.VISIBLE);
-
-            holder.getTvReviewReply().setVisibility(View.VISIBLE);
             holder.getTvShopOwnerReplyView().setText(review.getReply());
         }
 
@@ -100,11 +92,8 @@ public class ReviewRecyclerViewAdapter extends RecyclerView.Adapter<ReviewViewHo
         if (user != null && mActivity.getmOwnedShopsSet().contains(shop.getId())) {
             // Check if owner is replied before or not
             if (review != null && (review.getReply() == null || review.getReply().isEmpty())) {
-                holder.getEtShopOwnerReplyText().setVisibility(View.VISIBLE);
-                holder.getIvReplyIcon().setVisibility(View.VISIBLE);
-                holder.getTvReviewReply().setVisibility(View.VISIBLE);
-                holder.getEtShopOwnerReplyText().setVisibility(View.VISIBLE);
-                holder.getLlOwnerReply().setVisibility(View.VISIBLE);
+                showShopOwnerUI(holder);
+                holder.getTvShopOwnerReplyView().setVisibility(View.GONE);
             }
 //            else if (review != null && review.getReply() != null && ! review.getReply().isEmpty()) {
 //                // show reply
@@ -137,5 +126,30 @@ public class ReviewRecyclerViewAdapter extends RecyclerView.Adapter<ReviewViewHo
                 reviewsTabFragment.prepareDeleteReview(review);
             }
         });
+
+        holder.getEtShopOwnerReplyText().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                reviewsTabFragment.goToShopOwnerReply(review);
+            }
+        });
+    }
+
+    private void hideShopOwnerUI(ReviewViewHolder holder) {
+        holder.getIvReplyIcon().setVisibility(View.GONE);
+        holder.getTvShopOwnerReplyView().setVisibility(View.GONE);
+        holder.getEtShopOwnerReplyText().setVisibility(View.GONE);
+        holder.getLlOwnerReply().setVisibility(View.GONE);
+        holder.getTvReviewReply().setVisibility(View.GONE);
+
+    }
+
+    private void showShopOwnerUI(ReviewViewHolder holder) {
+        holder.getEtShopOwnerReplyText().setVisibility(View.VISIBLE);
+        holder.getIvReplyIcon().setVisibility(View.VISIBLE);
+        holder.getTvReviewReply().setVisibility(View.VISIBLE);
+        holder.getLlOwnerReply().setVisibility(View.VISIBLE);
+
+        holder.getTvShopOwnerReplyView().setVisibility(View.VISIBLE);
     }
 }

@@ -28,7 +28,7 @@ public class ReviewViewHolder extends RecyclerView.ViewHolder {
     private TextView tvReviewEdit;
     private TextView tvReviewDelete;
     private TextView tvShopOwnerReplyView;
-    private EditText etShopOwnerReplyText;
+    private TextView etShopOwnerReplyText;
     private TextView tvReviewReply;
 
     public ReviewViewHolder(View itemView) {
@@ -140,11 +140,11 @@ public class ReviewViewHolder extends RecyclerView.ViewHolder {
         this.tvShopOwnerReplyView = tvShopOwnerReplyView;
     }
 
-    public EditText getEtShopOwnerReplyText() {
+    public TextView getEtShopOwnerReplyText() {
         return etShopOwnerReplyText;
     }
 
-    public void setEtShopOwnerReplyText(EditText etShopOwnerReplyText) {
+    public void setEtShopOwnerReplyText(TextView etShopOwnerReplyText) {
         this.etShopOwnerReplyText = etShopOwnerReplyText;
     }
 

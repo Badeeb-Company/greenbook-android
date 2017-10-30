@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.android.volley.Request;
 import com.badeeb.greenbook.R;
 import com.badeeb.greenbook.activities.MainActivity;
+import com.badeeb.greenbook.models.JsonOwnerReply;
 import com.badeeb.greenbook.models.JsonRequest;
 import com.badeeb.greenbook.models.JsonResponse;
 import com.badeeb.greenbook.models.Review;
@@ -46,6 +47,7 @@ public class ReviewMngFragment extends Fragment {
     public final static String EXTRA_ACTION = "EXTRA_ACTION";
     public final static String ACTION_EDIT  = "ACTION_EDIT";
     public final static String ACTION_ADD = "ACTION_ADD";
+    public final static String ACTION_OWNER_REPLY = "ACTION_OWNER_REPLY";
     public final static String EXTRA_REVIEW_OBJECT = "EXTRA_REVIEW_OBJECT";
 
     private MainActivity mActivity;
@@ -64,6 +66,9 @@ public class ReviewMngFragment extends Fragment {
     private EditText etReviewDescription;
     private RatingBar rbShopRate;
     private TextView tvToolbarEditReview;
+    private TextView tvToolbarShopOwnerTitle;
+    private TextView tvToolbarTitle;
+    private TextView tvTapAstarToRate;
 
     public ReviewMngFragment() {
         // Required empty public constructor
@@ -107,7 +112,7 @@ public class ReviewMngFragment extends Fragment {
 
         mAction = getArguments().getString(ReviewMngFragment.EXTRA_ACTION);
 
-        if (mAction.equals(ReviewMngFragment.ACTION_EDIT)) {
+        if (mAction.equals(ReviewMngFragment.ACTION_EDIT) || ReviewMngFragment.ACTION_OWNER_REPLY.equals(mAction)) {
             // load review
             mReview = Parcels.unwrap(getArguments().getParcelable(ReviewMngFragment.EXTRA_REVIEW_OBJECT));
         }
@@ -115,6 +120,8 @@ public class ReviewMngFragment extends Fragment {
 
     private void initUi(View view) {
         ivToolbarBack = view.findViewById(R.id.ivToolbarBack);
+        tvToolbarShopOwnerTitle = view.findViewById(R.id.tvToolbarShopOwnerTitle);
+        tvToolbarTitle = view.findViewById(R.id.tvToolbarTitle);
         tvToolbarAddReview = view.findViewById(R.id.tvToolbarAddReview);
 
         rivImage = view.findViewById(R.id.rivImage);
@@ -130,18 +137,32 @@ public class ReviewMngFragment extends Fragment {
         rbShopRate = view.findViewById(R.id.rbShopRate);
 
         tvToolbarEditReview = view.findViewById(R.id.tvToolbarEditReview);
+        tvTapAstarToRate = view.findViewById(R.id.tvTapAstarToRate);
 
-        if (mAction.equals(ReviewMngFragment.ACTION_EDIT)) {
+        if (ReviewMngFragment.ACTION_EDIT.equals(mAction)) {
             tvToolbarAddReview.setVisibility(View.GONE);
             tvToolbarEditReview.setVisibility(View.VISIBLE);
 
             etReviewDescription.setText(mReview.getDescription());
             rbShopRate.setRating((float) mReview.getRate());
         }
+        else if (ReviewMngFragment.ACTION_OWNER_REPLY.equals(mAction)) {
+            applyShopOwnerUiChanges();
+        }
         else {
             tvToolbarAddReview.setVisibility(View.VISIBLE);
             tvToolbarEditReview.setVisibility(View.GONE);
         }
+    }
+
+    private void applyShopOwnerUiChanges() {
+        tvToolbarShopOwnerTitle.setVisibility(View.VISIBLE);
+        tvToolbarTitle.setVisibility(View.GONE);
+        rivImage.setVisibility(View.GONE);
+        rbShopRate.setVisibility(View.GONE);
+        tvTapAstarToRate.setVisibility(View.GONE);
+        tvReviewerName.setText("Shop Owner");
+        etReviewDescription.setHint("Write a Reply");
     }
 
     private void setupListeners() {
@@ -172,10 +193,17 @@ public class ReviewMngFragment extends Fragment {
     private void prepareAddReview() {
         mProgressDialog.show();
 
-        mReview.setRate(rbShopRate.getRating());
-        mReview.setDescription(etReviewDescription.getText().toString());
+        if (ReviewMngFragment.ACTION_OWNER_REPLY.equals(mAction)) {
+            // Add a reply
+            callAddOwnerReplyApi();
+        }
+        else {
+            // Add a review
+            mReview.setRate(rbShopRate.getRating());
+            mReview.setDescription(etReviewDescription.getText().toString());
 
-        callAddReviewApi();
+            callAddReviewApi();
+        }
     }
 
     private boolean validateInput() {
@@ -312,6 +340,57 @@ public class ReviewMngFragment extends Fragment {
                 new VolleyWrapper<>(request, responseType, Request.Method.PUT, url,
                         callback, getContext(), mActivity.getmSnackBarDisplayer(), mActivity.findViewById(R.id.ll_main_view));
         volleyWrapper.execute();
+    }
+
+    private void callAddOwnerReplyApi() {
+
+        if (! validateInput()) {
+            mProgressDialog.dismiss();
+            return;
+        }
+
+        String url = Constants.BASE_URL + "/shops/" + mShop.getId() + "/reviews/" + mReview.getId() + "/reply";
+
+        Log.d(TAG, "callAddOwnerReplyApi - url: " + url);
+
+        AuthorizedCallback<JsonResponse<Object>> callback = new AuthorizedCallback<JsonResponse<Object>>(mActivity.getUser().getToken()) {
+            @Override
+            public void onSuccess(JsonResponse<Object> jsonResponse) {
+                Log.d(TAG, "callAddOwnerReplyApi - onSuccess - Start");
+
+                mActivity.getmSnackBarDisplayer().displayError("Reply is published");
+                mFragmentManager.popBackStack();
+
+                mActivity.hideKeyboard();
+
+                mProgressDialog.dismiss();
+
+                Log.d(TAG, "callAddOwnerReplyApi - onSuccess - End");
+            }
+
+            @Override
+            public void onError() {
+                Log.d(TAG, "callAddOwnerReplyApi - onError - Start");
+
+                mProgressDialog.dismiss();
+
+                Log.d(TAG, "callAddOwnerReplyApi - onError - End");
+            }
+        };
+
+        // Prepare response type
+        Type responseType = new TypeToken<JsonResponse<Object>>() {}.getType();
+
+        JsonOwnerReply jsonOwnerReply = new JsonOwnerReply();
+        jsonOwnerReply.setReply(etReviewDescription.getText().toString());
+
+        JsonRequest<JsonOwnerReply> request = new JsonRequest<>(jsonOwnerReply);
+
+        VolleyWrapper<JsonRequest<JsonOwnerReply>, JsonResponse<Object>> volleyWrapper =
+                new VolleyWrapper<>(request, responseType, Request.Method.POST, url,
+                        callback, getContext(), mActivity.getmSnackBarDisplayer(), mActivity.findViewById(R.id.ll_main_view));
+        volleyWrapper.execute();
+
     }
 
 }
