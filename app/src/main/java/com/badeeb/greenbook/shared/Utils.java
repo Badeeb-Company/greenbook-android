@@ -106,9 +106,16 @@ public class Utils {
         int daysDifference = now.get(Calendar.DATE) - dateTime.get(Calendar.DATE);
         if (daysDifference == 0) {
             int hoursDifference = now.get(Calendar.HOUR) - dateTime.get(Calendar.HOUR);
+
             if (hoursDifference > 0) {
-                return hoursDifference + " hrs";
-            } else {
+
+                int minutesDifference = (int) ((now.getTimeInMillis() - dateTime.getTimeInMillis()) / (1000 * 60));
+                if (minutesDifference < 60)
+                    return minutesDifference + " mins";
+                else
+                    return hoursDifference + " hrs";
+            }
+            else {
                 int minutesDifference = now.get(Calendar.MINUTE) - dateTime.get(Calendar.MINUTE);
                 if (minutesDifference > 0) {
                     return minutesDifference + " mins";
