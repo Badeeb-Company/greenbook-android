@@ -57,6 +57,8 @@ public class LoginFragment extends Fragment {
     private User mUser;
     private AppSettings mAppSettings;
 
+    private Shop mShop;
+
     private EditText mEmail;
     private EditText mPassword;
     private ProgressDialog mProgressDialog;
@@ -182,8 +184,7 @@ public class LoginFragment extends Fragment {
 
                 if (mActivity.getState().equals(Constants.GO_TO_ADD_REVIEW)) {
                     // pop back stack
-                    Shop shop = Parcels.unwrap(getArguments().getParcelable(ReviewMngFragment.EXTRA_SHOP_OBJECT));
-                    goToReviewsTab(shop);
+                    goToReviewsTab();
                 }
                 else {
                     goToShopSearch();
@@ -263,7 +264,7 @@ public class LoginFragment extends Fragment {
         forgetPasswordDialogFragment.show(mFragmentManager, forgetPasswordDialogFragment.TAG);
     }
 
-    public void goToReviewsTab(Shop shop) {
+    public void goToReviewsTab() {
         Log.d(TAG, "goToReviewsTab - Start");
 
         mFragmentManager.popBackStack();
@@ -272,7 +273,7 @@ public class LoginFragment extends Fragment {
         ShopDetailsFragment shopDetailsFragment = new ShopDetailsFragment();
 
         Bundle bundle = new Bundle();
-        bundle.putParcelable(ShopDetailsFragment.EXTRA_SHOP_OBJECT, Parcels.wrap(shop));
+        bundle.putParcelable(ShopDetailsFragment.EXTRA_SHOP_OBJECT, Parcels.wrap(mActivity.getmShopUnderReview()));
         bundle.putInt(ShopDetailsFragment.EXTRA_OPEN_TAB, 2);
         shopDetailsFragment.setArguments(bundle);
 

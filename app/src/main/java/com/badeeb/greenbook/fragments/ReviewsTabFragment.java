@@ -135,6 +135,7 @@ public class ReviewsTabFragment extends Fragment {
                     goToAddReview();
                 }
                 else {
+                    mActivity.setmShopUnderReview(mShop);
                     askUserToLoginDialog();
                 }
             }

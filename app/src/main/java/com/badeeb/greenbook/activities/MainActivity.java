@@ -30,6 +30,7 @@ import com.badeeb.greenbook.fragments.FavoriteFragment;
 import com.badeeb.greenbook.fragments.LoginFragment;
 import com.badeeb.greenbook.fragments.ProfileFragment;
 import com.badeeb.greenbook.fragments.ShopSearchFragment;
+import com.badeeb.greenbook.models.Review;
 import com.badeeb.greenbook.models.Shop;
 import com.badeeb.greenbook.models.User;
 import com.badeeb.greenbook.shared.AppSettings;
@@ -63,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
     private GoogleApiClient mPlaceGoogleApiClient;
 
     private String mState;
+    private Shop mShopUnderReview;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -325,5 +327,13 @@ public class MainActivity extends AppCompatActivity {
 
     public void setState(String state) {
         this.mState = state;
+    }
+
+    public Shop getmShopUnderReview() {
+        return mShopUnderReview;
+    }
+
+    public void setmShopUnderReview(Shop mShopUnderReview) {
+        this.mShopUnderReview = mShopUnderReview;
     }
 }
