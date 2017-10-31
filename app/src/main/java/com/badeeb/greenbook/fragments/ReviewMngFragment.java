@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -197,6 +199,31 @@ public class ReviewMngFragment extends Fragment {
                 if (rating < 1.0f) {
                     rbShopRate.setRating(1.0f);
                 }
+                Log.d(TAG, "Rate Value: " + rating);
+            }
+        });
+
+        etReviewDescription.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s.length() > 0) {
+                    tvToolbarAddReview.setEnabled(true);
+                    tvToolbarAddReview.setTextColor(getResources().getColor(R.color.white));
+                }
+                else {
+                    tvToolbarAddReview.setEnabled(false);
+                    tvToolbarAddReview.setTextColor(getResources().getColor(R.color.gray));
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
             }
         });
     }

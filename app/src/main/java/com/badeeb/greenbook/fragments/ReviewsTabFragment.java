@@ -381,9 +381,20 @@ public class ReviewsTabFragment extends Fragment {
     private void disableOrEnableAddReview() {
 
         if (mActivity.getUser() != null) {
+            boolean userReviewExist = false;
+            for (Review review : mReviewsList) {
+                if (review.getUser().getId() == mActivity.getUser().getId()) {
+                    userReviewExist = true;
+                    break;
+                }
+            }
 
-
-
+            if (userReviewExist) {
+                mFabAddReview.setVisibility(View.GONE);
+            }
+            else {
+                mFabAddReview.setVisibility(View.VISIBLE);
+            }
         }
     }
 }
