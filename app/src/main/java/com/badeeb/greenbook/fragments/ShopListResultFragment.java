@@ -246,8 +246,6 @@ public class ShopListResultFragment extends Fragment {
                         .getPlaceById(mActivity.getmPlaceGoogleApiClient(), placeId);
                 placeResult.setResultCallback(mUpdatePlaceDetailsCallback);
 
-                Toast.makeText(mActivity, "Clicked: " + primaryText,
-                        Toast.LENGTH_SHORT).show();
                 Log.i(TAG, "Called getPlaceById to get Place details for " + placeId);
                 Log.d(TAG, "actvLocationSearch - setOnItemClickListener - end ");
             }

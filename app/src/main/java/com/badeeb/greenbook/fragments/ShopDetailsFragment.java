@@ -30,6 +30,8 @@ import com.makeramen.roundedimageview.RoundedImageView;
 import org.parceler.Parcels;
 import org.w3c.dom.Text;
 
+import java.text.DecimalFormat;
+
 public class ShopDetailsFragment extends Fragment {
 
     public final static String TAG = ShopDetailsFragment.class.getName();
@@ -49,6 +51,7 @@ public class ShopDetailsFragment extends Fragment {
     private RoundedImageView rivShopMainPhoto;
     private ImageView ivFavShop;
     private RatingBar rbShopRate;
+    private TextView tvRatingValue;
     private TextView tvShopName;
     private TextView tvDescription;
     private TextView tvNearLocation;
@@ -104,6 +107,7 @@ public class ShopDetailsFragment extends Fragment {
         rivShopMainPhoto = (RoundedImageView)  view.findViewById(R.id.rivShopMainPhoto);
         ivFavShop = (ImageView) view.findViewById(R.id.ivFav) ;
         rbShopRate = (RatingBar) view.findViewById(R.id.rbShopRate) ;
+        tvRatingValue = (TextView) view.findViewById(R.id.tvRatingValue);
         tvShopName = (TextView) view.findViewById(R.id.tvShopName);
         tvDescription = (TextView) view.findViewById(R.id.tvDescription);
         tvNearLocation = (TextView) view.findViewById(R.id.tvNearLocation);
@@ -117,6 +121,10 @@ public class ShopDetailsFragment extends Fragment {
         Log.d(TAG, "fillUiFields - Start");
 
         Glide.with(mActivity).load(mShop.getMainPhotoURL()).into(rivShopMainPhoto);
+        DecimalFormat df = new DecimalFormat("#.#");
+        tvRatingValue.setText(df.format(mShop.getRate()));
+        rbShopRate.setRating((float) mShop.getRate());
+
         tvShopName.setText(mShop.getName());
         tvDescription.setText(mShop.getDescription());
         tvNearLocation.setText(getShopDistance());

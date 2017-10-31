@@ -16,6 +16,7 @@ import com.badeeb.greenbook.shared.Utils;
 import com.badeeb.greenbook.view.ShopViewHolder;
 import com.bumptech.glide.Glide;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 /**
@@ -53,6 +54,10 @@ public class ShopRecyclerViewAdapter extends RecyclerView.Adapter<ShopViewHolder
         Log.d(TAG, " onBindViewHolder - ShopName: "+shop.getName());
         holder.getTvShopName().setText(shop.getName());
         holder.getTvDescription().setText(shop.getDescription());
+
+        DecimalFormat df = new DecimalFormat("#.#");
+        holder.getTvRateValue().setText(df.format(shop.getRate()));
+        holder.getRbShopRate().setRating((float)shop.getRate());
 
         int distance = (int) Utils.distance(shop.getLocation().getLat(), shop.getLocation().getLng() ,
                 mActivity.getCurrentLocation().getLatitude(),mActivity.getCurrentLocation().getLongitude());

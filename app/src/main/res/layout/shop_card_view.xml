@@ -52,11 +52,11 @@
                         android:layout_height="@dimen/rating_bar_height"
                         android:progressTint="@color/dark_orange"
                         style="@style/customRatingBar"
-                        android:rating="2.3"
                         android:stepSize="@dimen/rating_step_size"
                         />
 
                     <TextView
+                        android:id="@+id/tvRatingValue"
                         android:layout_width="wrap_content"
                         android:layout_height="@dimen/rating_bar_height"
                         android:layout_marginLeft="@dimen/left_margin_rating_value"

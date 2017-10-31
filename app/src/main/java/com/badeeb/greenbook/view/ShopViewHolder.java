@@ -23,6 +23,7 @@ public class ShopViewHolder extends RecyclerView.ViewHolder{
     private RoundedImageView rivShopMainPhoto;
     private ImageView ivFavShop;
     private RatingBar rbShopRate;
+    private TextView tvRateValue;
     private TextView tvShopName;
     private TextView tvDescription;
     private TextView tvNearLocation;
@@ -36,6 +37,7 @@ public class ShopViewHolder extends RecyclerView.ViewHolder{
         rivShopMainPhoto = (RoundedImageView) itemView.findViewById(R.id.rivShopMainPhoto);
         ivFavShop = (ImageView) itemView.findViewById(R.id.ivFav);
         rbShopRate = (RatingBar) itemView.findViewById(R.id.rbShopRate);
+        tvRateValue = (TextView) itemView.findViewById(R.id.tvRatingValue) ;
         tvShopName = (TextView) itemView.findViewById(R.id.tvShopName);
         tvDescription = (TextView) itemView.findViewById(R.id.tvDescription);
         tvNearLocation = (TextView) itemView.findViewById(R.id.tvNearLocation);
@@ -102,5 +104,13 @@ public class ShopViewHolder extends RecyclerView.ViewHolder{
 
     public void setShopDetailsLinearLayout(LinearLayout shopDetailsLinearLayout) {
         this.shopDetailsLinearLayout = shopDetailsLinearLayout;
+    }
+
+    public TextView getTvRateValue() {
+        return tvRateValue;
+    }
+
+    public void setTvRateValue(TextView tvRateValue) {
+        this.tvRateValue = tvRateValue;
     }
 }
