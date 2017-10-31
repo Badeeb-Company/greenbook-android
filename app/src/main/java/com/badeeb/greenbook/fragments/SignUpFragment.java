@@ -272,7 +272,7 @@ public class SignUpFragment extends Fragment {
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-        fragmentTransaction.add(R.id.main_frame, loginFragment, loginFragment.TAG);
+        fragmentTransaction.replace(R.id.main_frame, loginFragment, loginFragment.TAG);
 
         fragmentTransaction.addToBackStack(TAG);
 

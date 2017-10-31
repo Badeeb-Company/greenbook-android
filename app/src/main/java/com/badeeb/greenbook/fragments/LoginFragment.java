@@ -269,6 +269,10 @@ public class LoginFragment extends Fragment {
 
         mFragmentManager.popBackStack();
         mFragmentManager.popBackStack();
+        mFragmentManager.popBackStack();
+        mFragmentManager.popBackStack();
+
+
 
         ShopDetailsFragment shopDetailsFragment = new ShopDetailsFragment();
 
