@@ -186,6 +186,8 @@ public class ReviewsTabFragment extends Fragment {
 
                     Log.d(TAG, "callListReviewsApi - onSuccess - mReviewsList: "+ Arrays.toString(mReviewsList.toArray()));
 
+                    disableOrEnableAddReview();
+
                 } else {
                     mActivity.getmSnackBarDisplayer().displayError("Categories not loaded from the server");
                 }
@@ -374,5 +376,14 @@ public class ReviewsTabFragment extends Fragment {
         fragmentTransaction.commit();
 
         Log.d(TAG, "goToShopOwnerReply - End");
+    }
+
+    private void disableOrEnableAddReview() {
+
+        if (mActivity.getUser() != null) {
+
+
+
+        }
     }
 }

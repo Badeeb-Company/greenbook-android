@@ -33,7 +33,7 @@ public class Constants {
 
     //AutoComplete Constant
     public static final int THRESHOLD = 1;
-    public static final int GALLERY_PHOTOS_PER_LINE = 3 ;
+    public static final int GALLERY_PHOTOS_PER_LINE = 2;
 
     public static final LatLngBounds BOUNDS_MIDDLE_EAST = new LatLngBounds(
             new LatLng(22.001018, 25.000663), new LatLng(31.487536, 35.096937));

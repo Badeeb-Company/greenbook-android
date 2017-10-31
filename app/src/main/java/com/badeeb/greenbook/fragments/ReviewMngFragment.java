@@ -129,7 +129,7 @@ public class ReviewMngFragment extends Fragment {
         Glide.with(getContext())
                 .load(mActivity.getUser().getImageURL())
                 .asBitmap()
-                .placeholder(R.drawable.pic_img)
+                .placeholder(R.drawable.def_usr_img)
                 .into(rivImage);
 
         tvReviewerName = view.findViewById(R.id.tvReviewerName);
@@ -188,6 +188,15 @@ public class ReviewMngFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 prepareEditReview();
+            }
+        });
+
+        rbShopRate.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+            @Override
+            public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+                if (rating < 1.0f) {
+                    rbShopRate.setRating(1.0f);
+                }
             }
         });
     }
