@@ -28,6 +28,7 @@ import com.badeeb.greenbook.activities.MainActivity;
 import com.badeeb.greenbook.models.JsonRequest;
 import com.badeeb.greenbook.models.JsonResponse;
 import com.badeeb.greenbook.models.JsonUser;
+import com.badeeb.greenbook.models.Shop;
 import com.badeeb.greenbook.models.User;
 import com.badeeb.greenbook.network.NonAuthorizedCallback;
 import com.badeeb.greenbook.network.VolleyResponse;
@@ -38,6 +39,7 @@ import com.badeeb.greenbook.shared.UiUtils;
 import com.badeeb.greenbook.shared.Utils;
 import com.google.gson.reflect.TypeToken;
 
+import org.parceler.Parcels;
 import org.w3c.dom.Text;
 
 import java.lang.reflect.Type;
@@ -180,7 +182,8 @@ public class LoginFragment extends Fragment {
 
                 if (mActivity.getState().equals(Constants.GO_TO_ADD_REVIEW)) {
                     // pop back stack
-                    mFragmentManager.popBackStack();
+                    Shop shop = Parcels.unwrap(getArguments().getParcelable(ReviewMngFragment.EXTRA_SHOP_OBJECT));
+                    goToReviewsTab(shop);
                 }
                 else {
                     goToShopSearch();
@@ -258,6 +261,31 @@ public class LoginFragment extends Fragment {
         ForgetPasswordDialogFragment forgetPasswordDialogFragment = new ForgetPasswordDialogFragment();
         forgetPasswordDialogFragment.setCancelable(false);
         forgetPasswordDialogFragment.show(mFragmentManager, forgetPasswordDialogFragment.TAG);
+    }
+
+    public void goToReviewsTab(Shop shop) {
+        Log.d(TAG, "goToReviewsTab - Start");
+
+        mFragmentManager.popBackStack();
+        mFragmentManager.popBackStack();
+
+        ShopDetailsFragment shopDetailsFragment = new ShopDetailsFragment();
+
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(ShopDetailsFragment.EXTRA_SHOP_OBJECT, Parcels.wrap(shop));
+        bundle.putInt(ShopDetailsFragment.EXTRA_OPEN_TAB, 2);
+        shopDetailsFragment.setArguments(bundle);
+
+        FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
+
+        fragmentTransaction.replace(R.id.main_frame, shopDetailsFragment, shopDetailsFragment.TAG);
+
+        fragmentTransaction.addToBackStack(TAG);
+
+        fragmentTransaction.commit();
+
+        mActivity.disconnectPlaceGoogleApiClient();
+        Log.d(TAG, "goToReviewsTab - End");
     }
 
 }
