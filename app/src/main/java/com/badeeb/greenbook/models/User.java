@@ -40,11 +40,26 @@ public class User {
     @SerializedName("owned_shops")
     private ArrayList<Shop> ownedShops;
 
+    @Expose
+    @SerializedName("account_token")
+    private String socialAcctToken;
+
+    @Expose
+    @SerializedName("account_id")
+    private String socialAcctId;
+
+    @Expose
+    @SerializedName("account_type")
+    private String accountType;
+
     public User() {
         this.name = "";
         this.email = "";
         this.password = "";
         this.imageURL = "";
+        this.socialAcctToken = "";
+        this.socialAcctId = "";
+        this.accountType = "";
     }
 
     public String getName() {
@@ -101,5 +116,29 @@ public class User {
 
     public void setOwnedShops(ArrayList<Shop> ownedShops) {
         this.ownedShops = ownedShops;
+    }
+
+    public String getSocialAcctToken() {
+        return socialAcctToken;
+    }
+
+    public void setSocialAcctToken(String socialAcctToken) {
+        this.socialAcctToken = socialAcctToken;
+    }
+
+    public String getSocialAcctId() {
+        return socialAcctId;
+    }
+
+    public void setSocialAcctId(String socialAcctId) {
+        this.socialAcctId = socialAcctId;
+    }
+
+    public String getAccountType() {
+        return accountType;
+    }
+
+    public void setAccountType(String accountType) {
+        this.accountType = accountType;
     }
 }
