@@ -52,6 +52,7 @@ public class NotLoggedInProfileFragment extends Fragment {
         Log.d(TAG, "onCreateView - Start");
 
         if (container != null) {
+            // this code is used to prevent fragment overlapping
             container.removeAllViews();
         }
 

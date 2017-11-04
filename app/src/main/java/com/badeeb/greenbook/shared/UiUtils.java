@@ -132,6 +132,21 @@ public class UiUtils {
         return dialog;
     }
 
+    public static AlertDialog showDialog(Context context, int style, int title,
+                                         int positiveMessage, DialogInterface.OnClickListener positiveListener,
+                                         int negativeMessage, DialogInterface.OnClickListener negativeListener
+    ) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context, style);
+        builder.setTitle(title);
+        builder.setPositiveButton(positiveMessage, positiveListener);
+        builder.setNegativeButton(negativeMessage, negativeListener);
+        builder.setCancelable(false);
+        AlertDialog dialog = builder.create();
+        dialog.show();
+
+        return dialog;
+    }
+
     // Snackbar with message only
     public static Snackbar showSnackBar(View view, String message, int duration, int color) {
 

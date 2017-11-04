@@ -159,8 +159,8 @@ public class ReviewsTabFragment extends Fragment {
             }
         };
 
-        UiUtils.showDialog(getContext(), R.style.DialogTheme,
-                R.string.ask_user_to_login_title, R.string.ask_user_to_login_msg,
+        UiUtils.showDialog(mContext, R.style.DialogTheme,
+                R.string.ask_user_to_login_msg,
                 R.string.ok_btn_dialog, positiveListener, R.string.cancel, negativeListener);
     }
 
