@@ -28,7 +28,9 @@ public class AppSettings {
     private final static String PREF_USER_IMAGE_URL = "PREF_USER_IMAGE_URL";
     private final static String PREF_USER_TOKEN = "PREF_USER_TOKEN";
     private final static String PREF_USER_OWNED_SHOPS = "PREF_USER_OWNED_SHOPS";
-
+    private final static String PREF_USER_SOCIAL_ACCT_TOKEN = "PREF_USER_SOCIAL_ACCT_TOKEN";
+    private final static String PREF_USER_SOCIAL_ACCT_ID = "PREF_USER_SOCIAL_ACCT_ID";
+    private final static String PREF_USER_ACCT_TYPE = "PREF_USER_ACCT_TYPE";
 
     private static AppSettings sInstance;
 
@@ -143,6 +145,30 @@ public class AppSettings {
         return getValue(PREF_USER_OWNED_SHOPS, type);
     }
 
+    public void setUserSocialAcctToken(String prefSocialAcctToken) {
+        putValue(PREF_USER_SOCIAL_ACCT_TOKEN, prefSocialAcctToken);
+    }
+
+    public String getUserSocialAcctToken() {
+        return getValue(PREF_USER_SOCIAL_ACCT_TOKEN, "");
+    }
+
+    public void setUserSocialAcctId(String prefUserSocialAcctId) {
+        putValue(PREF_USER_SOCIAL_ACCT_ID, prefUserSocialAcctId);
+    }
+
+    public String getUserSocialAcctId() {
+        return getValue(PREF_USER_SOCIAL_ACCT_ID, "");
+    }
+
+    public void setUserAccountType(String prefUserAccountType) {
+        putValue(PREF_USER_ACCT_TYPE, prefUserAccountType);
+    }
+
+    public String getUserAccountType() {
+        return getValue(PREF_USER_ACCT_TYPE, "");
+    }
+
     public void saveUser(User user) {
         setUserId(user.getId());
         setUserName(user.getName());
@@ -150,6 +176,9 @@ public class AppSettings {
         setUserImageUrl(user.getImageURL());
         setUserToken(user.getToken());
         setUserOwnedShops(user.getOwnedShops());
+        setUserSocialAcctToken(user.getSocialAcctToken());
+        setUserSocialAcctId(user.getSocialAcctId());
+        setUserAccountType(user.getAccountType());
     }
 
     public void clearUserInfo() {
@@ -159,7 +188,10 @@ public class AppSettings {
                 .remove(PREF_USER_EMAIL)
                 .remove(PREF_USER_IMAGE_URL)
                 .remove(PREF_USER_TOKEN)
-                .remove(PREF_USER_OWNED_SHOPS);
+                .remove(PREF_USER_OWNED_SHOPS)
+                .remove(PREF_USER_SOCIAL_ACCT_TOKEN)
+                .remove(PREF_USER_SOCIAL_ACCT_ID)
+                .remove(PREF_USER_ACCT_TYPE);
         editor.commit();
     }
 
@@ -171,6 +203,9 @@ public class AppSettings {
         user.setImageURL(getUserImageUrl());
         user.setToken(getUserToken());
         user.setOwnedShops(getUserOwnedShops());
+        user.setAccountType(getUserAccountType());
+        user.setSocialAcctToken(getUserSocialAcctToken());
+        user.setSocialAcctId(getUserSocialAcctId());
         return user;
     }
 

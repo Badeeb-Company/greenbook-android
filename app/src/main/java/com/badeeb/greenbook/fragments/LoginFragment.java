@@ -1,9 +1,13 @@
 package com.badeeb.greenbook.fragments;
 
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -37,6 +41,15 @@ import com.badeeb.greenbook.shared.AppSettings;
 import com.badeeb.greenbook.shared.Constants;
 import com.badeeb.greenbook.shared.UiUtils;
 import com.badeeb.greenbook.shared.Utils;
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.auth.api.signin.GoogleSignInResult;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.OptionalPendingResult;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 import com.google.gson.reflect.TypeToken;
 
 import org.parceler.Parcels;
@@ -62,6 +75,17 @@ public class LoginFragment extends Fragment {
     private EditText mEmail;
     private EditText mPassword;
     private ProgressDialog mProgressDialog;
+
+    private TextView tvLogin;
+    private TextView tvSignup;
+    private TextView tvSkip;
+    private TextView tvForgetPassword;
+    private TextView tvFacebbokLogin;
+
+    private TextView tvGoogleLogin;
+    private GoogleApiClient mGoogleApiClient;
+    private GoogleApiClient.OnConnectionFailedListener onConnectionFailedListener;
+    private static final int RC_SIGN_IN = 9001;
 
     public LoginFragment() {
         // Required empty public constructor
@@ -90,24 +114,33 @@ public class LoginFragment extends Fragment {
         mFragmentManager = getFragmentManager();
         mUser = new User();
         mAppSettings = AppSettings.getInstance();
-
-        mEmail = view.findViewById(R.id.etEmail);
-        mPassword = view.findViewById(R.id.etPassword);
         mProgressDialog = UiUtils.createProgressDialog(mActivity);
 
-        mActivity.hideToolbar();
-        mActivity.hideBottomNavigationActionBar();
+        initUi(view);
 
         setupListeners(view);
 
         Log.d(TAG, "init - End");
     }
 
+    private void initUi(View view) {
+        mEmail = view.findViewById(R.id.etEmail);
+        mPassword = view.findViewById(R.id.etPassword);
+        tvLogin = view.findViewById(R.id.tvLogin);
+        tvSignup = view.findViewById(R.id.tvSignup);
+        tvSkip = view.findViewById(R.id.tvSkip);
+        tvForgetPassword = view.findViewById(R.id.tvForgetPassword);
+        tvGoogleLogin = view.findViewById(R.id.tvGoogleLogin);
+        tvFacebbokLogin = view.findViewById(R.id.tvFacebbokLogin);
+
+        mActivity.hideToolbar();
+        mActivity.hideBottomNavigationActionBar();
+    }
+
     private void setupListeners(View view) {
         Log.d(TAG, "setupListeners - Start");
 
-        TextView login = view.findViewById(R.id.tvLogin);
-        login.setOnClickListener(new View.OnClickListener() {
+        tvLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -118,21 +151,20 @@ public class LoginFragment extends Fragment {
 
                 mUser.setEmail(email);
                 mUser.setPassword(password);
+                mUser.setAccountType("normal");
 
                 callLoginApi();
             }
         });
 
-        TextView signup = view.findViewById(R.id.tvSignup);
-        signup.setOnClickListener(new View.OnClickListener() {
+        tvSignup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 goToSignup();
             }
         });
 
-        TextView skip = view.findViewById(R.id.tvSkip);
-        skip.setOnClickListener(new View.OnClickListener() {
+        tvSkip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mActivity.hideKeyboard();
@@ -140,11 +172,17 @@ public class LoginFragment extends Fragment {
             }
         });
 
-        TextView forgetPassword = view.findViewById(R.id.tvForgetPassword);
-        forgetPassword.setOnClickListener(new View.OnClickListener() {
+        tvForgetPassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 gotToForgetPasswordDialog();
+            }
+        });
+
+        tvGoogleLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                prepareGooglePlusLogin();
             }
         });
 
@@ -295,6 +333,165 @@ public class LoginFragment extends Fragment {
 
         mActivity.disconnectPlaceGoogleApiClient();
         Log.d(TAG, "goToReviewsTab - End");
+    }
+
+    //------------------------------ Google Login ------------------------------------
+    private GoogleApiClient.OnConnectionFailedListener createOnConnectionFailedListener() {
+        return new GoogleApiClient.OnConnectionFailedListener() {
+            @Override
+            public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+                Log.d(TAG, "createOnConnectionFailedListener - onConnectionFailed: " + connectionResult);
+            }
+        };
+    }
+
+    private void prepareGooglePlusLogin() {
+        Log.d(TAG, "googlePlusSignIn - Start");
+
+        mProgressDialog.show();
+
+        onConnectionFailedListener = createOnConnectionFailedListener();
+
+        initGoogleApiClientForLogin();
+
+        showGoogleLoginIntent();
+
+        Log.d(TAG, "googlePlusSignIn - End");
+    }
+
+    private void initGoogleApiClientForLogin() {
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+//                .requestIdToken(getString(R.string.server_client_id))
+                .build();
+
+        mGoogleApiClient = new GoogleApiClient.Builder(mActivity)
+                .enableAutoManage(mActivity /* FragmentActivity */, onConnectionFailedListener /* OnConnectionFailedListener */)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                .build();
+    }
+
+    private void showGoogleLoginIntent() {
+        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+        startActivityForResult(signInIntent, RC_SIGN_IN);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.d(TAG, "onActivityResult - Start");
+
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
+        if (requestCode == RC_SIGN_IN) {
+            Log.d(TAG, "onActivityResult - Google activity result");
+            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+            handleSignInResult(result);
+        }
+
+        Log.d(TAG, "onActivityResult - End");
+    }
+
+    private void handleSignInResult(GoogleSignInResult result) {
+        Log.d(TAG, "handleSignInResult - Start");
+
+        Log.d(TAG, "handleSignInResult:" + result.isSuccess());
+        if (result.isSuccess()) {
+            // Signed in successfully, show authenticated UI.
+            GoogleSignInAccount acct = result.getSignInAccount();
+
+            String personName = acct.getDisplayName();
+            String personGivenName = acct.getGivenName();
+            String personFamilyName = acct.getFamilyName();
+            String personEmail = acct.getEmail();
+            String personId = acct.getId();
+            Uri personPhoto = acct.getPhotoUrl();
+            String idToken = acct.getIdToken();
+
+            mUser.setEmail(personEmail);
+            mUser.setName(personName);
+            mUser.setImageURL(personPhoto.toString());
+            mUser.setSocialAcctId(personId);
+            mUser.setSocialAcctToken(idToken);
+            mUser.setAccountType("google");
+
+            callSocialLoginApi();
+
+        } else {
+            // Signed out, show unauthenticated UI.
+            mActivity.getmSnackBarDisplayer().displayError("Login error, please try later.");
+            mProgressDialog.dismiss();
+        }
+
+        stopGoogleApiClientForLogin();
+
+        Log.d(TAG, "handleSignInResult - End");
+    }
+
+    private void stopGoogleApiClientForLogin() {
+        mGoogleApiClient.clearDefaultAccountAndReconnect();
+        mGoogleApiClient.stopAutoManage(mActivity);
+        mGoogleApiClient.disconnect();
+    }
+
+
+    private void callSocialLoginApi() {
+
+        String url = Constants.BASE_URL + "/users/social_login";
+
+        Log.d(TAG, "callSocialLoginApi - url: " + url);
+
+        NonAuthorizedCallback<JsonResponse<JsonUser>> callback = new NonAuthorizedCallback<JsonResponse<JsonUser>>() {
+            @Override
+            public void onSuccess(JsonResponse<JsonUser> jsonResponse) {
+                Log.d(TAG, "callSocialLoginApi - onSuccess - Start");
+
+                mUser = jsonResponse.getResult().getUser();
+
+                mAppSettings.saveUser(mUser);
+                mActivity.setUser(mUser);
+
+                if (mActivity.getState().equals(Constants.GO_TO_ADD_REVIEW)) {
+                    // pop back stack
+                    goToReviewsTab();
+                }
+                else {
+                    // Clear back stack
+                    mActivity.clearBackStack();
+                    goToShopSearch();
+                }
+
+                mActivity.updateFavouriteSet();
+
+                mActivity.hideKeyboard();
+
+                mProgressDialog.dismiss();
+
+                Log.d(TAG, "callSocialLoginApi - onSuccess - End");
+            }
+
+            @Override
+            public void onError() {
+                Log.d(TAG, "callSocialLoginApi - onError - Start");
+
+                mProgressDialog.dismiss();
+
+                Log.d(TAG, "callSocialLoginApi - onError - End");
+            }
+        };
+
+        // Prepare response type
+        Type responseType = new TypeToken<JsonResponse<JsonUser>>() {}.getType();
+
+        JsonUser jsonUser = new JsonUser();
+        jsonUser.setUser(mUser);
+
+        JsonRequest<JsonUser> request = new JsonRequest<>(jsonUser);
+
+        VolleyWrapper<JsonRequest<JsonUser>, JsonResponse<JsonUser>> volleyWrapper = new VolleyWrapper<>(request, responseType, Request.Method.POST, url,
+                callback, getContext(), mActivity.getmSnackBarDisplayer(), mActivity.findViewById(R.id.ll_main_view));
+        volleyWrapper.execute();
+
     }
 
 }

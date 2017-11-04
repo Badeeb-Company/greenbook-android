@@ -40,5 +40,6 @@
     <string name="succes_review_deletion">Review is deleted successfully</string>
     <string name="network_timeout">Network timeout, please try later</string>
     <string name="app_share_descrption_msg">Greenbook Application</string>
+    <string name="server_error">Server error, please try later</string>
 
 </resources>

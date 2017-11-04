@@ -126,6 +126,9 @@ public class VolleyWrapper <T, S> {
                                     errorDisplayHandler.displayError(errorResponse.getJsonMeta().getMessage());
                                 }
                             }
+                            else if (error instanceof ServerError && error.networkResponse.statusCode == 404) {
+                                errorDisplayHandler.displayError(context.getResources().getString(R.string.server_error));
+                            }
                             else if (error instanceof TimeoutError) {
                                 errorDisplayHandler.displayError(context.getResources().getString(R.string.network_timeout));
                             }

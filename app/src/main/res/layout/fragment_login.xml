@@ -156,6 +156,7 @@
             >
 
             <TextView
+                android:id="@+id/tvFacebbokLogin"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:text="with Facebook"
@@ -170,6 +171,7 @@
                 />
 
             <TextView
+                android:id="@+id/tvGoogleLogin"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:text="with Google+"
@@ -183,8 +185,6 @@
                 />
 
         </LinearLayout>
-
-
 
     </LinearLayout>
 
