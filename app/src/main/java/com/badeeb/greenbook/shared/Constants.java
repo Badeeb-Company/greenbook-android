@@ -22,6 +22,8 @@ public class Constants {
 
     public static final String PLAY_STORE_URL = "https://play.google.com/store/apps/details?id=com.badeeb.greenbook";
 
+    public static final String OAUTH_WEB_CLIENT_ID = "941112756170-fllsaspu0a71c16p0m8ldt2sjqbnv5b1.apps.googleusercontent.com";
+
     // Volley constants
     public static final int VOLLEY_TIME_OUT = 8000; // Milliseconds
     public static final int VOLLEY_RETRY_COUNTER = 0;

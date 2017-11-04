@@ -362,7 +362,7 @@ public class LoginFragment extends Fragment {
     private void initGoogleApiClientForLogin() {
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
-//                .requestIdToken(getString(R.string.server_client_id))
+                .requestIdToken(Constants.OAUTH_WEB_CLIENT_ID)   // Auth of web not android
                 .build();
 
         mGoogleApiClient = new GoogleApiClient.Builder(mActivity)
