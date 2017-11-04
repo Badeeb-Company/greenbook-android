@@ -8,6 +8,9 @@
     <color name="light_green">#509b78</color>
 
     <color name="red">#d8463b</color>
+    <color name="fav_red">#e20714</color>
+    <color name="fav_gray">#929292</color>
+
     <color name="orange">#fbc752</color>
     <color name="gray">#ababab</color>
     <color name="hint_gray">#d8d8d8</color>

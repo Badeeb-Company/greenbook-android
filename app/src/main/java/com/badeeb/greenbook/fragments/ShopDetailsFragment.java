@@ -43,7 +43,6 @@ public class ShopDetailsFragment extends Fragment {
     private FragmentManager fragmentManager;
 
     private Shop mShop;
-    boolean isFav = true;
 
     private TabLayout mTabLayout;
     private ViewPager mViewPager;
@@ -73,6 +72,10 @@ public class ShopDetailsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        if (container != null) {
+            // this code is used to prevent fragment overlapping
+            container.removeAllViews();
+        }
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_shop_details, container, false);
 
@@ -121,9 +124,15 @@ public class ShopDetailsFragment extends Fragment {
         Log.d(TAG, "fillUiFields - Start");
 
         Glide.with(mActivity).load(mShop.getMainPhotoURL()).into(rivShopMainPhoto);
-        DecimalFormat df = new DecimalFormat("#.#");
+        DecimalFormat df = new DecimalFormat("0.0");
         tvRatingValue.setText(df.format(mShop.getRate()));
         rbShopRate.setRating((float) mShop.getRate());
+
+        if(!mActivity.getFavSet().isEmpty() && mActivity.getFavSet().contains(mShop.getId())){
+            ivFavShop.setImageDrawable(mActivity.getResources().getDrawable(R.drawable.btn_fav_prassed));
+        }else{
+            ivFavShop.setImageDrawable(mActivity.getResources().getDrawable(R.drawable.ic_fav));
+        }
 
         tvShopName.setText(mShop.getName());
         tvDescription.setText(mShop.getDescription());
@@ -150,16 +159,14 @@ public class ShopDetailsFragment extends Fragment {
                 Drawable iconPressed = getResources().getDrawable(R.drawable.btn_fav_prassed);
                 Drawable iconNotPressed = getResources().getDrawable(R.drawable.ic_fav);
 
-                if(isFav) {
-                    Log.d(TAG, "setupListener - ivFavShop - change to pressed");
-                    // TODO - add favorite action
-                    ivFavShop.setImageDrawable(iconPressed);
-                    isFav = false;
-                }else{
+                if(!mActivity.getFavSet().isEmpty() && mActivity.getFavSet().contains(mShop.getId())) {
                     Log.d(TAG, "setupListener - ivFavShop - change to not pressed");
-                    // TODO - remove from favorite action
+                    mActivity.removeFromFavourite(mShop, null);
                     ivFavShop.setImageDrawable(iconNotPressed);
-                    isFav = true;
+                }else{
+                    Log.d(TAG, "setupListener - ivFavShop - change to pressed");
+                    mActivity.addToFavourite(mShop, null);
+                    ivFavShop.setImageDrawable(iconPressed);
                 }
             }
         });
@@ -200,7 +207,6 @@ public class ShopDetailsFragment extends Fragment {
 
         Log.d(TAG, "setupViewPager - End");
     }
-
 
 
 }

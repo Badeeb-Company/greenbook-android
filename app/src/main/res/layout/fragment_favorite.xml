@@ -4,11 +4,72 @@
     android:layout_height="match_parent"
     tools:context="com.badeeb.greenbook.fragments.FavoriteFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal"
+        android:background="@color/green"
+        android:paddingLeft="12dp"
+        android:gravity="left|center">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Favourite"
+            android:textSize="18sp"
+            android:fontFamily="fonts/OpenSans-Regular.ttf"
+            />
+    </LinearLayout>
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/favList_form"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        >
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rvFavList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="vertical"/>
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+    <LinearLayout
+        android:id="@+id/llEmptyFavourite"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:textColor="@color/red"
-        android:text="Favorite Fragment" />
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone"
+        >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_empty_search"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Your favourite place will be here"
+            android:textSize="19sp"
+            android:textColor="@color/fav_red"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="57dp"
+            android:layout_marginRight="57dp"
+            android:text="We will help you track your favourite places, if you liked some."
+            android:textSize="16sp"
+            android:textColor="@color/fav_gray"
+            />
+
+    </LinearLayout>
 
 </FrameLayout>

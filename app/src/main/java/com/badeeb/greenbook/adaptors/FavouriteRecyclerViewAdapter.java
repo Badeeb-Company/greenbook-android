@@ -10,6 +10,7 @@ import android.widget.ImageView;
 
 import com.badeeb.greenbook.R;
 import com.badeeb.greenbook.activities.MainActivity;
+import com.badeeb.greenbook.fragments.FavoriteFragment;
 import com.badeeb.greenbook.fragments.ShopListResultFragment;
 import com.badeeb.greenbook.models.Shop;
 import com.badeeb.greenbook.shared.Utils;
@@ -23,16 +24,16 @@ import java.util.List;
  * Created by ahmed on 10/21/2017.
  */
 
-public class ShopRecyclerViewAdapter extends RecyclerView.Adapter<ShopViewHolder> {
-    private final static String TAG = ShopRecyclerViewAdapter.class.getName();
+public class FavouriteRecyclerViewAdapter extends RecyclerView.Adapter<ShopViewHolder> {
+    private final static String TAG = FavouriteRecyclerViewAdapter.class.getName();
 
     private MainActivity mActivity;
-    private ShopListResultFragment mParentFragment;
+    private FavoriteFragment mParentFragment;
     private List<Shop> mShopList;
 
     private boolean isFav = true;
 
-    public ShopRecyclerViewAdapter(MainActivity mActivity, List<Shop> shopList, ShopListResultFragment parentFragment){
+    public FavouriteRecyclerViewAdapter(MainActivity mActivity, List<Shop> shopList, FavoriteFragment parentFragment){
         this.mActivity = mActivity;
         mParentFragment = parentFragment;
         mShopList = shopList;
@@ -41,7 +42,7 @@ public class ShopRecyclerViewAdapter extends RecyclerView.Adapter<ShopViewHolder
     @Override
     public ShopViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Log.d(TAG, " onCreateViewHolder - Start");
-        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.shop_card_view,parent,false);
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.favourite_card_view,parent,false);
         Log.d(TAG, " onCreateViewHolder - End");
         return new ShopViewHolder(itemView);
     }
@@ -55,21 +56,11 @@ public class ShopRecyclerViewAdapter extends RecyclerView.Adapter<ShopViewHolder
         holder.getTvShopName().setText(shop.getName());
         holder.getTvDescription().setText(shop.getDescription());
 
+        holder.getIvFavShop().setImageDrawable(mActivity.getResources().getDrawable(R.drawable.btn_fav_prassed));
+
         DecimalFormat df = new DecimalFormat("0.0");
         holder.getTvRateValue().setText(df.format(shop.getRate()));
         holder.getRbShopRate().setRating((float)shop.getRate());
-
-        if(!mActivity.getFavSet().isEmpty() && mActivity.getFavSet().contains(shop.getId())){
-            Log.d(TAG, " onBindViewHolder - shop is fav: "+shop.getName());
-            holder.getIvFavShop().setImageDrawable(mActivity.getResources().getDrawable(R.drawable.btn_fav_prassed));
-        }else{
-            Log.d(TAG, " onBindViewHolder - shop not fav: "+shop.getName());
-            holder.getIvFavShop().setImageDrawable(mActivity.getResources().getDrawable(R.drawable.ic_fav));
-        }
-
-        int distance = (int) Utils.distance(shop.getLocation().getLat(), shop.getLocation().getLng() ,
-                mActivity.getCurrentLocation().getLatitude(),mActivity.getCurrentLocation().getLongitude());
-        holder.getTvNearLocation().setText(distance+" Km around you");
 
         Glide.with(mActivity)
                 .load(shop.getMainPhotoURL())
@@ -95,17 +86,11 @@ public class ShopRecyclerViewAdapter extends RecyclerView.Adapter<ShopViewHolder
             @Override
             public void onClick(View view) {
                 Log.d(TAG, "setupListener - ivFavShop - icon pressed");
-                Shop shop = mShopList.get(position);
                 ImageView selectedFav = view.findViewById(R.id.ivFav);
-                if(!mActivity.getFavSet().isEmpty() && mActivity.getFavSet().contains(shop.getId())) {
-                    Log.d(TAG, "setupListener - ivFavShop - change to not pressed");
-                    selectedFav.setImageDrawable(mActivity.getResources().getDrawable(R.drawable.ic_fav));
-                    mActivity.removeFromFavourite(shop, null);
-                }else{
-                    Log.d(TAG, "setupListener - ivFavShop - change to pressed");
-                    selectedFav.setImageDrawable(mActivity.getResources().getDrawable(R.drawable.btn_fav_prassed));
-                    mActivity.addToFavourite(shop,null);
-                }
+
+                Log.d(TAG, "setupListener - ivFavShop - change to not pressed");
+                mParentFragment.removeFavourite(mShopList.get(position));
+                selectedFav.setImageDrawable(mActivity.getResources().getDrawable(R.drawable.ic_fav));
             }
         });
 

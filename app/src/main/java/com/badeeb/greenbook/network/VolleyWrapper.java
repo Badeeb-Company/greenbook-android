@@ -76,7 +76,7 @@ public class VolleyWrapper <T, S> {
             gsonBuilder.excludeFieldsWithoutExposeAnnotation();
             final Gson gson = gsonBuilder.create();
 
-            if (requestType != Request.Method.GET) {
+            if (requestType != Request.Method.GET && jsonRequest != null) {
                 jsonObject = new JSONObject(gson.toJson(jsonRequest));
 
                 Log.d(TAG, "execute - Json Request"+ gson.toJson(jsonRequest));
