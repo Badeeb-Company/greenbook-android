@@ -20,6 +20,8 @@ public class Constants {
 
     public static final String BASE_URL = "https://staging-greenbook.herokuapp.com/api/v1";
 
+    public static final String PLAY_STORE_URL = "https://play.google.com/store/apps/details?id=com.badeeb.greenbook";
+
     // Volley constants
     public static final int VOLLEY_TIME_OUT = 8000; // Milliseconds
     public static final int VOLLEY_RETRY_COUNTER = 0;

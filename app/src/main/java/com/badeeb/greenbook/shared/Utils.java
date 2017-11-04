@@ -1,12 +1,16 @@
 package com.badeeb.greenbook.shared;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.res.Resources;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.widget.Toast;
+
+import com.badeeb.greenbook.R;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -138,6 +142,38 @@ public class Utils {
             return "Yesterday at " + DateFormat.format(timeFormatString, dateTime);
         } else {
             return DateFormat.format("MMMM dd 'at' h:mmaa", dateTime).toString();
+        }
+    }
+
+    public static void rateAppOnPlayStore(Context context) {
+        try {
+            Uri uri = Uri.parse(Constants.PLAY_STORE_URL);
+
+            Intent goToMarket = new Intent(Intent.ACTION_VIEW, uri);
+
+            context.startActivity(goToMarket);
+
+        } catch (Exception e) {
+
+        }
+    }
+
+
+    public static void shareAppWithFriend(Context context, Resources resources) {
+        try {
+            Intent i = new Intent(Intent.ACTION_SEND);
+            i.setType("text/plain");
+            i.putExtra(Intent.EXTRA_SUBJECT, resources.getText(R.string.app_name));
+
+            String sAux = "\n"+ resources.getText(R.string.app_share_descrption_msg) +"\n\n";
+            sAux = sAux + Constants.PLAY_STORE_URL +" \n\n";
+
+            i.putExtra(Intent.EXTRA_TEXT, sAux);
+
+            context.startActivity(Intent.createChooser(i, "choose one"));
+
+        } catch(Exception e) {
+            Log.d(TAG, "shareAppWithFriend - Throw exception: "+e.getMessage());
         }
     }
 }

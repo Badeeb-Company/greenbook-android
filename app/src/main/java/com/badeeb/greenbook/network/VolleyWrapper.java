@@ -13,6 +13,7 @@ import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.ServerError;
+import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.badeeb.greenbook.R;
@@ -124,6 +125,9 @@ public class VolleyWrapper <T, S> {
 
                                     errorDisplayHandler.displayError(errorResponse.getJsonMeta().getMessage());
                                 }
+                            }
+                            else if (error instanceof TimeoutError) {
+                                errorDisplayHandler.displayError(context.getResources().getString(R.string.network_timeout));
                             }
                             // Network Error Handling
                             callback.onError();

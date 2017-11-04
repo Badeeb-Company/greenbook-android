@@ -187,6 +187,8 @@ public class LoginFragment extends Fragment {
                     goToReviewsTab();
                 }
                 else {
+                    // Clear back stack
+                    mActivity.clearBackStack();
                     goToShopSearch();
                 }
 

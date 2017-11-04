@@ -1,0 +1,144 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    >
+
+    <ImageView
+        android:layout_width="@dimen/login_logo_width"
+        android:layout_height="@dimen/login_logo_height"
+        android:layout_gravity="center"
+        android:src="@drawable/green_logo"
+        android:layout_marginTop="20dp"
+        />
+
+    <TextView
+        android:id="@+id/tvInviteFriend"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="19dp"
+        android:layout_marginTop="27dp"
+        android:layout_marginLeft="28dp"
+        android:text="Invite a friend"
+        android:textColor="#404040"
+        android:textSize="16sp"
+        android:fontFamily="fonts/Helvetica.ttf"
+        />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/login_line_thickness"
+        android:background="@color/light_gray"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="28dp"
+        />
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="40dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="12dp"
+        android:text="Support us"
+        android:textSize="16sp"
+        android:textColor="#404040"
+        android:background="@drawable/rounded_corner_light_gray"
+        android:gravity="center"
+        />
+
+    <TextView
+        android:id="@+id/tvAppRate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="19dp"
+        android:layout_marginTop="27dp"
+        android:layout_marginLeft="28dp"
+        android:text="Rate our app"
+        android:textColor="#404040"
+        android:textSize="16sp"
+        android:fontFamily="fonts/Helvetica.ttf"
+        />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/login_line_thickness"
+        android:background="@color/light_gray"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="28dp"
+        />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/login_bttn_height"
+        style="@style/login_bttn_linear_layout"
+        >
+
+        <TextView
+            android:id="@+id/tvLogin"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="@string/login"
+            style="@style/login_bttn"
+            android:layout_weight="1"
+            />
+
+        <View
+            android:layout_marginLeft="7dp"
+            style="@style/login_vertical_line"/>
+
+        <TextView
+            android:id="@+id/tvSignup"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="@string/signup"
+            style="@style/login_bttn"
+            android:layout_weight="1"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/login_bttn_height"
+        android:layout_marginTop="5dp"
+        android:orientation="horizontal"
+        android:layout_marginLeft="@dimen/login_bttn_left_margin"
+        android:layout_marginRight="@dimen/login_bttn_right_margin"
+        android:gravity="center"
+        >
+
+        <TextView
+            android:id="@+id/tvFacebbokLogin"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="with Facebook"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:background="@drawable/rounded_corner_fb"
+            android:drawableLeft="@drawable/ic_facebook"
+            android:layout_weight="1"
+            android:textSize="14sp"
+            android:padding="15dp"
+            android:layout_marginRight="7dp"
+            />
+
+        <TextView
+            android:id="@+id/tvGoogleLogin"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="with Google+"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:background="@drawable/rounded_corner_google"
+            android:drawableLeft="@drawable/ic_google"
+            android:layout_weight="1"
+            android:textSize="14sp"
+            android:padding="15dp"
+            />
+
+    </LinearLayout>
+
+</LinearLayout>

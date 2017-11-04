@@ -28,6 +28,7 @@ import com.badeeb.greenbook.R;
 import com.badeeb.greenbook.adaptors.PlaceAutocompleteAdapter;
 import com.badeeb.greenbook.fragments.FavoriteFragment;
 import com.badeeb.greenbook.fragments.LoginFragment;
+import com.badeeb.greenbook.fragments.NotLoggedInProfileFragment;
 import com.badeeb.greenbook.fragments.ProfileFragment;
 import com.badeeb.greenbook.fragments.ShopSearchFragment;
 import com.badeeb.greenbook.models.Review;
@@ -136,9 +137,11 @@ public class MainActivity extends AppCompatActivity {
     public void setUser(User user) {
         this.mUser = user;
 
-        // Fill owned shops
-        for (Shop shop : user.getOwnedShops()) {
-            this.mOwnedShopsSet.add(shop.getId());
+        if (user != null) {
+            // Fill owned shops
+            for (Shop shop : user.getOwnedShops()) {
+                this.mOwnedShopsSet.add(shop.getId());
+            }
         }
     }
 
@@ -179,7 +182,10 @@ public class MainActivity extends AppCompatActivity {
                         goToFavorite();
                         break;
                     case R.id.aiProfile:
-                        goToProfileEdit();
+                        if (mUser == null)
+                            goToNotLoggedInProfileFragment();
+                        else
+                            goToProfileEdit();
                         break;
                 }
                 return true;
@@ -224,6 +230,19 @@ public class MainActivity extends AppCompatActivity {
         ProfileFragment profileFragment = new ProfileFragment();
         FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.main_frame, profileFragment, profileFragment.TAG);
+        fragmentTransaction.commit();
+
+        changeNavigationIconsState(R.id.aiProfile);
+    }
+
+    private void goToNotLoggedInProfileFragment() {
+        Fragment fragment = mFragmentManager.findFragmentByTag(NotLoggedInProfileFragment.TAG);
+        if (fragment != null && fragment instanceof NotLoggedInProfileFragment && fragment.isVisible())
+            return;
+
+        NotLoggedInProfileFragment notLoggedInProfileFragment = new NotLoggedInProfileFragment();
+        FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.main_frame, notLoggedInProfileFragment, NotLoggedInProfileFragment.TAG);
         fragmentTransaction.commit();
 
         changeNavigationIconsState(R.id.aiProfile);
@@ -335,5 +354,12 @@ public class MainActivity extends AppCompatActivity {
 
     public void setmShopUnderReview(Shop mShopUnderReview) {
         this.mShopUnderReview = mShopUnderReview;
+    }
+
+    public void clearBackStack() {
+        mFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+//        int counter = mFragmentManager.getBackStackEntryCount();
+//        for (int i = 0; i < counter; i++)
+//            mFragmentManager.popBackStack();
     }
 }

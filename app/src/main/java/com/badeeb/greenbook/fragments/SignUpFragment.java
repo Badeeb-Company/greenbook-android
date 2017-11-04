@@ -62,6 +62,7 @@ public class SignUpFragment extends Fragment {
     private final static int IMAGE_GALLERY_REQUEST = 10;
 
     private MainActivity mActivity;
+    private FragmentManager mFragmentManager;
     private User mUser;
     private OnPermissionsGrantedHandler onStoragePermissionGrantedHandler;
     private ProgressDialog mProgressDialog;
@@ -104,7 +105,10 @@ public class SignUpFragment extends Fragment {
 
     public void init(View view){
         mActivity = (MainActivity) getActivity();
+        mFragmentManager = getFragmentManager();
+
         mUser = new User();
+
         onStoragePermissionGrantedHandler = createOnStoragePermissionGrantedHandler();
         mProgressDialog = UiUtils.createProgressDialog(getActivity(), "Signing up...");
         mActivity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
@@ -269,12 +273,10 @@ public class SignUpFragment extends Fragment {
 
     private void goToLogin() {
         LoginFragment loginFragment = new LoginFragment();
-        FragmentManager fragmentManager = getFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+        FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
 
         fragmentTransaction.replace(R.id.main_frame, loginFragment, loginFragment.TAG);
-
-        fragmentTransaction.addToBackStack(TAG);
 
         fragmentTransaction.commit();
     }
@@ -370,6 +372,7 @@ public class SignUpFragment extends Fragment {
             mPhotoUri = data.getData();
             Glide.with(mActivity)
                     .load(mPhotoUri)
+                    .asBitmap()
                     .into(rivProfileImage);
         }
     }

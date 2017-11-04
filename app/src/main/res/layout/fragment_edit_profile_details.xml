@@ -1,0 +1,117 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white"
+    android:clickable="true"
+    android:focusable="true">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/green"
+        android:paddingLeft="14dp"
+        android:gravity="left|center"
+        >
+
+        <ImageView
+            android:id="@+id/ivToolbarBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/go_back_left_arrow"
+            android:layout_alignParentLeft="true"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="14dp"
+            android:text="Edit Profile"
+            android:textSize="17sp"
+            android:fontFamily="fonts/OpenSans-Regular.ttf"
+            android:layout_toRightOf="@id/ivToolbarBack"
+            />
+
+        <TextView
+            android:id="@+id/tvToolbarSave"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="21dp"
+            android:text="Save"
+            android:textSize="16sp"
+            android:fontFamily="fonts/OpenSans-Regular.ttf"
+            android:layout_alignParentRight="true"
+            android:enabled="false"
+            android:textColor="@color/gray"
+            />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        >
+
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/rivImage"
+            android:layout_width="106dp"
+            android:layout_height="106dp"
+            android:src="@drawable/def_usr_img"
+            android:scaleType="centerCrop"
+            app:riv_oval="true"
+            android:layout_gravity="center"
+            android:layout_marginTop="26dp"
+            />
+
+        <TextView
+            android:id="@+id/tvUploadImage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="27dp"
+            android:layout_marginTop="7dp"
+            android:gravity="center"
+            android:text="Upload image"
+            android:textColor="#4a4a4a"
+            android:textSize="16sp"
+            android:fontFamily="fonts/OpenSans-Regular.ttf"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="19dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginLeft="28dp"
+            android:text="Full name"
+            android:textColor="@color/green"
+            android:textSize="16sp"
+            android:fontFamily="fonts/Helvetica.ttf"
+            />
+
+        <EditText
+            android:id="@+id/etFullName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="28dp"
+            android:layout_marginTop="4dp"
+            android:hint="Full Name"
+            android:textColorHint="#9b9b9b"
+            android:textSize="18sp"
+            android:background="@android:color/transparent"
+            />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/login_line_thickness"
+            android:background="@color/light_gray"
+            android:layout_marginTop="9dp"
+            android:layout_marginLeft="28dp"
+            android:layout_marginRight="34dp"
+            />
+
+    </LinearLayout>
+
+</LinearLayout>
