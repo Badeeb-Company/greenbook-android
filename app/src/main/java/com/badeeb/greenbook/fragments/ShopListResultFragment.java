@@ -35,9 +35,13 @@ import com.badeeb.greenbook.listener.RecyclerItemClickListener;
 import com.badeeb.greenbook.adaptors.ShopRecyclerViewAdapter;
 import com.badeeb.greenbook.models.Category;
 import com.badeeb.greenbook.models.CategoryInquiry;
+import com.badeeb.greenbook.models.FavouriteInquiry;
+import com.badeeb.greenbook.models.JsonRequest;
 import com.badeeb.greenbook.models.JsonResponse;
+import com.badeeb.greenbook.models.ReviewManage;
 import com.badeeb.greenbook.models.Shop;
 import com.badeeb.greenbook.models.ShopInquiry;
+import com.badeeb.greenbook.network.AuthorizedCallback;
 import com.badeeb.greenbook.network.NonAuthorizedCallback;
 import com.badeeb.greenbook.network.VolleyWrapper;
 import com.badeeb.greenbook.shared.Constants;
@@ -108,6 +112,11 @@ public class ShopListResultFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        if (container != null) {
+            // this code is used to prevent fragment overlapping
+            container.removeAllViews();
+        }
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_shop_list_result, container, false);
 
@@ -497,6 +506,24 @@ public class ShopListResultFragment extends Fragment {
         mActivity.disconnectPlaceGoogleApiClient();
         Log.d(TAG, "goToSelectedShop - End");
     }
+
+    public void addToFavourite(int position){
+        Log.d(TAG, "addToFavourite - Start");
+
+        mActivity.addToFavourite(mShopList.get(position), null);
+
+        Log.d(TAG, "addToFavourite - End");
+    }
+
+    public void removeFromFavourite(int position){
+        Log.d(TAG, "removeFromFavourite - Start");
+
+        mActivity.removeFromFavourite(mShopList.get(position), null);
+
+        Log.d(TAG, "removeFromFavourite - End");
+    }
+
+
 
     @Override
     public void onDestroy() {

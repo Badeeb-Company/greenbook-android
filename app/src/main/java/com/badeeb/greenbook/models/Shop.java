@@ -130,4 +130,9 @@ public class Shop {
     public void setPhotos(ArrayList<Photo> photos) {
         this.photos = photos;
     }
+
+    @Override
+    public String toString() {
+        return "["+id+" - "+name+"] ";
+    }
 }

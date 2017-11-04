@@ -2,50 +2,53 @@ package com.badeeb.greenbook.activities;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.location.Location;
-import android.location.LocationManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 
+import com.android.volley.Request;
 import com.badeeb.greenbook.R;
-import com.badeeb.greenbook.adaptors.PlaceAutocompleteAdapter;
 import com.badeeb.greenbook.fragments.FavoriteFragment;
 import com.badeeb.greenbook.fragments.LoginFragment;
 import com.badeeb.greenbook.fragments.NotLoggedInProfileFragment;
 import com.badeeb.greenbook.fragments.ProfileFragment;
 import com.badeeb.greenbook.fragments.ShopSearchFragment;
-import com.badeeb.greenbook.models.Review;
+import com.badeeb.greenbook.models.FavouriteInquiry;
+import com.badeeb.greenbook.models.JsonRequest;
+import com.badeeb.greenbook.models.JsonResponse;
 import com.badeeb.greenbook.models.Shop;
 import com.badeeb.greenbook.models.User;
+import com.badeeb.greenbook.network.AuthorizedCallback;
+import com.badeeb.greenbook.network.VolleyWrapper;
+import com.badeeb.greenbook.shared.AdapterNotifier;
 import com.badeeb.greenbook.shared.AppSettings;
+import com.badeeb.greenbook.shared.Constants;
 import com.badeeb.greenbook.shared.ErrorDisplayHandler;
-import com.badeeb.greenbook.shared.OnPermissionsGrantedHandler;
 import com.badeeb.greenbook.shared.UiUtils;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.places.Places;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Array;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
-import java.util.TimerTask;
+import java.util.List;
+import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -54,12 +57,17 @@ public class MainActivity extends AppCompatActivity {
     private Toolbar mtoolbar;
     private FragmentManager mFragmentManager;
     private BottomNavigationView mBottomNavigationView;
+    private ProgressDialog mProgressDialog;
 
     private User mUser;
     private HashSet<Integer> mOwnedShopsSet;
     private AppSettings mAppSettings;
     private ErrorDisplayHandler mSnackBarDisplayer;
     private Location mCurrentLocation;
+
+    private Set<Integer> mFavSet;
+    private List<Shop> mFavShopList;
+    private AdapterNotifier mFavAdapterNotifier;
 
     // PlaceAutoComplete Attributes
     private GoogleApiClient mPlaceGoogleApiClient;
@@ -85,6 +93,8 @@ public class MainActivity extends AppCompatActivity {
         mFragmentManager = getSupportFragmentManager();
         mAppSettings = AppSettings.getInstance();
         mSnackBarDisplayer = createSnackBarDisplayer();
+        mProgressDialog = UiUtils.createProgressDialog(this);
+
         // Toolbar
         mtoolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mtoolbar);
@@ -93,6 +103,10 @@ public class MainActivity extends AppCompatActivity {
 
         mState = "";
         mOwnedShopsSet = new HashSet<>();
+
+        mFavSet = new HashSet<>();
+        mFavShopList = new ArrayList<Shop>();
+
 
         // Check if user was logged in before or not
         mAppSettings.clearUserInfo();
@@ -104,6 +118,8 @@ public class MainActivity extends AppCompatActivity {
             // Go to login screen
         }
 
+        updateFavouriteSet();
+
         initPlaceAutoComplete();
 
         goToLogin();
@@ -112,6 +128,8 @@ public class MainActivity extends AppCompatActivity {
 
         Log.d(TAG, "init - End");
     }
+
+
 
     public void initPlaceAutoComplete(){
         Log.d(TAG, "initPlaceAutoComplete - start ");
@@ -355,6 +373,205 @@ public class MainActivity extends AppCompatActivity {
     public void setmShopUnderReview(Shop mShopUnderReview) {
         this.mShopUnderReview = mShopUnderReview;
     }
+
+    public Set<Integer> getFavSet() {
+        if(mFavSet == null)
+            mFavSet = new HashSet<>();
+
+        return mFavSet;
+    }
+
+    public List<Shop> getFavShopList() {
+        return mFavShopList;
+    }
+
+    public void updateFavouriteSet() {
+        Log.d(TAG, "updateFavouriteSet - Start");
+        if(getUser() != null){
+            Log.d(TAG, "getFavouriteList - in login mode");
+            callFavApi();
+        }else{
+            Log.d(TAG, "getFavouriteList - in offline mode");
+        }
+        Log.d(TAG, "updateFavouriteSet - end");
+    }
+
+    public void addToFavourite(Shop selectedShop, AdapterNotifier adapterNotifier){
+        Log.d(TAG, "addToFavourite - Start");
+        mFavAdapterNotifier = adapterNotifier;
+        if(getUser() != null){
+            callAddFavouriteApi(selectedShop);
+        }else{
+
+        }
+
+        Log.d(TAG, "addToFavourite - End");
+    }
+
+    public void removeFromFavourite(Shop selectedShop, AdapterNotifier adapterNotifier){
+        Log.d(TAG, "removeFromFavourite - Start");
+        mFavAdapterNotifier = adapterNotifier;
+        if(getUser() != null){
+            callRemoveFavouriteApi(selectedShop);
+        }else{
+
+        }
+
+
+
+        Log.d(TAG, "removeFromFavourite - End");
+    }
+
+
+    private void callFavApi() {
+        Log.d(TAG, "callFavApi - Start");
+        mProgressDialog.show();
+        String url = Constants.BASE_URL + "/shops/favourites" ;
+        Log.d(TAG, "callFavApi - Request URL: " + url);
+
+        AuthorizedCallback<JsonResponse<FavouriteInquiry>> callback = new AuthorizedCallback<JsonResponse<FavouriteInquiry>>(getUser().getToken()) {
+
+            @Override
+            public void onSuccess(JsonResponse<FavouriteInquiry> jsonResponse) {
+                Log.d(TAG, "callFavApi - AuthorizedCallback - onSuccess");
+
+                if (jsonResponse != null
+                        && jsonResponse.getResult() != null
+                        && jsonResponse.getResult().getShopList() != null
+                        && !jsonResponse.getResult().getShopList().isEmpty()) {
+
+                    Log.d(TAG, "callFavApi - AuthorizedCallback - onSuccess - shopList: "
+                            + Arrays.toString(jsonResponse.getResult().getShopList().toArray()));
+
+                    mFavShopList.clear();
+                    mFavShopList.addAll(jsonResponse.getResult().getShopList());
+
+                    if(mFavAdapterNotifier != null)
+                        mFavAdapterNotifier.notifyAdapter();
+
+                    mFavSet = new HashSet<>();
+                    for(Shop fav : jsonResponse.getResult().getShopList()){
+                        if(fav != null){
+                            Log.d(TAG, "updateFavouriteSet - insert fav: "+fav.getName()+" in set");
+                            getFavSet().add(fav.getId());
+                        }
+                    }
+
+                } else {
+                    //switch to empty search page
+                    Log.d(TAG, "callFavApi - AuthorizedCallback - onSuccess - empty search ");
+                }
+                mProgressDialog.dismiss();
+
+            }
+
+            @Override
+            public void onError() {
+                Log.d(TAG, "callFavApi - AuthorizedCallback - onError");
+                mProgressDialog.dismiss();
+            }
+        };
+
+        Type responseType = new TypeToken<JsonResponse<FavouriteInquiry>>() {
+        }.getType();
+
+        VolleyWrapper<Object, JsonResponse<FavouriteInquiry>> volleyWrapper = new VolleyWrapper<>(null, responseType, Request.Method.GET, url,
+                callback, this, getmSnackBarDisplayer(), findViewById(R.id.ll_main_view));
+        volleyWrapper.execute();
+
+        Log.d(TAG, "callFavApi - end");
+    }
+
+    private void callAddFavouriteApi(Shop selectedShop){
+        mProgressDialog.show();
+
+        final Shop shop = selectedShop;
+
+        String url = Constants.BASE_URL + "/shops/" + shop.getId() + "/favourite";
+
+        Log.d(TAG, "callAddFavouriteApi - url: " + url);
+
+        AuthorizedCallback<JsonResponse<FavouriteInquiry>> callback = new AuthorizedCallback<JsonResponse<FavouriteInquiry>>(getUser().getToken()) {
+            @Override
+            public void onSuccess(JsonResponse<FavouriteInquiry> jsonResponse) {
+                Log.d(TAG, "callAddFavouriteApi - onSuccess - Start");
+
+
+                hideKeyboard();
+
+
+                mProgressDialog.dismiss();
+
+                updateFavouriteSet();
+
+                Log.d(TAG, "callAddFavouriteApi - onSuccess - End");
+            }
+
+            @Override
+            public void onError() {
+                Log.d(TAG, "callAddFavouriteApi - onError - Start");
+
+                getmSnackBarDisplayer().displayError(shop.getName()+" couldn't be added to favourite");
+                mProgressDialog.dismiss();
+
+                Log.d(TAG, "callAddFavouriteApi - onError - End");
+            }
+        };
+
+        // Prepare response type
+        Type responseType = new TypeToken<JsonResponse<FavouriteInquiry>>() {}.getType();
+
+        VolleyWrapper<JsonRequest<FavouriteInquiry>, JsonResponse<FavouriteInquiry>> volleyWrapper =
+                new VolleyWrapper<>(null, responseType, Request.Method.POST, url,
+                        callback, this, getmSnackBarDisplayer(), findViewById(R.id.ll_main_view));
+        volleyWrapper.execute();
+
+    }
+
+    private void callRemoveFavouriteApi(Shop selectedShop){
+        mProgressDialog.show();
+
+        final Shop shop = selectedShop;
+
+        String url = Constants.BASE_URL + "/shops/" + shop.getId() + "/favourite";
+
+        Log.d(TAG, "callRemoveFavouriteApi - url: " + url);
+
+        AuthorizedCallback<JsonResponse<FavouriteInquiry>> callback = new AuthorizedCallback<JsonResponse<FavouriteInquiry>>(getUser().getToken()) {
+            @Override
+            public void onSuccess(JsonResponse<FavouriteInquiry> jsonResponse) {
+                Log.d(TAG, "callRemoveFavouriteApi - onSuccess - Start");
+
+                hideKeyboard();
+                mProgressDialog.dismiss();
+
+                updateFavouriteSet();
+
+                Log.d(TAG, "callRemoveFavouriteApi - onSuccess - End");
+            }
+
+            @Override
+            public void onError() {
+                Log.d(TAG, "callRemoveFavouriteApi - onError - Start");
+
+                getmSnackBarDisplayer().displayError(shop.getName()+" couldn't be deleted!");
+                mProgressDialog.dismiss();
+
+                Log.d(TAG, "callRemoveFavouriteApi - onError - End");
+            }
+        };
+
+        // Prepare response type
+        Type responseType = new TypeToken<JsonResponse<FavouriteInquiry>>() {}.getType();
+
+        VolleyWrapper<JsonRequest<FavouriteInquiry>, JsonResponse<FavouriteInquiry>> volleyWrapper =
+                new VolleyWrapper<>(null, responseType, Request.Method.DELETE, url,
+                        callback, this, getmSnackBarDisplayer(), findViewById(R.id.ll_main_view));
+        volleyWrapper.execute();
+
+    }
+
+
 
     public void clearBackStack() {
         mFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);

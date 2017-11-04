@@ -192,6 +192,8 @@ public class LoginFragment extends Fragment {
                     goToShopSearch();
                 }
 
+                mActivity.updateFavouriteSet();
+
                 mActivity.hideKeyboard();
 
                 mProgressDialog.dismiss();

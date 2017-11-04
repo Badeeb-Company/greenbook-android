@@ -189,7 +189,7 @@ public class MapFragment extends Fragment {
 
                     Shop shop = mShopsList.get(index);
 
-                    DecimalFormat df = new DecimalFormat("#.#");
+                    DecimalFormat df = new DecimalFormat("0.0");
 
 
                     ((TextView) v.findViewById(R.id.tvShopName)).setText(shop.getName());

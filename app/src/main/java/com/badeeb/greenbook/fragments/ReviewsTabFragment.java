@@ -301,7 +301,7 @@ public class ReviewsTabFragment extends Fragment {
             public void onSuccess(JsonResponse<ReviewManage> jsonResponse) {
                 Log.d(TAG, "callDeleteReviewApi - onSuccess - Start");
 
-                UiUtils.showDialog(mContext, R.style.DialogTheme, R.string.succes_review_deletion, R.string.ok_btn_dialog, null);
+                UiUtils.showDialog(mContext, R.style.DialogTheme, R.string.succes_review_deletion,~ R.string.ok_btn_dialog, null);
 
                 // Refresh reviews list
                 prepareReviewsList();
