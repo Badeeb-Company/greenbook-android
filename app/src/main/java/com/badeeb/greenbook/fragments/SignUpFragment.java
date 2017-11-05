@@ -235,7 +235,6 @@ public class SignUpFragment extends Fragment {
             @Override
             public void onError() {
                 Log.d(TAG, "SignUp request failed !!");
-                mActivity.getmSnackBarDisplayer().displayError("Internal server error, Please try again later");
                 mProgressDialog.dismiss();
             }
         };
