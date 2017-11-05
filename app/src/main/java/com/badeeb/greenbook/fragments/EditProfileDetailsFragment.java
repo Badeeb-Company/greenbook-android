@@ -117,20 +117,20 @@ public class EditProfileDetailsFragment extends Fragment {
     }
 
     private void initUi(View view) {
-        ivToolbarBack = view.findViewById(R.id.ivToolbarBack);
+        ivToolbarBack = (ImageView) view.findViewById(R.id.ivToolbarBack);
 
-        tvToolbarSave = view.findViewById(R.id.tvToolbarSave);
+        tvToolbarSave = (TextView) view.findViewById(R.id.tvToolbarSave);
 
-        rivImage = view.findViewById(R.id.rivImage);
+        rivImage = (RoundedImageView) view.findViewById(R.id.rivImage);
         Glide.with(mContext)
                 .load(mActivity.getUser().getImageURL())
                 .asBitmap()
                 .placeholder(R.drawable.def_usr_img)
                 .into(rivImage);
 
-        tvUploadImage = view.findViewById(R.id.tvUploadImage);
+        tvUploadImage = (TextView) view.findViewById(R.id.tvUploadImage);
 
-        etFullName = view.findViewById(R.id.etFullName);
+        etFullName = (EditText) view.findViewById(R.id.etFullName);
         etFullName.setText(mActivity.getUser().getName());
     }
 

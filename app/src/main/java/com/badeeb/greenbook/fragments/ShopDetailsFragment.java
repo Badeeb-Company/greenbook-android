@@ -114,8 +114,8 @@ public class ShopDetailsFragment extends Fragment {
         tvShopName = (TextView) view.findViewById(R.id.tvShopName);
         tvDescription = (TextView) view.findViewById(R.id.tvDescription);
         tvNearLocation = (TextView) view.findViewById(R.id.tvNearLocation);
-        ivToolbarBack = view.findViewById(R.id.ivToolbarBack);
-        tvToolbarShopName = view.findViewById(R.id.tvToolbarShopName);
+        ivToolbarBack = (ImageView) view.findViewById(R.id.ivToolbarBack);
+        tvToolbarShopName = (TextView) view.findViewById(R.id.tvToolbarShopName);
 
         fillUiFields();
     }

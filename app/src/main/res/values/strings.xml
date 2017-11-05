@@ -42,4 +42,7 @@
     <string name="app_share_descrption_msg">Greenbook Application</string>
     <string name="server_error">Server error, please try later</string>
 
+    <string name="facebook_app_id">176228622930367</string>
+    <string name="fb_login_protocol_scheme">fb176228622930367</string>
+
 </resources>

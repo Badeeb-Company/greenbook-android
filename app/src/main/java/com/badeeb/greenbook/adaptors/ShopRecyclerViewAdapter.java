@@ -96,7 +96,7 @@ public class ShopRecyclerViewAdapter extends RecyclerView.Adapter<ShopViewHolder
             public void onClick(View view) {
                 Log.d(TAG, "setupListener - ivFavShop - icon pressed");
                 Shop shop = mShopList.get(position);
-                ImageView selectedFav = view.findViewById(R.id.ivFav);
+                ImageView selectedFav = (ImageView) view.findViewById(R.id.ivFav);
                 if(!mActivity.getFavSet().isEmpty() && mActivity.getFavSet().contains(shop.getId())) {
                     Log.d(TAG, "setupListener - ivFavShop - change to not pressed");
                     selectedFav.setImageDrawable(mActivity.getResources().getDrawable(R.drawable.ic_fav));

@@ -91,7 +91,7 @@ public class ReviewsTabFragment extends Fragment {
         mProgressDialog = UiUtils.createProgressDialog(mActivity);
         mFragmentManager = getFragmentManager();
         mReviewsList = new ArrayList<>();
-        mFabAddReview = view.findViewById(R.id.fabAddReview);
+        mFabAddReview = (FloatingActionButton) view.findViewById(R.id.fabAddReview);
 
         loadBundleData();
 
@@ -106,7 +106,7 @@ public class ReviewsTabFragment extends Fragment {
 
     private void initRecyclerView(View view) {
 
-        mRecyclerView = view.findViewById(R.id.rvReviews);
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.rvReviews);
         mReviewRecyclerViewAdapter = new ReviewRecyclerViewAdapter(getContext(), mShop, mReviewsList, this, mActivity.getUser(), mActivity);
         mReviewsPerLine = 1;
 

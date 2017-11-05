@@ -87,11 +87,11 @@ public class ChangePasswordDialogFragment extends DialogFragment {
     }
 
     private void initUi(View view) {
-        etCurrentPassword = view.findViewById(R.id.etCurrentPassword);
-        etNewPassword = view.findViewById(R.id.etNewPassword);
-        etConfirmNewPassword = view.findViewById(R.id.etConfirmNewPassword);
-        tvCancel = view.findViewById(R.id.tvCancel);
-        tvChange = view.findViewById(R.id.tvChange);
+        etCurrentPassword =(EditText) view.findViewById(R.id.etCurrentPassword);
+        etNewPassword = (EditText) view.findViewById(R.id.etNewPassword);
+        etConfirmNewPassword = (EditText) view.findViewById(R.id.etConfirmNewPassword);
+        tvCancel = (TextView) view.findViewById(R.id.tvCancel);
+        tvChange = (TextView) view.findViewById(R.id.tvChange);
     }
 
 

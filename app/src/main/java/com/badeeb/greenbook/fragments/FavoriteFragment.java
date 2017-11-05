@@ -37,6 +37,7 @@ import org.parceler.Parcels;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -88,7 +89,8 @@ public class FavoriteFragment extends Fragment {
 
         mActivity = (MainActivity) getActivity();
         mProgressDialog = UiUtils.createProgressDialog(mActivity);
-        mShopList = mActivity.getFavShopList();
+
+        mShopList = new ArrayList<>();
 
         rvFavList = (RecyclerView) view.findViewById(R.id.rvFavList) ;
         RecyclerView.LayoutManager mShopLayoutManager = new LinearLayoutManager(mActivity);
@@ -104,6 +106,9 @@ public class FavoriteFragment extends Fragment {
 
         llEmptyFavourite = (LinearLayout) view.findViewById(R.id.llEmptyFavourite);
 
+        prepareFavouriteShopList();
+
+        adjustVisiablity();
         SetupListener();
 
 
@@ -112,12 +117,46 @@ public class FavoriteFragment extends Fragment {
 
     }
 
+    private void prepareFavouriteShopList() {
+        callFavShopsApi();
+    }
+
+
+    private void adjustVisiablity() {
+        if(mActivity.getFavSet().isEmpty()){
+            enableNoFavouriteFoundScreen();
+        }else {
+            disableNoFavouriteFoundScreen();
+        }
+    }
+
     private AdapterNotifier createAdapterNotifier() {
         return new AdapterNotifier(){
 
             @Override
             public void notifyAdapter() {
+                Log.d(TAG, "notifyAdapter - Start");
+
+                Log.d(TAG, "notifyAdapter - Favourite Fragment FavShopList : "+Arrays.toString(mShopList.toArray()));
+
+                if(!mActivity.getFavSet().isEmpty()){
+                    for(int i = mShopList.size() - 1 ; i >= 0  ; i--){
+                        Log.d(TAG, "inside check - shop: "+mShopList.get(i)+"");
+                        if(!mActivity.getFavSet().contains(mShopList.get(i).getId())){
+                            Log.d(TAG, "inside check - shop: "+mShopList.get(i)+" removed");
+                            mShopList.remove(i);
+                        }
+                    }
+                }
                 mFavAdapter.notifyDataSetChanged();
+                Log.d(TAG, "notifyAdapter - Start");
+            }
+
+            @Override
+            public void notifyEmptyList() {
+                mShopList.clear();
+                mFavAdapter.notifyDataSetChanged();
+                enableNoFavouriteFoundScreen();
             }
         };
     }
@@ -139,6 +178,75 @@ public class FavoriteFragment extends Fragment {
     private void disableNoFavouriteFoundScreen() {
         srlFavList.setVisibility(View.VISIBLE);
         llEmptyFavourite.setVisibility(View.GONE);
+    }
+
+    private void callFavShopsApi() {
+        Log.d(TAG, "callFavShopsApi - Start");
+
+        if(mActivity.getFavSet().isEmpty()){
+            Log.d(TAG, "callFavShopsApi - Start");
+            enableNoFavouriteFoundScreen();
+            return;
+        }
+
+        mProgressDialog.show();
+        String url = Constants.BASE_URL + "/shops?ids=" ;
+
+        for(int shopId: mActivity.getFavSet()){
+            url += shopId + ",";
+        }
+
+        if(url.lastIndexOf(',') != -1) {
+            url = url.substring(0, url.lastIndexOf(',')); // remove the last comma
+        }
+
+        Log.d(TAG, "callFavApi - Request URL: " + url);
+
+        NonAuthorizedCallback<JsonResponse<ShopInquiry>> callback = new NonAuthorizedCallback<JsonResponse<ShopInquiry>>() {
+
+            @Override
+            public void onSuccess(JsonResponse<ShopInquiry> jsonResponse) {
+                Log.d(TAG, "callFavApi - NonAuthorizedCallback - onSuccess");
+
+                if (jsonResponse != null
+                        && jsonResponse.getResult() != null
+                        && jsonResponse.getResult().getShopList() != null
+                        && !jsonResponse.getResult().getShopList().isEmpty()) {
+
+                    Log.d(TAG, "callFavApi - NonAuthorizedCallback - onSuccess - shopList: "
+                            + Arrays.toString(jsonResponse.getResult().getShopList().toArray()));
+
+                    mShopList.clear();
+                    mShopList.addAll(jsonResponse.getResult().getShopList());
+
+                    mFavAdapter.notifyDataSetChanged();
+                    disableNoFavouriteFoundScreen();
+
+                } else {
+                    //switch to empty search
+                    enableNoFavouriteFoundScreen();
+                    Log.d(TAG, "callFavApi - NonAuthorizedCallback - onSuccess - empty search ");
+                }
+                mProgressDialog.dismiss();
+
+            }
+
+            @Override
+            public void onError() {
+                Log.d(TAG, "callFavApi - NonAuthorizedCallback - onError");
+                mProgressDialog.dismiss();
+            }
+        };
+
+        Type responseType = new TypeToken<JsonResponse<ShopInquiry>>() {
+        }.getType();
+
+        VolleyWrapper<Object, JsonResponse<ShopInquiry>> volleyWrapper = new VolleyWrapper<>(null, responseType, Request.Method.GET, url,
+                callback, mActivity, mActivity.getmSnackBarDisplayer(), mActivity.findViewById(R.id.ll_main_view));
+        volleyWrapper.execute();
+
+        Log.d(TAG, "callFavApi - end");
+
     }
 
 
@@ -167,10 +275,6 @@ public class FavoriteFragment extends Fragment {
         Log.d(TAG, "goToSelectedShop - End");
     }
 
-    public void fetchSotredFavourite() {
-        enableNoFavouriteFoundScreen();
-        mProgressDialog.dismiss();
-    }
 
     public void removeFavourite(Shop selectedShop){
         mActivity.removeFromFavourite(selectedShop,mAdapterNotifier);

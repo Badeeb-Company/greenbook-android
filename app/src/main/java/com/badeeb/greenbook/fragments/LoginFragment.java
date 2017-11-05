@@ -25,6 +25,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.QuickContactBadge;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.badeeb.greenbook.R;
@@ -41,6 +42,16 @@ import com.badeeb.greenbook.shared.AppSettings;
 import com.badeeb.greenbook.shared.Constants;
 import com.badeeb.greenbook.shared.UiUtils;
 import com.badeeb.greenbook.shared.Utils;
+import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.appevents.AppEventsLogger;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -52,10 +63,13 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.gson.reflect.TypeToken;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.parceler.Parcels;
 import org.w3c.dom.Text;
 
 import java.lang.reflect.Type;
+import java.util.Arrays;
 import java.util.HashSet;
 
 /**
@@ -86,6 +100,12 @@ public class LoginFragment extends Fragment {
     private GoogleApiClient mGoogleApiClient;
     private GoogleApiClient.OnConnectionFailedListener onConnectionFailedListener;
     private static final int RC_SIGN_IN = 9001;
+
+
+    //Facebook
+    private LoginManager mLoginManager;
+    private CallbackManager mFacebookCallbackManager;
+    private static final int FB_REQUEST_CODE = 64206;
 
     public LoginFragment() {
         // Required empty public constructor
@@ -124,18 +144,85 @@ public class LoginFragment extends Fragment {
     }
 
     private void initUi(View view) {
-        mEmail = view.findViewById(R.id.etEmail);
-        mPassword = view.findViewById(R.id.etPassword);
-        tvLogin = view.findViewById(R.id.tvLogin);
-        tvSignup = view.findViewById(R.id.tvSignup);
-        tvSkip = view.findViewById(R.id.tvSkip);
-        tvForgetPassword = view.findViewById(R.id.tvForgetPassword);
-        tvGoogleLogin = view.findViewById(R.id.tvGoogleLogin);
-        tvFacebbokLogin = view.findViewById(R.id.tvFacebbokLogin);
+        mEmail = (EditText) view.findViewById(R.id.etEmail);
+        mPassword = (EditText) view.findViewById(R.id.etPassword);
+        tvLogin = (TextView) view.findViewById(R.id.tvLogin);
+        tvSignup = (TextView) view.findViewById(R.id.tvSignup);
+        tvSkip = (TextView) view.findViewById(R.id.tvSkip);
+        tvForgetPassword = (TextView) view.findViewById(R.id.tvForgetPassword);
+        tvGoogleLogin = (TextView) view.findViewById(R.id.tvGoogleLogin);
+        tvFacebbokLogin = (TextView) view.findViewById(R.id.tvFacebbokLogin);
 
         mActivity.hideToolbar();
         mActivity.hideBottomNavigationActionBar();
     }
+
+    public void initFacebook(){
+
+        // Facebook
+        FacebookSdk.sdkInitialize(mActivity.getApplicationContext());
+        AppEventsLogger.activateApp(mActivity);
+        mLoginManager = LoginManager.getInstance();
+        mFacebookCallbackManager = CallbackManager.Factory.create();
+
+        mLoginManager.registerCallback(mFacebookCallbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+
+                graphRequest(loginResult.getAccessToken());
+            }
+
+            @Override
+            public void onCancel() {
+
+            }
+
+            @Override
+            public void onError(FacebookException error) {
+
+            }
+        });
+
+
+
+    }
+
+    public void graphRequest(final AccessToken token){
+        GraphRequest request = GraphRequest.newMeRequest(token,new GraphRequest.GraphJSONObjectCallback(){
+
+            @Override
+            public void onCompleted(JSONObject object, GraphResponse response) {
+
+                Log.d(TAG," Facebook JSON: "+object.toString());
+                Log.d(TAG," Facebook Token: "+token.getToken());
+
+                try {
+                    mUser.setEmail(object.getString("email"));
+                    mUser.setName(object.getString("first_name")+" "+object.getString("last_name"));
+
+                    mUser.setImageURL(object.getJSONObject("picture").getJSONObject("data").getString("url"));
+                    mUser.setSocialAcctId(object.getString("id"));
+                    mUser.setSocialAcctToken(token.getToken());
+                    mUser.setAccountType("facebook");
+
+                    mProgressDialog.show();
+                    callSocialLoginApi();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+//                Toast.makeText(mActivity.getApplicationContext(),object.toString(),Toast.LENGTH_LONG).show();
+
+            }
+        });
+
+        Bundle b = new Bundle();
+        b.putString("fields","id,email,first_name,last_name,picture.type(large)");
+        request.setParameters(b);
+        request.executeAsync();
+
+    }
+
 
     private void setupListeners(View view) {
         Log.d(TAG, "setupListeners - Start");
@@ -183,6 +270,15 @@ public class LoginFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 prepareGooglePlusLogin();
+            }
+        });
+
+        tvFacebbokLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                initFacebook();
+
+                mLoginManager.logInWithReadPermissions(LoginFragment.this, Arrays.asList("public_profile","email","user_friends"));
             }
         });
 
@@ -387,6 +483,8 @@ public class LoginFragment extends Fragment {
             Log.d(TAG, "onActivityResult - Google activity result");
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             handleSignInResult(result);
+        }else if(requestCode == FB_REQUEST_CODE){
+            mFacebookCallbackManager.onActivityResult(requestCode,resultCode,data);
         }
 
         Log.d(TAG, "onActivityResult - End");

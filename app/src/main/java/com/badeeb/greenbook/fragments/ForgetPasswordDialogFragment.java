@@ -71,12 +71,12 @@ public class ForgetPasswordDialogFragment extends DialogFragment {
 
         mActivity = (MainActivity) getActivity();
 
-        llForgetPassword = view.findViewById(R.id.llForgetPassword);
-        llForgetPasswordMessage = view.findViewById(R.id.llForgetPasswordMessage);
-        mEmail = view.findViewById(R.id.etEmail);
-        mCancel = view.findViewById(R.id.tvCancel);
-        mSend = view.findViewById(R.id.tvSend);
-        mOk = view.findViewById(R.id.tvOk);
+        llForgetPassword = (LinearLayout) view.findViewById(R.id.llForgetPassword);
+        llForgetPasswordMessage = (LinearLayout) view.findViewById(R.id.llForgetPasswordMessage);
+        mEmail = (EditText) view.findViewById(R.id.etEmail);
+        mCancel = (TextView) view.findViewById(R.id.tvCancel);
+        mSend = (TextView) view.findViewById(R.id.tvSend);
+        mOk = (TextView) view.findViewById(R.id.tvOk);
         mProgressDialog = UiUtils.createProgressDialog(mActivity);
 
         setupListeners();

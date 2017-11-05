@@ -82,12 +82,12 @@ public class NotLoggedInProfileFragment extends Fragment {
     }
 
     private void initUi(View view) {
-        tvInviteFriend = view.findViewById(R.id.tvInviteFriend);
-        tvAppRate = view.findViewById(R.id.tvAppRate);
-        tvLogin = view.findViewById(R.id.tvLogin);
-        tvSignup = view.findViewById(R.id.tvSignup);
-        tvFacebbokLogin = view.findViewById(R.id.tvFacebbokLogin);
-        tvGoogleLogin = view.findViewById(R.id.tvGoogleLogin);
+        tvInviteFriend = (TextView) view.findViewById(R.id.tvInviteFriend);
+        tvAppRate = (TextView) view.findViewById(R.id.tvAppRate);
+        tvLogin = (TextView) view.findViewById(R.id.tvLogin);
+        tvSignup = (TextView) view.findViewById(R.id.tvSignup);
+        tvFacebbokLogin = (TextView) view.findViewById(R.id.tvFacebbokLogin);
+        tvGoogleLogin = (TextView) view.findViewById(R.id.tvGoogleLogin);
 
         mActivity.showBottomNavigationActionBar();
     }

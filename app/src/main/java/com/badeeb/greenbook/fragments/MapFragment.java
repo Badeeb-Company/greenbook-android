@@ -109,7 +109,7 @@ public class MapFragment extends Fragment {
 
     private void setupListeners(View view) {
 
-        ImageView back = view.findViewById(R.id.ivback);
+        ImageView back = (ImageView) view.findViewById(R.id.ivback);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -20,6 +20,7 @@ import android.view.inputmethod.InputMethodManager;
 
 import com.android.volley.Request;
 import com.badeeb.greenbook.R;
+import com.badeeb.greenbook.dbHelpers.FavouriteSQLiteHelper;
 import com.badeeb.greenbook.fragments.FavoriteFragment;
 import com.badeeb.greenbook.fragments.LoginFragment;
 import com.badeeb.greenbook.fragments.NotLoggedInProfileFragment;
@@ -37,6 +38,10 @@ import com.badeeb.greenbook.shared.AppSettings;
 import com.badeeb.greenbook.shared.Constants;
 import com.badeeb.greenbook.shared.ErrorDisplayHandler;
 import com.badeeb.greenbook.shared.UiUtils;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
+import com.facebook.login.LoginManager;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.places.Places;
 import com.google.gson.reflect.TypeToken;
@@ -66,8 +71,8 @@ public class MainActivity extends AppCompatActivity {
     private Location mCurrentLocation;
 
     private Set<Integer> mFavSet;
-    private List<Shop> mFavShopList;
     private AdapterNotifier mFavAdapterNotifier;
+    private FavouriteSQLiteHelper favouriteSQLiteHelper;
 
     // PlaceAutoComplete Attributes
     private GoogleApiClient mPlaceGoogleApiClient;
@@ -105,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
         mOwnedShopsSet = new HashSet<>();
 
         mFavSet = new HashSet<>();
-        mFavShopList = new ArrayList<Shop>();
+        favouriteSQLiteHelper = new FavouriteSQLiteHelper(this);
 
 
         // Check if user was logged in before or not
@@ -381,9 +386,6 @@ public class MainActivity extends AppCompatActivity {
         return mFavSet;
     }
 
-    public List<Shop> getFavShopList() {
-        return mFavShopList;
-    }
 
     public void updateFavouriteSet() {
         Log.d(TAG, "updateFavouriteSet - Start");
@@ -392,6 +394,7 @@ public class MainActivity extends AppCompatActivity {
             callFavApi();
         }else{
             Log.d(TAG, "getFavouriteList - in offline mode");
+            updateFavShopListFromDb();
         }
         Log.d(TAG, "updateFavouriteSet - end");
     }
@@ -402,7 +405,8 @@ public class MainActivity extends AppCompatActivity {
         if(getUser() != null){
             callAddFavouriteApi(selectedShop);
         }else{
-
+            favouriteSQLiteHelper.addFavourite(selectedShop.getId());
+            updateFavShopListFromDb();
         }
 
         Log.d(TAG, "addToFavourite - End");
@@ -414,12 +418,41 @@ public class MainActivity extends AppCompatActivity {
         if(getUser() != null){
             callRemoveFavouriteApi(selectedShop);
         }else{
-
+            favouriteSQLiteHelper.removeFavourite(selectedShop.getId());
+            updateFavShopListFromDb();
         }
 
 
 
         Log.d(TAG, "removeFromFavourite - End");
+    }
+
+
+    private void updateFavShopListFromDb() {
+        Log.d(TAG, "updateFavShopListFromDb - Start");
+
+        List<Integer> updatedList = favouriteSQLiteHelper.getAllFavouriteIds();
+        Log.d(TAG, "updateFavShopListFromDb - updatedList : "+Arrays.toString(updatedList.toArray()));
+
+        mFavSet = new HashSet<>();
+        mFavSet.addAll(updatedList);
+
+        Log.d(TAG, "updateFavShopListFromDb - mFavSet : "+Arrays.toString(mFavSet.toArray()));
+
+
+
+
+        if(mFavAdapterNotifier != null ) {
+            if (mFavSet.isEmpty()) {
+                Log.d(TAG, "updateFavShopListFromDb - notify empty list");
+                mFavAdapterNotifier.notifyEmptyList();
+            } else {
+                Log.d(TAG, "updateFavShopListFromDb - notify adapter");
+                mFavAdapterNotifier.notifyAdapter();
+            }
+        }
+
+        Log.d(TAG, "updateFavShopListFromDb - End");
     }
 
 
@@ -443,8 +476,6 @@ public class MainActivity extends AppCompatActivity {
                     Log.d(TAG, "callFavApi - AuthorizedCallback - onSuccess - shopList: "
                             + Arrays.toString(jsonResponse.getResult().getShopList().toArray()));
 
-                    mFavShopList.clear();
-                    mFavShopList.addAll(jsonResponse.getResult().getShopList());
 
                     if(mFavAdapterNotifier != null)
                         mFavAdapterNotifier.notifyAdapter();
@@ -458,7 +489,10 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                 } else {
-                    //switch to empty search page
+                    //switch to empty search
+                    mFavSet = new HashSet<>();
+                    if(mFavAdapterNotifier != null)
+                        mFavAdapterNotifier.notifyEmptyList();
                     Log.d(TAG, "callFavApi - AuthorizedCallback - onSuccess - empty search ");
                 }
                 mProgressDialog.dismiss();

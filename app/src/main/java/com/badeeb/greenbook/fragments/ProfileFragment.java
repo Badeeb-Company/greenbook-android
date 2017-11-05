@@ -87,26 +87,26 @@ public class ProfileFragment extends Fragment {
     }
 
     private void initUi(View view) {
-        ivToolbarBack = view.findViewById(R.id.ivToolbarBack);
+        ivToolbarBack = (ImageView) view.findViewById(R.id.ivToolbarBack);
 
-        rivImage = view.findViewById(R.id.rivImage);
+        rivImage = (ImageView) view.findViewById(R.id.rivImage);
         Glide.with(mContext)
                 .load(mActivity.getUser().getImageURL())
                 .asBitmap()
                 .placeholder(R.drawable.def_usr_img)
                 .into(rivImage);
 
-        tvName = view.findViewById(R.id.tvName);
+        tvName = (TextView) view.findViewById(R.id.tvName);
         tvName.setText(mActivity.getUser().getName());
 
-        tvEmail = view.findViewById(R.id.tvEmail);
+        tvEmail = (TextView) view.findViewById(R.id.tvEmail);
         tvEmail.setText(mActivity.getUser().getEmail());
 
-        tvEditProfile = view.findViewById(R.id.tvEditProfile);
-        tvLogout = view.findViewById(R.id.tvLogout);
-        tvInviteFriend = view.findViewById(R.id.tvInviteFriend);
-        tvAppRate = view.findViewById(R.id.tvAppRate);
-        tvChangePassword = view.findViewById(R.id.tvChangePassword);
+        tvEditProfile =(TextView)  view.findViewById(R.id.tvEditProfile);
+        tvLogout = (TextView) view.findViewById(R.id.tvLogout);
+        tvInviteFriend =(TextView)  view.findViewById(R.id.tvInviteFriend);
+        tvAppRate = (TextView) view.findViewById(R.id.tvAppRate);
+        tvChangePassword = (TextView) view.findViewById(R.id.tvChangePassword);
     }
 
     private void setupListeners() {
@@ -184,6 +184,7 @@ public class ProfileFragment extends Fragment {
     private void logout() {
         mAppSettings.clearUserInfo();
         mActivity.setUser(null);
+        mActivity.updateFavouriteSet();
         goToShopSearchFragment();
     }
 

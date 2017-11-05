@@ -185,7 +185,7 @@ public class UiUtils {
                 ;
 
         View snackbarView = snackbar.getView();
-        TextView action = snackbarView.findViewById(android.support.design.R.id.snackbar_action);
+        TextView action = (TextView) snackbarView.findViewById(android.support.design.R.id.snackbar_action);
         action.setCompoundDrawablesWithIntrinsicBounds(0, 0, icon, 0);
 
         snackbarView.setBackgroundColor(color);

@@ -86,7 +86,7 @@ public class FavouriteRecyclerViewAdapter extends RecyclerView.Adapter<ShopViewH
             @Override
             public void onClick(View view) {
                 Log.d(TAG, "setupListener - ivFavShop - icon pressed");
-                ImageView selectedFav = view.findViewById(R.id.ivFav);
+                ImageView selectedFav = (ImageView) view.findViewById(R.id.ivFav);
 
                 Log.d(TAG, "setupListener - ivFavShop - change to not pressed");
                 mParentFragment.removeFavourite(mShopList.get(position));

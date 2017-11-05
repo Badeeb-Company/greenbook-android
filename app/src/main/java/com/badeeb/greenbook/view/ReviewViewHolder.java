@@ -35,24 +35,24 @@ public class ReviewViewHolder extends RecyclerView.ViewHolder {
     public ReviewViewHolder(View itemView) {
         super(itemView);
 
-        ivImage = itemView.findViewById(R.id.ivImage);
-        tvReviewerName = itemView.findViewById(R.id.tvReviewerName);
-        rbReviewRate = itemView.findViewById(R.id.rbReviewRate);
-        tvReviewRating = itemView.findViewById(R.id.tvReviewRating);
-        tvReviewDescription = itemView.findViewById(R.id.tvReviewDescription);
+        ivImage = (ImageView) itemView.findViewById(R.id.ivImage);
+        tvReviewerName = (TextView) itemView.findViewById(R.id.tvReviewerName);
+        rbReviewRate = (RatingBar) itemView.findViewById(R.id.rbReviewRate);
+        tvReviewRating = (TextView) itemView.findViewById(R.id.tvReviewRating);
+        tvReviewDescription = (TextView) itemView.findViewById(R.id.tvReviewDescription);
 
-        llOfReviewReply = itemView.findViewById(R.id.llOfReviewReply);
-        ivReplyIcon = itemView.findViewById(R.id.ivReplyIcon);
+        llOfReviewReply = (LinearLayout) itemView.findViewById(R.id.llOfReviewReply);
+        ivReplyIcon = (ImageView) itemView.findViewById(R.id.ivReplyIcon);
 
-        llOwnerReply = itemView.findViewById(R.id.llOwnerReply);
-        tvReviewReply = itemView.findViewById(R.id.tvReviewReply);
-        tvShopOwnerReplyView = itemView.findViewById(R.id.tvShopOwnerReplyView);
-        etShopOwnerReplyText = itemView.findViewById(R.id.etShopOwnerReplyText);
+        llOwnerReply = (LinearLayout) itemView.findViewById(R.id.llOwnerReply);
+        tvReviewReply = (TextView) itemView.findViewById(R.id.tvReviewReply);
+        tvShopOwnerReplyView = (TextView) itemView.findViewById(R.id.tvShopOwnerReplyView);
+        etShopOwnerReplyText = (TextView) itemView.findViewById(R.id.etShopOwnerReplyText);
 
-        tvReviewEdit = itemView.findViewById(R.id.tvReviewEdit);
-        tvReviewDelete = itemView.findViewById(R.id.tvReviewDelete);
+        tvReviewEdit = (TextView) itemView.findViewById(R.id.tvReviewEdit);
+        tvReviewDelete = (TextView) itemView.findViewById(R.id.tvReviewDelete);
 
-        tvReviewTime = itemView.findViewById(R.id.tvReviewTime);
+        tvReviewTime = (TextView) itemView.findViewById(R.id.tvReviewTime);
     }
 
     public ImageView getIvImage() {

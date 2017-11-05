@@ -6,4 +6,6 @@ package com.badeeb.greenbook.shared;
 
 public interface AdapterNotifier {
     public void notifyAdapter();
+
+    public void notifyEmptyList();
 }

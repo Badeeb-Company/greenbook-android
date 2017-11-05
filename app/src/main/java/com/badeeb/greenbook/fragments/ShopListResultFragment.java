@@ -501,6 +501,7 @@ public class ShopListResultFragment extends Fragment {
 
         fragmentTransaction.addToBackStack(TAG);
 
+
         fragmentTransaction.commit();
 
         mActivity.disconnectPlaceGoogleApiClient();

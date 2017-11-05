@@ -122,26 +122,26 @@ public class ReviewMngFragment extends Fragment {
     }
 
     private void initUi(View view) {
-        ivToolbarBack = view.findViewById(R.id.ivToolbarBack);
-        tvToolbarShopOwnerTitle = view.findViewById(R.id.tvToolbarShopOwnerTitle);
-        tvToolbarTitle = view.findViewById(R.id.tvToolbarTitle);
-        tvToolbarAddReview = view.findViewById(R.id.tvToolbarAddReview);
+        ivToolbarBack = (ImageView) view.findViewById(R.id.ivToolbarBack);
+        tvToolbarShopOwnerTitle = (TextView) view.findViewById(R.id.tvToolbarShopOwnerTitle);
+        tvToolbarTitle = (TextView) view.findViewById(R.id.tvToolbarTitle);
+        tvToolbarAddReview = (TextView) view.findViewById(R.id.tvToolbarAddReview);
 
-        rivImage = view.findViewById(R.id.rivImage);
+        rivImage = (RoundedImageView) view.findViewById(R.id.rivImage);
         Glide.with(getContext())
                 .load(mActivity.getUser().getImageURL())
                 .asBitmap()
                 .placeholder(R.drawable.def_usr_img)
                 .into(rivImage);
 
-        tvReviewerName = view.findViewById(R.id.tvReviewerName);
+        tvReviewerName = (TextView) view.findViewById(R.id.tvReviewerName);
         tvReviewerName.setText(mActivity.getUser().getName());
 
-        etReviewDescription = view.findViewById(R.id.etReviewDescription);
-        rbShopRate = view.findViewById(R.id.rbShopRate);
+        etReviewDescription = (EditText) view.findViewById(R.id.etReviewDescription);
+        rbShopRate = (RatingBar) view.findViewById(R.id.rbShopRate);
 
-        tvToolbarEditReview = view.findViewById(R.id.tvToolbarEditReview);
-        tvTapAstarToRate = view.findViewById(R.id.tvTapAstarToRate);
+        tvToolbarEditReview = (TextView) view.findViewById(R.id.tvToolbarEditReview);
+        tvTapAstarToRate = (TextView) view.findViewById(R.id.tvTapAstarToRate);
 
         if (ReviewMngFragment.ACTION_EDIT.equals(mAction)) {
             tvToolbarAddReview.setVisibility(View.GONE);
