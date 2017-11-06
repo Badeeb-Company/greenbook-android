@@ -11,6 +11,7 @@ import com.badeeb.greenbook.R;
 import com.badeeb.greenbook.models.Photo;
 import com.badeeb.greenbook.view.GalleryViewHolder;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.util.Arrays;
 import java.util.List;
@@ -50,6 +51,7 @@ public class GalleryRecyclerViewAdapter extends RecyclerView.Adapter<GalleryView
         Photo currentPhoto = mPhotoList.get(position);
         Glide.with(mActivity)
                 .load(currentPhoto.getPhotoURL())
+                .diskCacheStrategy(DiskCacheStrategy.RESULT)
                 .placeholder(R.drawable.no_img)
                 .into(holder.getIvPhoto());
 
