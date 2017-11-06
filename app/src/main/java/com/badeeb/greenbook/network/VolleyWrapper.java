@@ -110,28 +110,34 @@ public class VolleyWrapper <T, S> {
                             // Network Error Handling
                             Log.d(TAG, "execute - onErrorResponse: " + error.toString());
 
-                            if (error instanceof AuthFailureError && error.networkResponse.statusCode == 401) {
-                                // Authorization issue
-                                errorDisplayHandler.displayError(context.getResources().getString(R.string.login_error));
-                            }
-                            else if (error instanceof ServerError && error.networkResponse.statusCode != 404) {
-                                NetworkResponse response = error.networkResponse;
-                                String responseData = new String(response.data);
-
-                                Log.d(TAG, "execute - onErrorResponse - Network Response: " + responseData);
-
-                                JsonResponse errorResponse = gson.fromJson(responseData, JsonResponse.class);
-                                if(errorResponse != null && errorResponse.getJsonMeta() != null) {
-
-                                    errorDisplayHandler.displayError(errorResponse.getJsonMeta().getMessage());
+                            try {
+                                if (error instanceof AuthFailureError && error.networkResponse.statusCode == 401) {
+                                    // Authorization issue
+                                    errorDisplayHandler.displayError(context.getResources().getString(R.string.login_error));
                                 }
+                                else if (error instanceof ServerError && error.networkResponse.statusCode != 404) {
+                                    NetworkResponse response = error.networkResponse;
+                                    String responseData = new String(response.data);
+
+                                    Log.d(TAG, "execute - onErrorResponse - Network Response: " + responseData);
+
+                                    JsonResponse errorResponse = gson.fromJson(responseData, JsonResponse.class);
+                                    if(errorResponse != null && errorResponse.getJsonMeta() != null) {
+
+                                        errorDisplayHandler.displayError(errorResponse.getJsonMeta().getMessage());
+                                    }
+                                }
+                                else if (error instanceof ServerError && error.networkResponse.statusCode == 404) {
+                                    errorDisplayHandler.displayError(context.getResources().getString(R.string.server_error));
+                                }
+                                else if (error instanceof TimeoutError) {
+                                    errorDisplayHandler.displayError(context.getResources().getString(R.string.network_timeout));
+                                }
+                            } catch (JsonSyntaxException  e){
+                                e.printStackTrace();
+                                errorDisplayHandler.displayError(context.getResources().getString(R.string.unexpected_server_error));
                             }
-                            else if (error instanceof ServerError && error.networkResponse.statusCode == 404) {
-                                errorDisplayHandler.displayError(context.getResources().getString(R.string.server_error));
-                            }
-                            else if (error instanceof TimeoutError) {
-                                errorDisplayHandler.displayError(context.getResources().getString(R.string.network_timeout));
-                            }
+
                             // Network Error Handling
                             callback.onError();
                         }
