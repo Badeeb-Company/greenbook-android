@@ -31,6 +31,7 @@ public class AppSettings {
     private final static String PREF_USER_SOCIAL_ACCT_TOKEN = "PREF_USER_SOCIAL_ACCT_TOKEN";
     private final static String PREF_USER_SOCIAL_ACCT_ID = "PREF_USER_SOCIAL_ACCT_ID";
     private final static String PREF_USER_ACCT_TYPE = "PREF_USER_ACCT_TYPE";
+    private final static String PREF_APP_LOGIN_COUNTER = "PREF_APP_LOGIN_COUNTER";
 
     private static AppSettings sInstance;
 
@@ -96,6 +97,15 @@ public class AppSettings {
 
 
     // Save data into shared preferences
+    public void setAppLoginCounter(int prefUserToken) {
+        putValue(PREF_APP_LOGIN_COUNTER, prefUserToken);
+    }
+
+    public int getAppLoginCounter() {
+        return getValue(PREF_APP_LOGIN_COUNTER, 0);
+    }
+
+
     public void setUserId(int userId) {
         putValue(PREF_USER_ID, userId);
     }
@@ -212,6 +222,20 @@ public class AppSettings {
     public boolean isLoggedIn() {
         String authenticationToken = getUserToken();
         return !TextUtils.isEmpty(authenticationToken);
+    }
+
+    public boolean isShowLoginRequired() {
+        return getAppLoginCounter() >= 1;
+    }
+
+    public void saveLoginCounter(int counter) {
+        setAppLoginCounter(counter);
+    }
+
+    public void clearLoginCounter() {
+        SharedPreferences.Editor editor = sPreferences.edit();
+        editor.remove(PREF_APP_LOGIN_COUNTER);
+        editor.commit();
     }
 }
 

@@ -146,20 +146,24 @@ public class MainActivity extends AppCompatActivity {
 
 
         // Check if user was logged in before or not
-        mAppSettings.clearUserInfo();
+//        mAppSettings.clearUserInfo();
         if (mAppSettings.isLoggedIn()) {
             mUser = mAppSettings.getUser();
             // Go to Search screen directly
+            goToShopSearch();
+        }
+        else if (mAppSettings.isShowLoginRequired()) {
+            goToShopSearch();
         }
         else {
             // Go to login screen
+            goToLogin();
+            mAppSettings.saveLoginCounter(1);
         }
 
         updateFavouriteSet();
 
         initPlaceAutoComplete();
-
-        goToLogin();
 
         setupListener();
 

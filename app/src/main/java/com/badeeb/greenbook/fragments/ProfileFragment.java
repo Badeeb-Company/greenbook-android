@@ -191,6 +191,7 @@ public class ProfileFragment extends Fragment {
 
     private void logout() {
         mAppSettings.clearUserInfo();
+        mAppSettings.clearLoginCounter();
         mActivity.setUser(null);
         mActivity.updateFavouriteSet();
         goToShopSearchFragment();
