@@ -164,8 +164,6 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "init - End");
     }
 
-
-
     public void initPlaceAutoComplete(){
         Log.d(TAG, "initPlaceAutoComplete - start ");
         mPlaceGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -644,35 +642,6 @@ public class MainActivity extends AppCompatActivity {
 //            mFragmentManager.popBackStack();
     }
 
-    public void goToReviewsTab() {
-        Log.d(TAG, "goToReviewsTab - Start");
-
-        mFragmentManager.popBackStack();
-        mFragmentManager.popBackStack();
-        mFragmentManager.popBackStack();
-        mFragmentManager.popBackStack();
-
-
-
-        ShopDetailsFragment shopDetailsFragment = new ShopDetailsFragment();
-
-        Bundle bundle = new Bundle();
-        bundle.putParcelable(ShopDetailsFragment.EXTRA_SHOP_OBJECT, Parcels.wrap(getmShopUnderReview()));
-        bundle.putInt(ShopDetailsFragment.EXTRA_OPEN_TAB, 2);
-        shopDetailsFragment.setArguments(bundle);
-
-        FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
-
-        fragmentTransaction.replace(R.id.main_frame, shopDetailsFragment, shopDetailsFragment.TAG);
-
-        fragmentTransaction.addToBackStack(TAG);
-
-        fragmentTransaction.commit();
-
-        disconnectPlaceGoogleApiClient();
-        Log.d(TAG, "goToReviewsTab - End");
-    }
-
     //-------------------------------Facebook Login----------------------------------------------
     public void prepareFacebookLogin(){
 
@@ -764,7 +733,7 @@ public class MainActivity extends AppCompatActivity {
 
                 if (getState().equals(Constants.GO_TO_ADD_REVIEW)) {
                     // pop back stack
-                    goToReviewsTab();
+                    mFragmentManager.popBackStack();
                 }
                 else {
                     // Clear back stack

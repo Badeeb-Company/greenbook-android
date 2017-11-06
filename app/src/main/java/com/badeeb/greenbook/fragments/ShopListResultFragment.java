@@ -117,6 +117,7 @@ public class ShopListResultFragment extends Fragment {
             // this code is used to prevent fragment overlapping
             container.removeAllViews();
         }
+
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_shop_list_result, container, false);
 

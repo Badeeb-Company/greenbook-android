@@ -76,6 +76,12 @@ public class MapFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         Log.d(TAG, "onCreateView - Start");
+
+        if (container != null) {
+            // this code is used to prevent fragment overlapping
+            container.removeAllViews();
+        }
+
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_map, container, false);
 

@@ -89,7 +89,7 @@ public class ReviewsTabFragment extends Fragment {
         mActivity = (MainActivity) getActivity();
         mContext = getContext();
         mProgressDialog = UiUtils.createProgressDialog(mActivity);
-        mFragmentManager = getFragmentManager();
+        mFragmentManager = mActivity.getSupportFragmentManager();
         mReviewsList = new ArrayList<>();
         mFabAddReview = (FloatingActionButton) view.findViewById(R.id.fabAddReview);
 
@@ -232,7 +232,7 @@ public class ReviewsTabFragment extends Fragment {
 
         FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
 
-        fragmentTransaction.add(R.id.main_frame, reviewMngFragment, reviewMngFragment.TAG);
+        fragmentTransaction.replace(R.id.main_frame, reviewMngFragment, reviewMngFragment.TAG);
 
         fragmentTransaction.addToBackStack(TAG);
 
@@ -253,7 +253,7 @@ public class ReviewsTabFragment extends Fragment {
 
         FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
 
-        fragmentTransaction.add(R.id.main_frame, loginFragment, loginFragment.TAG);
+        fragmentTransaction.replace(R.id.main_frame, loginFragment, loginFragment.TAG);
 
         fragmentTransaction.addToBackStack(TAG);
 
@@ -301,7 +301,7 @@ public class ReviewsTabFragment extends Fragment {
             public void onSuccess(JsonResponse<ReviewManage> jsonResponse) {
                 Log.d(TAG, "callDeleteReviewApi - onSuccess - Start");
 
-                UiUtils.showDialog(mContext, R.style.DialogTheme, R.string.succes_review_deletion,~ R.string.ok_btn_dialog, null);
+                UiUtils.showDialog(mContext, R.style.DialogTheme, R.string.succes_review_deletion, R.string.ok_btn_dialog, null);
 
                 // Refresh reviews list
                 prepareReviewsList();
@@ -348,7 +348,7 @@ public class ReviewsTabFragment extends Fragment {
 
         FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
 
-        fragmentTransaction.add(R.id.main_frame, reviewMngFragment, reviewMngFragment.TAG);
+        fragmentTransaction.replace(R.id.main_frame, reviewMngFragment, reviewMngFragment.TAG);
 
         fragmentTransaction.addToBackStack(TAG);
 
@@ -370,7 +370,7 @@ public class ReviewsTabFragment extends Fragment {
 
         FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
 
-        fragmentTransaction.add(R.id.main_frame, reviewMngFragment, reviewMngFragment.TAG);
+        fragmentTransaction.replace(R.id.main_frame, reviewMngFragment, reviewMngFragment.TAG);
 
         fragmentTransaction.addToBackStack(TAG);
 

@@ -82,6 +82,12 @@ public class ReviewMngFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         Log.d(TAG, "onCreateView - Start");
+
+        if (container != null) {
+            // this code is used to prevent fragment overlapping
+            container.removeAllViews();
+        }
+
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_mng_review, container, false);
 
@@ -96,7 +102,7 @@ public class ReviewMngFragment extends Fragment {
 
         mActivity = (MainActivity) getActivity();
         mProgressDialog = UiUtils.createProgressDialog(mActivity);
-        mFragmentManager = getFragmentManager();
+        mFragmentManager = mActivity.getSupportFragmentManager();
         mContext = getContext();
 
         mReview = new Review();
@@ -255,20 +261,6 @@ public class ReviewMngFragment extends Fragment {
             valid = false;
         }
 
-//        if (rbShopRate.getRating() == 0) {
-//            // Empty Rating
-//            DialogInterface.OnClickListener positiveListener = new DialogInterface.OnClickListener() {
-//                @Override
-//                public void onClick(DialogInterface dialogInterface, int i) {
-//                }
-//            };
-//
-//            UiUtils.showDialog(getContext(), R.style.DialogTheme,
-//                    R.string.GPS_disabled_warning_title, R.string.GPS_disabled_warning_msg,
-//                    R.string.ok_btn_dialog, positiveListener);
-//            valid = false;
-//        }
-
         return valid;
     }
 
@@ -289,7 +281,8 @@ public class ReviewMngFragment extends Fragment {
                 Log.d(TAG, "callAddReviewApi - onSuccess - Start");
 
                 mActivity.getmSnackBarDisplayer().displayError("Thanks");
-                goToReviewsTab();
+
+                mFragmentManager.popBackStack();
 
                 mActivity.hideKeyboard();
 
@@ -348,7 +341,8 @@ public class ReviewMngFragment extends Fragment {
                 Log.d(TAG, "callAddReviewApi - onSuccess - Start");
 
                 mActivity.getmSnackBarDisplayer().displayError("Review is updated");
-                goToReviewsTab();
+
+                mFragmentManager.popBackStack();
 
                 mActivity.hideKeyboard();
 
@@ -399,7 +393,7 @@ public class ReviewMngFragment extends Fragment {
 
                 mActivity.getmSnackBarDisplayer().displayError("Reply is published");
 
-                goToReviewsTab();
+                mFragmentManager.popBackStack();
 
                 mActivity.hideKeyboard();
 
@@ -431,32 +425,6 @@ public class ReviewMngFragment extends Fragment {
                         callback, getContext(), mActivity.getmSnackBarDisplayer(), mActivity.findViewById(R.id.ll_main_view));
         volleyWrapper.execute();
 
-    }
-
-
-    public void goToReviewsTab() {
-        Log.d(TAG, "goToReviewsTab - Start");
-
-        mFragmentManager.popBackStack();
-        mFragmentManager.popBackStack();
-
-        ShopDetailsFragment shopDetailsFragment = new ShopDetailsFragment();
-
-        Bundle bundle = new Bundle();
-        bundle.putParcelable(ShopDetailsFragment.EXTRA_SHOP_OBJECT, Parcels.wrap(mShop));
-        bundle.putInt(ShopDetailsFragment.EXTRA_OPEN_TAB, 2);
-        shopDetailsFragment.setArguments(bundle);
-
-        FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
-
-        fragmentTransaction.replace(R.id.main_frame, shopDetailsFragment, shopDetailsFragment.TAG);
-
-        fragmentTransaction.addToBackStack(TAG);
-
-        fragmentTransaction.commit();
-
-        mActivity.disconnectPlaceGoogleApiClient();
-        Log.d(TAG, "goToReviewsTab - End");
     }
 
 }

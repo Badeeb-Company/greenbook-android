@@ -184,7 +184,7 @@ public class ShopDetailsFragment extends Fragment {
     private void setupViewPager(ViewPager viewPager) {
         Log.d(TAG, "setupViewPager - Start");
 
-        FragmentViewPagerAdapter adapter = new FragmentViewPagerAdapter(getFragmentManager());
+        FragmentViewPagerAdapter adapter = new FragmentViewPagerAdapter(getChildFragmentManager());
 
         DetailsTabFragment detailsTabFragment = new DetailsTabFragment();
         GalleryTabFragment galleryTabFragment = new GalleryTabFragment();

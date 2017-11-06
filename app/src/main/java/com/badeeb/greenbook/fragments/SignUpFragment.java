@@ -95,6 +95,12 @@ public class SignUpFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        if (container != null) {
+            // this code is used to prevent fragment overlapping
+            container.removeAllViews();
+        }
+
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_sign_up, container, false);
 

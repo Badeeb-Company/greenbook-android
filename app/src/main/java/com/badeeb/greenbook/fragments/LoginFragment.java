@@ -112,6 +112,11 @@ public class LoginFragment extends Fragment {
                              Bundle savedInstanceState) {
         Log.d(TAG, "onCreateView - Start");
 
+        if (container != null) {
+            // this code is used to prevent fragment overlapping
+            container.removeAllViews();
+        }
+
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_login, container, false);
 
@@ -244,7 +249,7 @@ public class LoginFragment extends Fragment {
 
                 if (mActivity.getState().equals(Constants.GO_TO_ADD_REVIEW)) {
                     // pop back stack
-                    goToReviewsTab();
+                    mFragmentManager.popBackStack();
                 }
                 else {
                     // Clear back stack
@@ -326,35 +331,6 @@ public class LoginFragment extends Fragment {
         ForgetPasswordDialogFragment forgetPasswordDialogFragment = new ForgetPasswordDialogFragment();
         forgetPasswordDialogFragment.setCancelable(false);
         forgetPasswordDialogFragment.show(mFragmentManager, forgetPasswordDialogFragment.TAG);
-    }
-
-    public void goToReviewsTab() {
-        Log.d(TAG, "goToReviewsTab - Start");
-
-        mFragmentManager.popBackStack();
-        mFragmentManager.popBackStack();
-        mFragmentManager.popBackStack();
-        mFragmentManager.popBackStack();
-
-
-
-        ShopDetailsFragment shopDetailsFragment = new ShopDetailsFragment();
-
-        Bundle bundle = new Bundle();
-        bundle.putParcelable(ShopDetailsFragment.EXTRA_SHOP_OBJECT, Parcels.wrap(mActivity.getmShopUnderReview()));
-        bundle.putInt(ShopDetailsFragment.EXTRA_OPEN_TAB, 2);
-        shopDetailsFragment.setArguments(bundle);
-
-        FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
-
-        fragmentTransaction.replace(R.id.main_frame, shopDetailsFragment, shopDetailsFragment.TAG);
-
-        fragmentTransaction.addToBackStack(TAG);
-
-        fragmentTransaction.commit();
-
-        mActivity.disconnectPlaceGoogleApiClient();
-        Log.d(TAG, "goToReviewsTab - End");
     }
 
 }

@@ -224,7 +224,7 @@ public class ChangePasswordDialogFragment extends DialogFragment {
         LoginFragment loginFragment = new LoginFragment();
         FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
 
-        fragmentTransaction.add(R.id.main_frame, loginFragment, loginFragment.TAG);
+        fragmentTransaction.replace(R.id.main_frame, loginFragment, loginFragment.TAG);
 
 //        fragmentTransaction.addToBackStack(TAG);
 
