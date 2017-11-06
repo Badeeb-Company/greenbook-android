@@ -113,6 +113,8 @@ public class ProfileFragment extends Fragment {
         tvInviteFriend =(TextView)  view.findViewById(R.id.tvInviteFriend);
         tvAppRate = (TextView) view.findViewById(R.id.tvAppRate);
         tvChangePassword = (TextView) view.findViewById(R.id.tvChangePassword);
+
+        mActivity.setProfileButtonAsChecked();
     }
 
     private void setupListeners() {

@@ -163,6 +163,8 @@ public class ReviewMngFragment extends Fragment {
             tvToolbarAddReview.setVisibility(View.VISIBLE);
             tvToolbarEditReview.setVisibility(View.GONE);
         }
+
+        mActivity.setSearchButtonAsChecked();
     }
 
     private void applyShopOwnerUiChanges() {

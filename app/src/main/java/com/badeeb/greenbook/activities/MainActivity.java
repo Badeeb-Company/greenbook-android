@@ -267,11 +267,10 @@ public class MainActivity extends AppCompatActivity {
         if (fragment != null && fragment instanceof FavoriteFragment && fragment.isVisible())
             return;
 
-        clearBackStack();
-
         FavoriteFragment favoriteFragment = new FavoriteFragment();
         FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.main_frame, favoriteFragment, favoriteFragment.TAG);
+        fragmentTransaction.addToBackStack(TAG);
         fragmentTransaction.commit();
 
         changeNavigationIconsState(R.id.aiFavorite);
@@ -282,11 +281,10 @@ public class MainActivity extends AppCompatActivity {
         if (fragment != null && fragment instanceof ProfileFragment && fragment.isVisible())
             return;
 
-        clearBackStack();
-
         ProfileFragment profileFragment = new ProfileFragment();
         FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.main_frame, profileFragment, profileFragment.TAG);
+        fragmentTransaction.addToBackStack(TAG);
         fragmentTransaction.commit();
 
         changeNavigationIconsState(R.id.aiProfile);
@@ -297,11 +295,10 @@ public class MainActivity extends AppCompatActivity {
         if (fragment != null && fragment instanceof NotLoggedInProfileFragment && fragment.isVisible())
             return;
 
-        clearBackStack();
-
         NotLoggedInProfileFragment notLoggedInProfileFragment = new NotLoggedInProfileFragment();
         FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.main_frame, notLoggedInProfileFragment, NotLoggedInProfileFragment.TAG);
+        fragmentTransaction.addToBackStack(TAG);
         fragmentTransaction.commit();
 
         changeNavigationIconsState(R.id.aiProfile);
@@ -313,11 +310,10 @@ public class MainActivity extends AppCompatActivity {
         if (fragment != null && fragment instanceof ShopSearchFragment && fragment.isVisible())
             return;
 
-        clearBackStack();
-
         ShopSearchFragment shopSearchFragment = new ShopSearchFragment();
         FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.main_frame, shopSearchFragment, shopSearchFragment.TAG);
+        fragmentTransaction.addToBackStack(TAG);
         fragmentTransaction.commit();
 
         changeNavigationIconsState(R.id.aiSearch);
@@ -326,28 +322,53 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void changeNavigationIconsState(int itemId) {
+        switch (itemId) {
+            case R.id.aiSearch:
+                setSearchButtonAsChecked();
+                break;
+            case R.id.aiFavorite:
+                setFavoriteButtonAsChecked();
+                break;
+            case R.id.aiProfile:
+                setProfileButtonAsChecked();
+                break;
+        }
+    }
+
+    public void setSearchButtonAsChecked() {
         Menu menu = mBottomNavigationView.getMenu();
         MenuItem favorite = menu.findItem(R.id.aiFavorite);
         MenuItem search = menu.findItem(R.id.aiSearch);
         MenuItem profile = menu.findItem(R.id.aiProfile);
 
-        switch (itemId) {
-            case R.id.aiSearch:
-                search.setIcon(getResources().getDrawable(R.drawable.ic_search_pressed));
-                favorite.setIcon(getResources().getDrawable(R.drawable.ic_fav_dimmed));
-                profile.setIcon(getResources().getDrawable(R.drawable.ic_profile_dimmed));
-                break;
-            case R.id.aiFavorite:
-                favorite.setIcon(getResources().getDrawable(R.drawable.ic_fav_pressed));
-                search.setIcon(getResources().getDrawable(R.drawable.ic_search_dimmed));
-                profile.setIcon(getResources().getDrawable(R.drawable.ic_profile_dimmed));
-                break;
-            case R.id.aiProfile:
-                profile.setIcon(getResources().getDrawable(R.drawable.ic_profile_pressed));
-                favorite.setIcon(getResources().getDrawable(R.drawable.ic_fav_dimmed));
-                search.setIcon(getResources().getDrawable(R.drawable.ic_search_dimmed));
-                break;
-        }
+        search.setIcon(getResources().getDrawable(R.drawable.ic_search_pressed));
+        search.setChecked(true);
+        favorite.setIcon(getResources().getDrawable(R.drawable.ic_fav_dimmed));
+        profile.setIcon(getResources().getDrawable(R.drawable.ic_profile_dimmed));
+    }
+
+    public void setFavoriteButtonAsChecked() {
+        Menu menu = mBottomNavigationView.getMenu();
+        MenuItem favorite = menu.findItem(R.id.aiFavorite);
+        MenuItem search = menu.findItem(R.id.aiSearch);
+        MenuItem profile = menu.findItem(R.id.aiProfile);
+
+        favorite.setIcon(getResources().getDrawable(R.drawable.ic_fav_pressed));
+        favorite.setChecked(true);
+        search.setIcon(getResources().getDrawable(R.drawable.ic_search_dimmed));
+        profile.setIcon(getResources().getDrawable(R.drawable.ic_profile_dimmed));
+    }
+
+    public void setProfileButtonAsChecked() {
+        Menu menu = mBottomNavigationView.getMenu();
+        MenuItem favorite = menu.findItem(R.id.aiFavorite);
+        MenuItem search = menu.findItem(R.id.aiSearch);
+        MenuItem profile = menu.findItem(R.id.aiProfile);
+
+        profile.setIcon(getResources().getDrawable(R.drawable.ic_profile_pressed));
+        profile.setChecked(true);
+        favorite.setIcon(getResources().getDrawable(R.drawable.ic_fav_dimmed));
+        search.setIcon(getResources().getDrawable(R.drawable.ic_search_dimmed));
     }
 
     public ErrorDisplayHandler getmSnackBarDisplayer() {

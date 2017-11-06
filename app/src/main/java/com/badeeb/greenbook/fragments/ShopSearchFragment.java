@@ -171,6 +171,7 @@ public class ShopSearchFragment extends Fragment {
         mPlaceAutocompleteAdapter = new PlaceAutocompleteAdapter(mActivity,mActivity.getmPlaceGoogleApiClient(),Constants.BOUNDS_MIDDLE_EAST, null);
         actvLocationSearch.setAdapter(mPlaceAutocompleteAdapter);
 
+        mActivity.setSearchButtonAsChecked();
     }
 
 

@@ -77,14 +77,14 @@ public class FavoriteFragment extends Fragment {
 
 
 
-        inti(view);
+        init(view);
 
         Log.d(TAG, "onCreateView - End");
 
         return view;
     }
 
-    private void inti(View view) {
+    private void init(View view) {
         Log.d(TAG, "inti - Start");
 
         mActivity = (MainActivity) getActivity();
@@ -105,6 +105,8 @@ public class FavoriteFragment extends Fragment {
         srlFavList = (SwipeRefreshLayout) view.findViewById(R.id.favList_form) ;
 
         llEmptyFavourite = (LinearLayout) view.findViewById(R.id.llEmptyFavourite);
+
+        mActivity.setFavoriteButtonAsChecked();
 
         prepareFavouriteShopList();
 

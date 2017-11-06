@@ -66,6 +66,7 @@ public class GalleryTabFragment extends Fragment {
         rvGalleryPhotosAdaptor = new GalleryRecyclerViewAdapter(getContext(), mShop.getPhotos());
         rvGalleryPhotos.setAdapter(rvGalleryPhotosAdaptor);
 
+        mActivity.setSearchButtonAsChecked();
     }
 
 }

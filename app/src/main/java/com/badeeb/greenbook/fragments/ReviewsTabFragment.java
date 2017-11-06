@@ -93,6 +93,8 @@ public class ReviewsTabFragment extends Fragment {
         mReviewsList = new ArrayList<>();
         mFabAddReview = (FloatingActionButton) view.findViewById(R.id.fabAddReview);
 
+        mActivity.setSearchButtonAsChecked();
+
         loadBundleData();
 
         initRecyclerView(view);

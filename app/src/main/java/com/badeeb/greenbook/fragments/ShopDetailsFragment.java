@@ -117,6 +117,8 @@ public class ShopDetailsFragment extends Fragment {
         ivToolbarBack = (ImageView) view.findViewById(R.id.ivToolbarBack);
         tvToolbarShopName = (TextView) view.findViewById(R.id.tvToolbarShopName);
 
+        mActivity.setSearchButtonAsChecked();
+
         fillUiFields();
     }
 

@@ -175,6 +175,8 @@ public class ShopListResultFragment extends Fragment {
         ivMap = (ImageView) view.findViewById(R.id.ivMap);
 
         llEmptyResult = (LinearLayout) view.findViewById(R.id.llEmptyResult);
+
+        mActivity.setSearchButtonAsChecked();
     }
 
     private void loadBundleData(){

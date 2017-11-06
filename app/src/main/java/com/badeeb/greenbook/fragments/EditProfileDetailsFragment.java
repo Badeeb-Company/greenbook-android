@@ -132,6 +132,8 @@ public class EditProfileDetailsFragment extends Fragment {
 
         etFullName = (EditText) view.findViewById(R.id.etFullName);
         etFullName.setText(mActivity.getUser().getName());
+
+        mActivity.setProfileButtonAsChecked();
     }
 
     private void setupListeners() {

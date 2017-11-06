@@ -90,6 +90,7 @@ public class NotLoggedInProfileFragment extends Fragment {
         tvGoogleLogin = (TextView) view.findViewById(R.id.tvGoogleLogin);
 
         mActivity.showBottomNavigationActionBar();
+        mActivity.setProfileButtonAsChecked();
     }
 
     private void setupListeners() {

@@ -108,6 +108,8 @@ public class MapFragment extends Fragment {
         mActivity = (MainActivity) getActivity();
         fragmentManager = getFragmentManager();
 
+        mActivity.setSearchButtonAsChecked();
+
         setupListeners(view);
 
         Log.d(TAG, "init - End");
