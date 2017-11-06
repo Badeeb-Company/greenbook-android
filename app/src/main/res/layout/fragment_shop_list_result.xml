@@ -105,7 +105,7 @@
                 android:id="@+id/ivMap"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
-                android:src="@drawable/fill_3"
+                android:src="@drawable/ic_location_map"
                 android:layout_marginTop="5.5dp"
                 android:layout_marginBottom="7.5dp"
                 android:layout_marginLeft="8dp"

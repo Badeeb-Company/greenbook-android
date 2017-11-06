@@ -81,6 +81,8 @@
             android:textSize="15sp"
             android:layout_marginTop="8dp"
             />
+
+
         <TextView
             android:id="@+id/tvPhone"
             android:layout_width="wrap_content"
@@ -88,16 +90,19 @@
             android:textColor="#1f92cd"
             android:textSize="15sp"
             android:text="+1 275 252"
+            android:fontFamily="fonts/OpenSans-Semibold.ttf"
             android:layout_marginTop="8dp"
             />
+
         <ImageView
             android:id="@+id/ivCall"
             android:layout_width="35dp"
-            android:layout_height="28dp"
+            android:layout_height="25dp"
             android:layout_marginLeft="11dp"
             android:layout_marginTop="8dp"
             android:src="@drawable/bt_mob"
             />
+
 
     </LinearLayout>
 </LinearLayout>
