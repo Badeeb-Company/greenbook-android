@@ -50,6 +50,7 @@ import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.appevents.AppEventsLogger;
+import com.facebook.login.LoginBehavior;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.google.android.gms.auth.api.Auth;
@@ -97,15 +98,9 @@ public class LoginFragment extends Fragment {
     private TextView tvFacebbokLogin;
 
     private TextView tvGoogleLogin;
-    private GoogleApiClient mGoogleApiClient;
-    private GoogleApiClient.OnConnectionFailedListener onConnectionFailedListener;
-    private static final int RC_SIGN_IN = 9001;
 
 
-    //Facebook
-    private LoginManager mLoginManager;
-    private CallbackManager mFacebookCallbackManager;
-    private static final int FB_REQUEST_CODE = 64206;
+
 
     public LoginFragment() {
         // Required empty public constructor
@@ -157,73 +152,6 @@ public class LoginFragment extends Fragment {
         mActivity.hideBottomNavigationActionBar();
     }
 
-    public void initFacebook(){
-
-        // Facebook
-        FacebookSdk.sdkInitialize(mActivity.getApplicationContext());
-        AppEventsLogger.activateApp(mActivity);
-        mLoginManager = LoginManager.getInstance();
-        mFacebookCallbackManager = CallbackManager.Factory.create();
-
-        mLoginManager.registerCallback(mFacebookCallbackManager, new FacebookCallback<LoginResult>() {
-            @Override
-            public void onSuccess(LoginResult loginResult) {
-
-                graphRequest(loginResult.getAccessToken());
-            }
-
-            @Override
-            public void onCancel() {
-
-            }
-
-            @Override
-            public void onError(FacebookException error) {
-
-            }
-        });
-
-
-
-    }
-
-    public void graphRequest(final AccessToken token){
-        GraphRequest request = GraphRequest.newMeRequest(token,new GraphRequest.GraphJSONObjectCallback(){
-
-            @Override
-            public void onCompleted(JSONObject object, GraphResponse response) {
-
-                Log.d(TAG," Facebook JSON: "+object.toString());
-                Log.d(TAG," Facebook Token: "+token.getToken());
-
-                try {
-                    mUser.setEmail(object.getString("email"));
-                    mUser.setName(object.getString("first_name")+" "+object.getString("last_name"));
-
-                    mUser.setImageURL(object.getJSONObject("picture").getJSONObject("data").getString("url"));
-                    mUser.setSocialAcctId(object.getString("id"));
-                    mUser.setSocialAcctToken(token.getToken());
-                    mUser.setAccountType("facebook");
-
-                    mProgressDialog.show();
-                    callSocialLoginApi();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-//                Toast.makeText(mActivity.getApplicationContext(),object.toString(),Toast.LENGTH_LONG).show();
-
-            }
-        });
-
-        Bundle b = new Bundle();
-        b.putString("fields","id,email,first_name,last_name,picture.type(large)");
-        request.setParameters(b);
-        request.executeAsync();
-
-    }
-
-
     private void setupListeners(View view) {
         Log.d(TAG, "setupListeners - Start");
 
@@ -269,16 +197,14 @@ public class LoginFragment extends Fragment {
         tvGoogleLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                prepareGooglePlusLogin();
+                mActivity.prepareGooglePlusLogin();
             }
         });
 
         tvFacebbokLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                initFacebook();
-
-                mLoginManager.logInWithReadPermissions(LoginFragment.this, Arrays.asList("public_profile","email","user_friends"));
+                mActivity.prepareFacebookLogin();
             }
         });
 
@@ -429,167 +355,6 @@ public class LoginFragment extends Fragment {
 
         mActivity.disconnectPlaceGoogleApiClient();
         Log.d(TAG, "goToReviewsTab - End");
-    }
-
-    //------------------------------ Google Login ------------------------------------
-    private GoogleApiClient.OnConnectionFailedListener createOnConnectionFailedListener() {
-        return new GoogleApiClient.OnConnectionFailedListener() {
-            @Override
-            public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-                Log.d(TAG, "createOnConnectionFailedListener - onConnectionFailed: " + connectionResult);
-            }
-        };
-    }
-
-    private void prepareGooglePlusLogin() {
-        Log.d(TAG, "googlePlusSignIn - Start");
-
-        mProgressDialog.show();
-
-        onConnectionFailedListener = createOnConnectionFailedListener();
-
-        initGoogleApiClientForLogin();
-
-        showGoogleLoginIntent();
-
-        Log.d(TAG, "googlePlusSignIn - End");
-    }
-
-    private void initGoogleApiClientForLogin() {
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .requestIdToken(Constants.OAUTH_WEB_CLIENT_ID)   // Auth of web not android
-                .build();
-
-        mGoogleApiClient = new GoogleApiClient.Builder(mActivity)
-                .enableAutoManage(mActivity /* FragmentActivity */, onConnectionFailedListener /* OnConnectionFailedListener */)
-                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-                .build();
-    }
-
-    private void showGoogleLoginIntent() {
-        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
-        startActivityForResult(signInIntent, RC_SIGN_IN);
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.d(TAG, "onActivityResult - Start");
-
-        super.onActivityResult(requestCode, resultCode, data);
-
-        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
-        if (requestCode == RC_SIGN_IN) {
-            Log.d(TAG, "onActivityResult - Google activity result");
-            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-            handleSignInResult(result);
-        }else if(requestCode == FB_REQUEST_CODE){
-            mFacebookCallbackManager.onActivityResult(requestCode,resultCode,data);
-        }
-
-        Log.d(TAG, "onActivityResult - End");
-    }
-
-    private void handleSignInResult(GoogleSignInResult result) {
-        Log.d(TAG, "handleSignInResult - Start");
-
-        Log.d(TAG, "handleSignInResult:" + result.isSuccess());
-        if (result.isSuccess()) {
-            // Signed in successfully, show authenticated UI.
-            GoogleSignInAccount acct = result.getSignInAccount();
-
-            String personName = acct.getDisplayName();
-            String personGivenName = acct.getGivenName();
-            String personFamilyName = acct.getFamilyName();
-            String personEmail = acct.getEmail();
-            String personId = acct.getId();
-            Uri personPhoto = acct.getPhotoUrl();
-            String idToken = acct.getIdToken();
-
-            mUser.setEmail(personEmail);
-            mUser.setName(personName);
-            mUser.setImageURL(personPhoto.toString());
-            mUser.setSocialAcctId(personId);
-            mUser.setSocialAcctToken(idToken);
-            mUser.setAccountType("google");
-
-            callSocialLoginApi();
-
-        } else {
-            // Signed out, show unauthenticated UI.
-            mActivity.getmSnackBarDisplayer().displayError("Login error, please try later.");
-            mProgressDialog.dismiss();
-        }
-
-        stopGoogleApiClientForLogin();
-
-        Log.d(TAG, "handleSignInResult - End");
-    }
-
-    private void stopGoogleApiClientForLogin() {
-        mGoogleApiClient.clearDefaultAccountAndReconnect();
-        mGoogleApiClient.stopAutoManage(mActivity);
-        mGoogleApiClient.disconnect();
-    }
-
-
-    private void callSocialLoginApi() {
-
-        String url = Constants.BASE_URL + "/users/social_login";
-
-        Log.d(TAG, "callSocialLoginApi - url: " + url);
-
-        NonAuthorizedCallback<JsonResponse<JsonUser>> callback = new NonAuthorizedCallback<JsonResponse<JsonUser>>() {
-            @Override
-            public void onSuccess(JsonResponse<JsonUser> jsonResponse) {
-                Log.d(TAG, "callSocialLoginApi - onSuccess - Start");
-
-                mUser = jsonResponse.getResult().getUser();
-
-                mAppSettings.saveUser(mUser);
-                mActivity.setUser(mUser);
-
-                if (mActivity.getState().equals(Constants.GO_TO_ADD_REVIEW)) {
-                    // pop back stack
-                    goToReviewsTab();
-                }
-                else {
-                    // Clear back stack
-                    mActivity.clearBackStack();
-                    goToShopSearch();
-                }
-
-                mActivity.updateFavouriteSet();
-
-                mActivity.hideKeyboard();
-
-                mProgressDialog.dismiss();
-
-                Log.d(TAG, "callSocialLoginApi - onSuccess - End");
-            }
-
-            @Override
-            public void onError() {
-                Log.d(TAG, "callSocialLoginApi - onError - Start");
-
-                mProgressDialog.dismiss();
-
-                Log.d(TAG, "callSocialLoginApi - onError - End");
-            }
-        };
-
-        // Prepare response type
-        Type responseType = new TypeToken<JsonResponse<JsonUser>>() {}.getType();
-
-        JsonUser jsonUser = new JsonUser();
-        jsonUser.setUser(mUser);
-
-        JsonRequest<JsonUser> request = new JsonRequest<>(jsonUser);
-
-        VolleyWrapper<JsonRequest<JsonUser>, JsonResponse<JsonUser>> volleyWrapper = new VolleyWrapper<>(request, responseType, Request.Method.POST, url,
-                callback, getContext(), mActivity.getmSnackBarDisplayer(), mActivity.findViewById(R.id.ll_main_view));
-        volleyWrapper.execute();
-
     }
 
 }

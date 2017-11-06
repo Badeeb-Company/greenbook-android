@@ -123,6 +123,20 @@ public class NotLoggedInProfileFragment extends Fragment {
             }
         });
 
+        tvGoogleLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mActivity.prepareGooglePlusLogin();
+            }
+        });
+
+        tvFacebbokLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mActivity.prepareFacebookLogin();
+            }
+        });
+
         Log.d(TAG, "setupListeners - End");
     }
 

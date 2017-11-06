@@ -2,7 +2,9 @@ package com.badeeb.greenbook.activities;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.location.Location;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.Snackbar;
@@ -25,26 +27,44 @@ import com.badeeb.greenbook.fragments.FavoriteFragment;
 import com.badeeb.greenbook.fragments.LoginFragment;
 import com.badeeb.greenbook.fragments.NotLoggedInProfileFragment;
 import com.badeeb.greenbook.fragments.ProfileFragment;
+import com.badeeb.greenbook.fragments.ShopDetailsFragment;
 import com.badeeb.greenbook.fragments.ShopSearchFragment;
 import com.badeeb.greenbook.models.FavouriteInquiry;
 import com.badeeb.greenbook.models.JsonRequest;
 import com.badeeb.greenbook.models.JsonResponse;
+import com.badeeb.greenbook.models.JsonUser;
 import com.badeeb.greenbook.models.Shop;
 import com.badeeb.greenbook.models.User;
 import com.badeeb.greenbook.network.AuthorizedCallback;
+import com.badeeb.greenbook.network.NonAuthorizedCallback;
 import com.badeeb.greenbook.network.VolleyWrapper;
 import com.badeeb.greenbook.shared.AdapterNotifier;
 import com.badeeb.greenbook.shared.AppSettings;
 import com.badeeb.greenbook.shared.Constants;
 import com.badeeb.greenbook.shared.ErrorDisplayHandler;
 import com.badeeb.greenbook.shared.UiUtils;
+import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
 import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.auth.api.signin.GoogleSignInResult;
+import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.places.Places;
 import com.google.gson.reflect.TypeToken;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.parceler.Parcels;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Type;
@@ -79,6 +99,16 @@ public class MainActivity extends AppCompatActivity {
 
     private String mState;
     private Shop mShopUnderReview;
+
+    //Facebook
+    private LoginManager mLoginManager;
+    private CallbackManager mFacebookCallbackManager;
+    private static final int FB_REQUEST_CODE = 64206;
+
+    // Google
+    private GoogleApiClient mGoogleApiClient;
+    private GoogleApiClient.OnConnectionFailedListener onConnectionFailedListener;
+    private static final int RC_SIGN_IN = 9001;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -612,5 +642,269 @@ public class MainActivity extends AppCompatActivity {
 //        int counter = mFragmentManager.getBackStackEntryCount();
 //        for (int i = 0; i < counter; i++)
 //            mFragmentManager.popBackStack();
+    }
+
+    public void goToReviewsTab() {
+        Log.d(TAG, "goToReviewsTab - Start");
+
+        mFragmentManager.popBackStack();
+        mFragmentManager.popBackStack();
+        mFragmentManager.popBackStack();
+        mFragmentManager.popBackStack();
+
+
+
+        ShopDetailsFragment shopDetailsFragment = new ShopDetailsFragment();
+
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(ShopDetailsFragment.EXTRA_SHOP_OBJECT, Parcels.wrap(getmShopUnderReview()));
+        bundle.putInt(ShopDetailsFragment.EXTRA_OPEN_TAB, 2);
+        shopDetailsFragment.setArguments(bundle);
+
+        FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
+
+        fragmentTransaction.replace(R.id.main_frame, shopDetailsFragment, shopDetailsFragment.TAG);
+
+        fragmentTransaction.addToBackStack(TAG);
+
+        fragmentTransaction.commit();
+
+        disconnectPlaceGoogleApiClient();
+        Log.d(TAG, "goToReviewsTab - End");
+    }
+
+    //-------------------------------Facebook Login----------------------------------------------
+    public void prepareFacebookLogin(){
+
+        // Facebook
+        FacebookSdk.sdkInitialize(getApplicationContext());
+        AppEventsLogger.activateApp(this);
+        mLoginManager = LoginManager.getInstance();
+        mFacebookCallbackManager = CallbackManager.Factory.create();
+
+        mLoginManager.registerCallback(mFacebookCallbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+
+                graphRequest(loginResult.getAccessToken());
+            }
+
+            @Override
+            public void onCancel() {
+
+            }
+
+            @Override
+            public void onError(FacebookException error) {
+
+            }
+        });
+
+        mLoginManager.logInWithReadPermissions(this, Arrays.asList("public_profile","email","user_friends"));
+
+    }
+
+    private void graphRequest(final AccessToken token){
+        GraphRequest request = GraphRequest.newMeRequest(token,new GraphRequest.GraphJSONObjectCallback(){
+
+            @Override
+            public void onCompleted(JSONObject object, GraphResponse response) {
+
+                Log.d(TAG," Facebook JSON: "+object.toString());
+                Log.d(TAG," Facebook Token: "+token.getToken());
+
+                try {
+                    User user = new User();
+                    user.setEmail(object.getString("email"));
+                    user.setName(object.getString("first_name")+" "+object.getString("last_name"));
+
+                    user.setImageURL(object.getJSONObject("picture").getJSONObject("data").getString("url"));
+                    user.setSocialAcctId(object.getString("id"));
+                    user.setSocialAcctToken(token.getToken());
+                    user.setAccountType("facebook");
+
+                    mLoginManager.unregisterCallback(mFacebookCallbackManager);
+                    mLoginManager.logOut();
+                    FacebookSdk.clearLoggingBehaviors();
+
+
+                    mProgressDialog.show();
+                    callSocialLoginApi(user);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+//                Toast.makeText(mActivity.getApplicationContext(),object.toString(),Toast.LENGTH_LONG).show();
+
+            }
+        });
+
+        Bundle b = new Bundle();
+        b.putString("fields","id,email,first_name,last_name,picture.type(large)");
+        request.setParameters(b);
+        request.executeAsync();
+
+    }
+
+    private void callSocialLoginApi(User user) {
+
+        String url = Constants.BASE_URL + "/users/social_login";
+
+        Log.d(TAG, "callSocialLoginApi - url: " + url);
+
+        NonAuthorizedCallback<JsonResponse<JsonUser>> callback = new NonAuthorizedCallback<JsonResponse<JsonUser>>() {
+            @Override
+            public void onSuccess(JsonResponse<JsonUser> jsonResponse) {
+                Log.d(TAG, "callSocialLoginApi - onSuccess - Start");
+
+                mUser = jsonResponse.getResult().getUser();
+
+                mAppSettings.saveUser(mUser);
+                setUser(mUser);
+
+                if (getState().equals(Constants.GO_TO_ADD_REVIEW)) {
+                    // pop back stack
+                    goToReviewsTab();
+                }
+                else {
+                    // Clear back stack
+                    clearBackStack();
+                    goToShopSearch();
+                }
+
+                updateFavouriteSet();
+
+                hideKeyboard();
+
+                mProgressDialog.dismiss();
+
+                Log.d(TAG, "callSocialLoginApi - onSuccess - End");
+            }
+
+            @Override
+            public void onError() {
+                Log.d(TAG, "callSocialLoginApi - onError - Start");
+
+                mProgressDialog.dismiss();
+
+                Log.d(TAG, "callSocialLoginApi - onError - End");
+            }
+        };
+
+        // Prepare response type
+        Type responseType = new TypeToken<JsonResponse<JsonUser>>() {}.getType();
+
+        JsonUser jsonUser = new JsonUser();
+        jsonUser.setUser(user);
+
+        JsonRequest<JsonUser> request = new JsonRequest<>(jsonUser);
+
+        VolleyWrapper<JsonRequest<JsonUser>, JsonResponse<JsonUser>> volleyWrapper = new VolleyWrapper<>(request, responseType, Request.Method.POST, url,
+                callback, this, getmSnackBarDisplayer(), findViewById(R.id.ll_main_view));
+        volleyWrapper.execute();
+
+    }
+
+    //------------------------------ Google Login ------------------------------------
+    private GoogleApiClient.OnConnectionFailedListener createOnConnectionFailedListener() {
+        return new GoogleApiClient.OnConnectionFailedListener() {
+            @Override
+            public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+                Log.d(TAG, "createOnConnectionFailedListener - onConnectionFailed: " + connectionResult);
+            }
+        };
+    }
+
+    public void prepareGooglePlusLogin() {
+        Log.d(TAG, "googlePlusSignIn - Start");
+
+        mProgressDialog.show();
+
+        onConnectionFailedListener = createOnConnectionFailedListener();
+
+        initGoogleApiClientForLogin();
+
+        showGoogleLoginIntent();
+
+        Log.d(TAG, "googlePlusSignIn - End");
+    }
+
+    private void initGoogleApiClientForLogin() {
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .requestIdToken(Constants.OAUTH_WEB_CLIENT_ID)   // Auth of web not android
+                .build();
+
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this /* FragmentActivity */, onConnectionFailedListener /* OnConnectionFailedListener */)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                .build();
+    }
+
+    private void showGoogleLoginIntent() {
+        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+        startActivityForResult(signInIntent, RC_SIGN_IN);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.d(TAG, "onActivityResult - Start");
+
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
+        if (requestCode == RC_SIGN_IN) {
+            Log.d(TAG, "onActivityResult - Google activity result");
+            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+            handleSignInResult(result);
+        }else if(requestCode == FB_REQUEST_CODE){
+            mFacebookCallbackManager.onActivityResult(requestCode,resultCode,data);
+        }
+
+        Log.d(TAG, "onActivityResult - End");
+    }
+
+    private void handleSignInResult(GoogleSignInResult result) {
+        Log.d(TAG, "handleSignInResult - Start");
+
+        Log.d(TAG, "handleSignInResult:" + result.isSuccess());
+        if (result.isSuccess()) {
+            // Signed in successfully, show authenticated UI.
+            GoogleSignInAccount acct = result.getSignInAccount();
+
+            String personName = acct.getDisplayName();
+            String personGivenName = acct.getGivenName();
+            String personFamilyName = acct.getFamilyName();
+            String personEmail = acct.getEmail();
+            String personId = acct.getId();
+            Uri personPhoto = acct.getPhotoUrl();
+            String idToken = acct.getIdToken();
+
+            User user = new User();
+
+            user.setEmail(personEmail);
+            user.setName(personName);
+            user.setImageURL(personPhoto.toString());
+            user.setSocialAcctId(personId);
+            user.setSocialAcctToken(idToken);
+            user.setAccountType("google");
+
+            callSocialLoginApi(user);
+
+        } else {
+            // Signed out, show unauthenticated UI.
+            getmSnackBarDisplayer().displayError("Login error, please try later.");
+            mProgressDialog.dismiss();
+        }
+
+        stopGoogleApiClientForLogin();
+
+        Log.d(TAG, "handleSignInResult - End");
+    }
+
+    private void stopGoogleApiClientForLogin() {
+        mGoogleApiClient.clearDefaultAccountAndReconnect();
+        mGoogleApiClient.stopAutoManage(this);
+        mGoogleApiClient.disconnect();
     }
 }
