@@ -193,7 +193,6 @@ public class LoginFragment extends Fragment {
                 }
                 else if (mActivity.getState().equals(Constants.GO_TO_PROFILE_TAB)) {
                     mFragmentManager.popBackStack();
-                    mActivity.goToProfileEdit();
                 }
                 else {
                     goToShopSearch();
