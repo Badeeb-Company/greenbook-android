@@ -138,7 +138,7 @@
         android:rating="1"
         android:progressTint="@color/dark_orange"
         android:secondaryProgressTint="@color/dark_orange"
-        android:stepSize="1"
+        android:stepSize="0.01"
         android:layout_gravity="center"
         android:isIndicator="false"
         />

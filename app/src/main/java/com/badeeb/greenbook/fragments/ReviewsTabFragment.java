@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RatingBar;
 
 import com.android.volley.Request;
 import com.badeeb.greenbook.R;
@@ -39,6 +40,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.zip.Inflater;
 
 public class ReviewsTabFragment extends Fragment {
 
@@ -46,6 +48,7 @@ public class ReviewsTabFragment extends Fragment {
 
     private MainActivity mActivity;
     private Context mContext;
+    private View mView;
     private ProgressDialog mProgressDialog;
     private FragmentManager mFragmentManager;
     private Shop mShop;
@@ -74,13 +77,13 @@ public class ReviewsTabFragment extends Fragment {
         Log.d(TAG, "onCreateView - Start");
 
         // Inflate the layout for this fragment
-        View view =  inflater.inflate(R.layout.fragment_reviews_tab, container, false);
+        mView =  inflater.inflate(R.layout.fragment_reviews_tab, container, false);
 
-        init(view);
+        init(mView);
 
         Log.d(TAG, "onCreateView - End");
 
-        return view;
+        return mView;
     }
 
     private void init(View view) {
@@ -299,9 +302,16 @@ public class ReviewsTabFragment extends Fragment {
         AuthorizedCallback<JsonResponse<ReviewManage>> callback = new AuthorizedCallback<JsonResponse<ReviewManage>>(mActivity.getUser().getToken()) {
             @Override
             public void onSuccess(JsonResponse<ReviewManage> jsonResponse) {
-                Log.d(TAG, "callDeleteReviewApi - onSuccess - Start");
+                Log.d(TAG, "callDeleteReviewApi - onSuccess - Start : "+jsonResponse.toString());
 
                 UiUtils.showDialog(mContext, R.style.DialogTheme, R.string.succes_review_deletion, R.string.ok_btn_dialog, null);
+
+                if(jsonResponse != null && jsonResponse.getResult() != null){
+                    ReviewManage reviewManage = jsonResponse.getResult();
+                    mShop.setRate(reviewManage.getShopRate());
+                    updateTotalRateBar();
+                    Log.d(TAG, "callDeleteReviewApi - Rate Value: " + mShop.getRate());
+                }
 
                 // Refresh reviews list
                 prepareReviewsList();
@@ -333,6 +343,14 @@ public class ReviewsTabFragment extends Fragment {
                         url, callback, getContext(),
                         mActivity.getmSnackBarDisplayer(), mActivity.findViewById(R.id.ll_main_view));
         volleyWrapper.execute();
+    }
+
+    private void updateTotalRateBar() {
+        Fragment parentFragment = getParentFragment();
+        if(parentFragment != null && parentFragment instanceof ShopDetailsFragment){
+            ShopDetailsFragment shopParentFragment = (ShopDetailsFragment) parentFragment;
+            shopParentFragment.updateTotalRateBar();
+        }
     }
 
     public void goToEditReview(Review review) {
