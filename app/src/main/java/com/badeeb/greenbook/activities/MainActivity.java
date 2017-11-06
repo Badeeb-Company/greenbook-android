@@ -3,6 +3,8 @@ package com.badeeb.greenbook.activities;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.location.Location;
 import android.net.Uri;
 import android.support.annotation.NonNull;
@@ -265,6 +267,8 @@ public class MainActivity extends AppCompatActivity {
         if (fragment != null && fragment instanceof FavoriteFragment && fragment.isVisible())
             return;
 
+        clearBackStack();
+
         FavoriteFragment favoriteFragment = new FavoriteFragment();
         FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.main_frame, favoriteFragment, favoriteFragment.TAG);
@@ -277,6 +281,8 @@ public class MainActivity extends AppCompatActivity {
         Fragment fragment = mFragmentManager.findFragmentByTag(ProfileFragment.TAG);
         if (fragment != null && fragment instanceof ProfileFragment && fragment.isVisible())
             return;
+
+        clearBackStack();
 
         ProfileFragment profileFragment = new ProfileFragment();
         FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
@@ -291,6 +297,8 @@ public class MainActivity extends AppCompatActivity {
         if (fragment != null && fragment instanceof NotLoggedInProfileFragment && fragment.isVisible())
             return;
 
+        clearBackStack();
+
         NotLoggedInProfileFragment notLoggedInProfileFragment = new NotLoggedInProfileFragment();
         FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.main_frame, notLoggedInProfileFragment, NotLoggedInProfileFragment.TAG);
@@ -304,6 +312,8 @@ public class MainActivity extends AppCompatActivity {
         Fragment fragment = mFragmentManager.findFragmentByTag(ShopSearchFragment.TAG);
         if (fragment != null && fragment instanceof ShopSearchFragment && fragment.isVisible())
             return;
+
+        clearBackStack();
 
         ShopSearchFragment shopSearchFragment = new ShopSearchFragment();
         FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
