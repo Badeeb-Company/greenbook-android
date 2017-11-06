@@ -1,12 +1,9 @@
 package com.badeeb.greenbook.fragments;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
@@ -28,7 +25,6 @@ import com.bumptech.glide.Glide;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import org.parceler.Parcels;
-import org.w3c.dom.Text;
 
 import java.text.DecimalFormat;
 
@@ -85,6 +81,7 @@ public class ShopDetailsFragment extends Fragment {
     }
 
     public void init(View view){
+        Log.d(TAG, "init - start ");
         mActivity = (MainActivity) getActivity();
         mProgressDialog = UiUtils.createProgressDialog(mActivity);
         fragmentManager = getFragmentManager();
@@ -104,6 +101,7 @@ public class ShopDetailsFragment extends Fragment {
         initUiFields(view);
 
         setupListener();
+        Log.d(TAG, "init - end ");
     }
 
     private void initUiFields(View view) {
@@ -128,6 +126,7 @@ public class ShopDetailsFragment extends Fragment {
         Glide.with(mActivity).load(mShop.getMainPhotoURL()).into(rivShopMainPhoto);
         DecimalFormat df = new DecimalFormat("0.0");
         tvRatingValue.setText(df.format(mShop.getRate()));
+        Log.d(TAG, "shop Rate in - fillUiFields : "+mShop.getRate());
         rbShopRate.setRating((float) mShop.getRate());
 
         if(!mActivity.getFavSet().isEmpty() && mActivity.getFavSet().contains(mShop.getId())){
@@ -142,6 +141,13 @@ public class ShopDetailsFragment extends Fragment {
         tvToolbarShopName.setText(mShop.getName());
 
         Log.d(TAG, "fillUiFields - end");
+    }
+
+    public void updateTotalRateBar() {
+        Log.d(TAG, "updateTotalRateBar - Rate Value: " + mShop.getRate());
+        DecimalFormat df = new DecimalFormat("0.0");
+        tvRatingValue.setText(df.format(mShop.getRate()));
+        rbShopRate.setRating((float) mShop.getRate());
     }
 
     private String getShopDistance(){

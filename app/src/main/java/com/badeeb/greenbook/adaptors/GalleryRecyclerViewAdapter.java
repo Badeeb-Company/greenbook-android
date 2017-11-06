@@ -48,8 +48,6 @@ public class GalleryRecyclerViewAdapter extends RecyclerView.Adapter<GalleryView
             return;
         }
 
-        Log.d(TAG, "mPhotoList is "+ Arrays.toString(mPhotoList.toArray()));
-
         Photo currentPhoto = mPhotoList.get(position);
         Glide.with(mActivity)
                 .load(currentPhoto.getPhotoURL())

@@ -204,12 +204,11 @@ public class ReviewMngFragment extends Fragment {
         rbShopRate.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             @Override
             public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
-                if (rating < 1.0f) {
-                    rbShopRate.setRating(1.0f);
-                }
-                Log.d(TAG, "Rate Value: " + rating);
+                rbShopRate.setRating((float) Math.ceil(rating));
+                Log.d(TAG, "Rate Value: " + (float) Math.ceil(rating));
             }
         });
+
 
         etReviewDescription.addTextChangedListener(new TextWatcher() {
             @Override
@@ -284,6 +283,12 @@ public class ReviewMngFragment extends Fragment {
 
                 mActivity.getmSnackBarDisplayer().displayError("Thanks");
 
+                if(jsonResponse != null && jsonResponse.getResult() != null){
+                    ReviewManage reviewManage = jsonResponse.getResult();
+                    mShop.setRate(reviewManage.getShopRate());
+                    Log.d(TAG, "callAddReviewApi - Rate Value: " + mShop.getRate());
+                }
+
                 mFragmentManager.popBackStack();
 
                 mActivity.hideKeyboard();
@@ -335,12 +340,18 @@ public class ReviewMngFragment extends Fragment {
 
         String url = Constants.BASE_URL + "/shops/" + mShop.getId() + "/reviews/" + mReview.getId();
 
-        Log.d(TAG, "callAddReviewApi - url: " + url);
+        Log.d(TAG, "callEditReviewApi - url: " + url);
 
         AuthorizedCallback<JsonResponse<ReviewManage>> callback = new AuthorizedCallback<JsonResponse<ReviewManage>>(mActivity.getUser().getToken()) {
             @Override
             public void onSuccess(JsonResponse<ReviewManage> jsonResponse) {
-                Log.d(TAG, "callAddReviewApi - onSuccess - Start");
+                Log.d(TAG, "callEditReviewApi - onSuccess - Start");
+
+                if(jsonResponse != null && jsonResponse.getResult() != null){
+                    ReviewManage reviewManage = jsonResponse.getResult();
+                    mShop.setRate(reviewManage.getShopRate());
+                    Log.d(TAG, "callEditReviewApi - Rate Value: " + mShop.getRate());
+                }
 
                 mActivity.getmSnackBarDisplayer().displayError("Review is updated");
 
@@ -350,16 +361,16 @@ public class ReviewMngFragment extends Fragment {
 
                 mProgressDialog.dismiss();
 
-                Log.d(TAG, "callAddReviewApi - onSuccess - End");
+                Log.d(TAG, "callEditReviewApi - onSuccess - End");
             }
 
             @Override
             public void onError() {
-                Log.d(TAG, "callAddReviewApi - onError - Start");
+                Log.d(TAG, "callEditReviewApi - onError - Start");
 
                 mProgressDialog.dismiss();
 
-                Log.d(TAG, "callAddReviewApi - onError - End");
+                Log.d(TAG, "callEditReviewApi - onError - End");
             }
         };
 

@@ -1,6 +1,5 @@
 package com.badeeb.greenbook.adaptors;
 
-import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,9 +10,7 @@ import android.widget.ImageView;
 import com.badeeb.greenbook.R;
 import com.badeeb.greenbook.activities.MainActivity;
 import com.badeeb.greenbook.fragments.FavoriteFragment;
-import com.badeeb.greenbook.fragments.ShopListResultFragment;
 import com.badeeb.greenbook.models.Shop;
-import com.badeeb.greenbook.shared.Utils;
 import com.badeeb.greenbook.view.ShopViewHolder;
 import com.bumptech.glide.Glide;
 
