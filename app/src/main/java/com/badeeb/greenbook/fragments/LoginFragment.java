@@ -188,7 +188,16 @@ public class LoginFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 mActivity.hideKeyboard();
-                goToShopSearch();
+                if (mActivity.getState().equals(Constants.GO_TO_ADD_REVIEW)) {
+                    mFragmentManager.popBackStack();
+                }
+                else if (mActivity.getState().equals(Constants.GO_TO_PROFILE_TAB)) {
+                    mFragmentManager.popBackStack();
+                    mActivity.goToProfileEdit();
+                }
+                else {
+                    goToShopSearch();
+                }
             }
         });
 
@@ -250,6 +259,11 @@ public class LoginFragment extends Fragment {
                 if (mActivity.getState().equals(Constants.GO_TO_ADD_REVIEW)) {
                     // pop back stack
                     mFragmentManager.popBackStack();
+                }
+                else if (mActivity.getState().equals(Constants.GO_TO_PROFILE_TAB)) {
+                    mFragmentManager.popBackStack();
+                    mFragmentManager.popBackStack();
+                    mActivity.goToProfileEdit();
                 }
                 else {
                     // Clear back stack

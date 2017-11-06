@@ -276,7 +276,7 @@ public class MainActivity extends AppCompatActivity {
         changeNavigationIconsState(R.id.aiFavorite);
     }
 
-    private void goToProfileEdit() {
+    public void goToProfileEdit() {
         Fragment fragment = mFragmentManager.findFragmentByTag(ProfileFragment.TAG);
         if (fragment != null && fragment instanceof ProfileFragment && fragment.isVisible())
             return;
@@ -765,6 +765,11 @@ public class MainActivity extends AppCompatActivity {
                 if (getState().equals(Constants.GO_TO_ADD_REVIEW)) {
                     // pop back stack
                     mFragmentManager.popBackStack();
+                }
+                else if (getState().equals(Constants.GO_TO_PROFILE_TAB)) {
+                    mFragmentManager.popBackStack();
+                    mFragmentManager.popBackStack();
+                    goToProfileEdit();
                 }
                 else {
                     // Clear back stack

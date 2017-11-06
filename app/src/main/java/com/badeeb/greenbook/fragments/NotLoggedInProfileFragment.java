@@ -113,6 +113,7 @@ public class NotLoggedInProfileFragment extends Fragment {
         tvLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mActivity.setState(Constants.GO_TO_PROFILE_TAB);
                 goToLogin();
             }
         });
@@ -127,6 +128,7 @@ public class NotLoggedInProfileFragment extends Fragment {
         tvGoogleLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mActivity.setState(Constants.GO_TO_PROFILE_TAB);
                 mActivity.prepareGooglePlusLogin();
             }
         });
@@ -134,6 +136,7 @@ public class NotLoggedInProfileFragment extends Fragment {
         tvFacebbokLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mActivity.setState(Constants.GO_TO_PROFILE_TAB);
                 mActivity.prepareFacebookLogin();
             }
         });

@@ -44,4 +44,5 @@ public class Constants {
 
 
     public static final String GO_TO_ADD_REVIEW = "GO_TO_ADD_REVIEW";
+    public static final String GO_TO_PROFILE_TAB = "GO_TO_PROFILE_TAB";
 }
