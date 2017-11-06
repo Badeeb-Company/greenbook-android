@@ -207,15 +207,6 @@ public class ReviewMngFragment extends Fragment {
             }
         });
 
-//        rbShopRate.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
-//            @Override
-//            public void onRatingChanged( final RatingBar ratingBar, final float rating, final boolean fromUser ) {
-//                if ( fromUser ) {
-//                    ratingBar.setRating((float) Math.ceil(rating));
-//                    Log.d(TAG, "setOnRatingBarChangeListener - rating: "+Math.ceil(rating));
-//                }
-//            }
-//        });
 
         etReviewDescription.addTextChangedListener(new TextWatcher() {
             @Override

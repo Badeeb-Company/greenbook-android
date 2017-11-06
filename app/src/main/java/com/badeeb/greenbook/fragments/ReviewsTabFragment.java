@@ -186,6 +186,9 @@ public class ReviewsTabFragment extends Fragment {
                 if (jsonResponse != null && jsonResponse.getResult() != null && jsonResponse.getResult().getReviewsList() != null) {
                     mReviewsList.clear();
                     mReviewsList.addAll(jsonResponse.getResult().getReviewsList());
+
+                    putUserReviewAtFirst();
+
                     mReviewRecyclerViewAdapter.notifyDataSetChanged();
 
                     Log.d(TAG, "callListReviewsApi - onSuccess - mReviewsList: "+ Arrays.toString(mReviewsList.toArray()));
@@ -220,6 +223,21 @@ public class ReviewsTabFragment extends Fragment {
                 mActivity.getmSnackBarDisplayer(), mActivity.findViewById(R.id.ll_main_view));
         volleyWrapper.execute();
 
+    }
+
+    private void putUserReviewAtFirst() {
+        if(mReviewsList != null && mActivity.getUser() != null){
+            Review userReview = null;
+            for(int i = mReviewsList.size()-1 ; i >=0 ; i--){
+                if(mReviewsList.get(i).getUser().getId() == mActivity.getUser().getId()){
+                    userReview = mReviewsList.remove(i);
+                    break;
+                }
+            }
+            if(userReview != null){
+                mReviewsList.add(0,userReview);
+            }
+        }
     }
 
     private void goToAddReview() {
