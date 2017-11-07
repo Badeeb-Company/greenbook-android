@@ -704,7 +704,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        mLoginManager.logInWithReadPermissions(this, Arrays.asList("public_profile","email","user_friends"));
+        mLoginManager.logInWithReadPermissions(this, Arrays.asList("public_profile","email"));
 
     }
 

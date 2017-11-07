@@ -26,7 +26,7 @@ public class Constants {
 
     // Volley constants
     public static final int VOLLEY_TIME_OUT = 8000; // Milliseconds
-    public static final int VOLLEY_RETRY_COUNTER = 0;
+    public static final int VOLLEY_RETRY_COUNTER = 2;
 
     // Location updates constants
     public static final int UPDATE_TIME = 0;    // Millisecoonds
