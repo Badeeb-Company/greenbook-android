@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.RatingBar;
 
 import com.android.volley.Request;
@@ -57,6 +58,8 @@ public class ReviewsTabFragment extends Fragment {
     private ReviewRecyclerViewAdapter mReviewRecyclerViewAdapter;
     private List<Review> mReviewsList;
     private int mReviewsPerLine;
+
+    private LinearLayout llNoReviews;
 
     private FloatingActionButton mFabAddReview;
 
@@ -101,6 +104,8 @@ public class ReviewsTabFragment extends Fragment {
         loadBundleData();
 
         initRecyclerView(view);
+
+        llNoReviews = (LinearLayout) view.findViewById(R.id.llNoReviews);
 
         setupListeners();
 
@@ -198,6 +203,13 @@ public class ReviewsTabFragment extends Fragment {
                     Log.d(TAG, "callListReviewsApi - onSuccess - mReviewsList: "+ Arrays.toString(mReviewsList.toArray()));
 
                     disableOrEnableAddReview();
+
+                    if (mReviewsList.size() == 0) {
+                        llNoReviews.setVisibility(View.VISIBLE);
+                    }
+                    else {
+                        llNoReviews.setVisibility(View.GONE);
+                    }
 
                 } else {
                     mActivity.getmSnackBarDisplayer().displayError("Categories not loaded from the server");

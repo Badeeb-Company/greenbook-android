@@ -195,7 +195,21 @@ public class ProfileFragment extends Fragment {
         mAppSettings.clearLoginCounter();
         mActivity.setUser(null);
         mActivity.updateFavouriteSet();
-        goToShopSearchFragment();
+//        goToShopSearchFragment();
+        goToNotLoggedInProfileFragment();
+    }
+
+    private void goToNotLoggedInProfileFragment() {
+
+        mFragmentManager.popBackStack();
+
+        NotLoggedInProfileFragment notLoggedInProfileFragment = new NotLoggedInProfileFragment();
+        FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.main_frame, notLoggedInProfileFragment, NotLoggedInProfileFragment.TAG);
+        fragmentTransaction.addToBackStack(TAG);
+        fragmentTransaction.commit();
+
+        mActivity.changeNavigationIconsState(R.id.aiProfile);
     }
 
     private void goToShopSearchFragment() {

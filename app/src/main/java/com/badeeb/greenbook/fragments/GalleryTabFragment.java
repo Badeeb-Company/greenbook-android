@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.badeeb.greenbook.R;
 import com.badeeb.greenbook.activities.MainActivity;
@@ -28,6 +29,7 @@ public class GalleryTabFragment extends Fragment {
 
     private RecyclerView rvGalleryPhotos;
     private GalleryRecyclerViewAdapter rvGalleryPhotosAdaptor;
+    private LinearLayout llNoGallery;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -65,6 +67,15 @@ public class GalleryTabFragment extends Fragment {
 
         rvGalleryPhotosAdaptor = new GalleryRecyclerViewAdapter(getContext(), mShop.getPhotos());
         rvGalleryPhotos.setAdapter(rvGalleryPhotosAdaptor);
+
+        llNoGallery = (LinearLayout) view.findViewById(R.id.llNoGallery);
+
+        if (mShop.getPhotos() != null && mShop.getPhotos().size() > 0) {
+            llNoGallery.setVisibility(View.GONE);
+        }
+        else {
+            llNoGallery.setVisibility(View.VISIBLE);
+        }
 
         mActivity.setSearchButtonAsChecked();
     }
