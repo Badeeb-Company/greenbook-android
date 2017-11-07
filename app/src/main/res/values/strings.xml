@@ -45,4 +45,5 @@
     <string name="facebook_app_id">176228622930367</string>
     <string name="fb_login_protocol_scheme">fb176228622930367</string>
     <string name="unexpected_server_error">Unexpected server error, Please try later</string>
+    <string name="password_change_msg">Your new password has been sent to your email</string>
 </resources>

@@ -2,6 +2,7 @@ package com.badeeb.greenbook.fragments;
 
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -150,13 +151,23 @@ public class ForgetPasswordDialogFragment extends DialogFragment {
                 // Show success message
                 if (jsonMeta.getStatus().equals("200")) {
                     // Success response
-                    llForgetPassword.setVisibility(View.GONE);
-                    llForgetPasswordMessage.setVisibility(View.VISIBLE);
+//                    llForgetPassword.setVisibility(View.GONE);
+//                    llForgetPasswordMessage.setVisibility(View.VISIBLE);
+                    DialogInterface.OnClickListener positiveListener = new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                        }
+                    };
+
+                    UiUtils.showDialog(mActivity, R.style.DialogTheme,
+                            R.string.password_change_msg,
+                            R.string.ok_btn_dialog, positiveListener);
                 }
 
                 mActivity.hideKeyboard(getView());
 
                 mProgressDialog.dismiss();
+                dismiss();
 
                 Log.d(TAG, "callForgetPasswordApi - onSuccess - End");
             }

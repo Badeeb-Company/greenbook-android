@@ -14,8 +14,10 @@
     <color name="orange">#fbc752</color>
     <color name="gray">#ababab</color>
     <color name="hint_gray">#d8d8d8</color>
+    <color name="profile_line_gray">#979797</color>
     <color name="dark_gray">#b2b2b2</color>
     <color name="dark_orange">#feb900</color>
+    <color name="off_white">#87ffffff</color>
 
 
 

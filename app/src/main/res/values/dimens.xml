@@ -71,4 +71,7 @@
     <!--End-->
 
 
+    <dimen name="profile_line_thickness">0.5dp</dimen>
+
+
 </resources>

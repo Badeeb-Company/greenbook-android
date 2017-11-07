@@ -152,6 +152,7 @@ public class FavoriteFragment extends Fragment {
                     }
                 }
                 mFavAdapter.notifyDataSetChanged();
+                mProgressDialog.dismiss();
                 Log.d(TAG, "notifyAdapter - Start");
             }
 
@@ -160,6 +161,7 @@ public class FavoriteFragment extends Fragment {
                 mShopList.clear();
                 mFavAdapter.notifyDataSetChanged();
                 enableNoFavouriteFoundScreen();
+                mProgressDialog.dismiss();
             }
         };
     }
@@ -167,6 +169,12 @@ public class FavoriteFragment extends Fragment {
     private void SetupListener() {
         Log.d(TAG, "SetupListener - Start");
 
+        srlFavList.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                prepareFavouriteShopList();
+            }
+        });
 
         Log.d(TAG, "SetupListener - end");
     }
@@ -191,8 +199,8 @@ public class FavoriteFragment extends Fragment {
             enableNoFavouriteFoundScreen();
             return;
         }
-
-        mProgressDialog.show();
+        srlFavList.setRefreshing(true);
+//        mProgressDialog.show();
         String url = Constants.BASE_URL + "/shops?ids=" ;
 
         for(int shopId: mActivity.getFavSet()){
@@ -230,15 +238,17 @@ public class FavoriteFragment extends Fragment {
                     enableNoFavouriteFoundScreen();
                     Log.d(TAG, "callFavApi - NonAuthorizedCallback - onSuccess - empty search ");
                 }
-                mProgressDialog.dismiss();
-
+//                mProgressDialog.dismiss();
+                srlFavList.setRefreshing(false);
             }
 
             @Override
             public void onError() {
                 Log.d(TAG, "callFavApi - NonAuthorizedCallback - onError");
-                mProgressDialog.dismiss();
+//                mProgressDialog.dismiss();
+                srlFavList.setRefreshing(false);
             }
+
         };
 
         Type responseType = new TypeToken<JsonResponse<ShopInquiry>>() {
@@ -280,6 +290,7 @@ public class FavoriteFragment extends Fragment {
 
 
     public void removeFavourite(Shop selectedShop){
+        mProgressDialog.show();
         mActivity.removeFromFavourite(selectedShop,mAdapterNotifier);
     }
 

@@ -1,6 +1,8 @@
 package com.badeeb.greenbook.adaptors;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -52,7 +54,7 @@ public class GalleryRecyclerViewAdapter extends RecyclerView.Adapter<GalleryView
         Glide.with(mActivity)
                 .load(currentPhoto.getPhotoURL())
                 .diskCacheStrategy(DiskCacheStrategy.RESULT)
-                .placeholder(R.drawable.no_img)
+                .placeholder(new ColorDrawable(mActivity.getResources().getColor(R.color.light_gray)))
                 .into(holder.getIvPhoto());
 
     }

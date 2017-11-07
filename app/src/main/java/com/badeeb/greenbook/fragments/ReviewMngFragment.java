@@ -246,7 +246,7 @@ public class ReviewMngFragment extends Fragment {
         else {
             // Add a review
             mReview.setRate(rbShopRate.getRating());
-            mReview.setDescription(etReviewDescription.getText().toString());
+            mReview.setDescription(etReviewDescription.getText().toString().trim());
 
             callAddReviewApi();
         }

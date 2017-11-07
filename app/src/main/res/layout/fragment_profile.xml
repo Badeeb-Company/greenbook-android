@@ -115,8 +115,8 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/login_line_thickness"
-                android:background="@color/light_gray"
+                android:layout_height="@dimen/profile_line_thickness"
+                android:background="@color/profile_line_gray"
                 android:layout_marginTop="20dp"
                 android:layout_marginLeft="28dp"
                 />
@@ -136,8 +136,8 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/login_line_thickness"
-                android:background="@color/light_gray"
+                android:layout_height="@dimen/profile_line_thickness"
+                android:background="@color/profile_line_gray"
                 android:layout_marginTop="20dp"
                 android:layout_marginLeft="28dp"
                 />
@@ -157,33 +157,11 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/login_line_thickness"
-                android:background="@color/light_gray"
+                android:layout_height="@dimen/profile_line_thickness"
+                android:background="@color/profile_line_gray"
                 android:layout_marginTop="20dp"
                 android:layout_marginLeft="28dp"
                 />
-
-            <TextView
-                android:id="@+id/tvInviteFriend"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:minHeight="19dp"
-                android:layout_marginTop="27dp"
-                android:layout_marginLeft="28dp"
-                android:text="Invite a friend"
-                android:textColor="#404040"
-                android:textSize="16sp"
-                android:fontFamily="fonts/Helvetica.ttf"
-                />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/login_line_thickness"
-                android:background="@color/light_gray"
-                android:layout_marginTop="20dp"
-                android:layout_marginLeft="28dp"
-                />
-
 
             <TextView
                 android:id="@+id/tvSupportUs"
@@ -200,14 +178,15 @@
                 android:gravity="center"
                 />
 
+
             <TextView
-                android:id="@+id/tvAppRate"
+                android:id="@+id/tvInviteFriend"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:minHeight="19dp"
                 android:layout_marginTop="27dp"
                 android:layout_marginLeft="28dp"
-                android:text="Rate our app"
+                android:text="Invite a friend"
                 android:textColor="#404040"
                 android:textSize="16sp"
                 android:fontFamily="fonts/Helvetica.ttf"
@@ -215,11 +194,33 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/login_line_thickness"
-                android:background="@color/light_gray"
+                android:layout_height="@dimen/profile_line_thickness"
+                android:background="@color/profile_line_gray"
                 android:layout_marginTop="20dp"
                 android:layout_marginLeft="28dp"
+
                 />
+
+
+            <TextView
+                android:id="@+id/tvAppRate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="19dp"
+                android:layout_marginTop="27dp"
+                android:layout_marginLeft="28dp"
+                android:layout_marginBottom="41dp"
+                android:text="Rate our app"
+                android:textColor="#404040"
+                android:textSize="16sp"
+                android:fontFamily="fonts/Helvetica.ttf"
+                />
+
+
+
+
+
+
 
         </LinearLayout>
 

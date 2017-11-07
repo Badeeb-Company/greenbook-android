@@ -521,7 +521,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void callFavApi() {
         Log.d(TAG, "callFavApi - Start");
-        mProgressDialog.show();
+//        mProgressDialog.show();
         String url = Constants.BASE_URL + "/shops/favourites" ;
         Log.d(TAG, "callFavApi - Request URL: " + url);
 
@@ -540,8 +540,7 @@ public class MainActivity extends AppCompatActivity {
                             + Arrays.toString(jsonResponse.getResult().getShopList().toArray()));
 
 
-                    if(mFavAdapterNotifier != null)
-                        mFavAdapterNotifier.notifyAdapter();
+
 
                     mFavSet = new HashSet<>();
                     for(Shop fav : jsonResponse.getResult().getShopList()){
@@ -551,6 +550,8 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
 
+                    if(mFavAdapterNotifier != null)
+                        mFavAdapterNotifier.notifyAdapter();
                 } else {
                     //switch to empty search
                     mFavSet = new HashSet<>();
@@ -558,14 +559,14 @@ public class MainActivity extends AppCompatActivity {
                         mFavAdapterNotifier.notifyEmptyList();
                     Log.d(TAG, "callFavApi - AuthorizedCallback - onSuccess - empty search ");
                 }
-                mProgressDialog.dismiss();
+//                mProgressDialog.dismiss();
 
             }
 
             @Override
             public void onError() {
                 Log.d(TAG, "callFavApi - AuthorizedCallback - onError");
-                mProgressDialog.dismiss();
+//                mProgressDialog.dismiss();
             }
         };
 
@@ -580,7 +581,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void callAddFavouriteApi(Shop selectedShop){
-        mProgressDialog.show();
+//        mProgressDialog.show();
 
         final Shop shop = selectedShop;
 
@@ -597,10 +598,14 @@ public class MainActivity extends AppCompatActivity {
                 hideKeyboard();
 
 
-                mProgressDialog.dismiss();
+//                mProgressDialog.dismiss();
 
-                updateFavouriteSet();
+//                updateFavouriteSet();
 
+                mFavSet.add(shop.getId());
+                if(mFavAdapterNotifier != null){
+                    mFavAdapterNotifier.notifyAdapter();
+                }
                 Log.d(TAG, "callAddFavouriteApi - onSuccess - End");
             }
 
@@ -609,7 +614,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.d(TAG, "callAddFavouriteApi - onError - Start");
 
                 getmSnackBarDisplayer().displayError(shop.getName()+" couldn't be added to favourite");
-                mProgressDialog.dismiss();
+//                mProgressDialog.dismiss();
 
                 Log.d(TAG, "callAddFavouriteApi - onError - End");
             }
@@ -626,7 +631,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void callRemoveFavouriteApi(Shop selectedShop){
-        mProgressDialog.show();
+//        mProgressDialog.show();
 
         final Shop shop = selectedShop;
 
@@ -640,9 +645,17 @@ public class MainActivity extends AppCompatActivity {
                 Log.d(TAG, "callRemoveFavouriteApi - onSuccess - Start");
 
                 hideKeyboard();
-                mProgressDialog.dismiss();
+//                mProgressDialog.dismiss();
+                mFavSet.remove(shop.getId());
+                if(mFavAdapterNotifier != null){
+                    if(mFavSet.isEmpty()){
+                        mFavAdapterNotifier.notifyEmptyList();
+                    }else{
+                        mFavAdapterNotifier.notifyAdapter();
+                    }
+                }
 
-                updateFavouriteSet();
+//                updateFavouriteSet();
 
                 Log.d(TAG, "callRemoveFavouriteApi - onSuccess - End");
             }
@@ -652,7 +665,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.d(TAG, "callRemoveFavouriteApi - onError - Start");
 
                 getmSnackBarDisplayer().displayError(shop.getName()+" couldn't be deleted!");
-                mProgressDialog.dismiss();
+//                mProgressDialog.dismiss();
 
                 Log.d(TAG, "callRemoveFavouriteApi - onError - End");
             }

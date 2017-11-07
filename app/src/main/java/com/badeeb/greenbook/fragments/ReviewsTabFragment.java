@@ -193,6 +193,8 @@ public class ReviewsTabFragment extends Fragment {
 
                     mReviewRecyclerViewAdapter.notifyDataSetChanged();
 
+                    updateTotalRateBar();
+
                     Log.d(TAG, "callListReviewsApi - onSuccess - mReviewsList: "+ Arrays.toString(mReviewsList.toArray()));
 
                     disableOrEnableAddReview();
@@ -302,7 +304,7 @@ public class ReviewsTabFragment extends Fragment {
             }
         };
 
-        UiUtils.showDialog(getContext(), R.style.DialogTheme, R.string.review_delete_title, R.string.review_delete_msg,
+        UiUtils.showDialog(getContext(), R.style.DialogTheme, R.string.review_delete_msg,
                 R.string.yes_msg, positiveListener, R.string.no_msg, negativeListener);
 
         Log.d(TAG, "goToAddReview - End");
