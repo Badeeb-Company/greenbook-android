@@ -86,7 +86,7 @@ public class FavouriteRecyclerViewAdapter extends RecyclerView.Adapter<ShopViewH
                 ImageView selectedFav = (ImageView) view.findViewById(R.id.ivFav);
 
                 Log.d(TAG, "setupListener - ivFavShop - change to not pressed");
-                mParentFragment.removeFavourite(mShopList.get(position));
+                mParentFragment.removeFavourite(position);
                 selectedFav.setImageDrawable(mActivity.getResources().getDrawable(R.drawable.ic_fav));
             }
         });

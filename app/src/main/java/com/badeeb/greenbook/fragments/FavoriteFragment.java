@@ -152,7 +152,7 @@ public class FavoriteFragment extends Fragment {
                     }
                 }
                 mFavAdapter.notifyDataSetChanged();
-                mProgressDialog.dismiss();
+//                mProgressDialog.dismiss();
                 Log.d(TAG, "notifyAdapter - Start");
             }
 
@@ -289,9 +289,11 @@ public class FavoriteFragment extends Fragment {
     }
 
 
-    public void removeFavourite(Shop selectedShop){
-        mProgressDialog.show();
-        mActivity.removeFromFavourite(selectedShop,mAdapterNotifier);
+    public void removeFavourite(int selectedShopIndex){
+//        mProgressDialog.show();
+        mActivity.removeFromFavourite(mShopList.get(selectedShopIndex),mAdapterNotifier);
+        mShopList.remove(selectedShopIndex);
+        mFavAdapter.notifyDataSetChanged();
     }
 
 }
