@@ -170,7 +170,7 @@ public class ReviewsTabFragment extends Fragment {
     }
 
     private void prepareReviewsList() {
-        mProgressDialog.show();
+//        mProgressDialog.show();
         callListReviewsApi();
     }
 
@@ -201,7 +201,7 @@ public class ReviewsTabFragment extends Fragment {
                     mActivity.getmSnackBarDisplayer().displayError("Categories not loaded from the server");
                 }
 
-                mProgressDialog.dismiss();
+//                mProgressDialog.dismiss();
 
                 Log.d(TAG, "callListReviewsApi - onSuccess - End");
             }
@@ -210,7 +210,7 @@ public class ReviewsTabFragment extends Fragment {
             public void onError() {
                 Log.d(TAG, "callListReviewsApi - onError - Start");
 
-                mProgressDialog.dismiss();
+//                mProgressDialog.dismiss();
 
                 Log.d(TAG, "callListReviewsApi - onError - End");
             }
