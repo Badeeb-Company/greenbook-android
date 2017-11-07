@@ -10,6 +10,38 @@
             android:id="@+id/rvPhotoList"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:scrollbars="vertical"/>
+            android:scrollbars="vertical"
+            />
+
+        <LinearLayout
+            android:id="@+id/llNoGallery"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_gravity="center"
+            android:gravity="center"
+
+            >
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="Gallery Empty!"
+                    android:textColor="#e20714"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:fontFamily="fonts/OpenSans-Bold.ttf"
+                    />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="1dp"
+                    android:gravity="center"
+                    android:text="You haven't any Gallery yet"
+                    android:textColor="#929292"
+                    android:textSize="14sp"
+                    android:fontFamily="fonts/Montserrat-Regular.ttf"
+                    />
+        </LinearLayout>
 
 </LinearLayout>
