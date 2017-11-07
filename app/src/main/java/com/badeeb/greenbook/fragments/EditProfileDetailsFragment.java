@@ -134,6 +134,7 @@ public class EditProfileDetailsFragment extends Fragment {
         etFullName.setText(mActivity.getUser().getName());
 
         mActivity.setProfileButtonAsChecked();
+        mActivity.hideBottomNavigationActionBar();
     }
 
     private void setupListeners() {

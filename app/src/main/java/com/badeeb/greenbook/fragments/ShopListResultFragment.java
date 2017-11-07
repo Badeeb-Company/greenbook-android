@@ -129,7 +129,7 @@ public class ShopListResultFragment extends Fragment {
     private void init(View view){
         mActivity = (MainActivity) getActivity();
         mProgressDialog = UiUtils.createProgressDialog(mActivity);
-        mActivity.showBottomNavigationActionBar();
+        mActivity.hideBottomNavigationActionBar();
         mActivity.hideToolbar();
         mActivity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 

@@ -107,6 +107,7 @@ public class FavoriteFragment extends Fragment {
         llEmptyFavourite = (LinearLayout) view.findViewById(R.id.llEmptyFavourite);
 
         mActivity.setFavoriteButtonAsChecked();
+        mActivity.showBottomNavigationActionBar();
 
         prepareFavouriteShopList();
 

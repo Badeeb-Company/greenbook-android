@@ -115,6 +115,7 @@ public class ProfileFragment extends Fragment {
         tvChangePassword = (TextView) view.findViewById(R.id.tvChangePassword);
 
         mActivity.setProfileButtonAsChecked();
+        mActivity.showBottomNavigationActionBar();
     }
 
     private void setupListeners() {

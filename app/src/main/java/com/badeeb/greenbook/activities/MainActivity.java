@@ -698,10 +698,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
 
-            @Override
-            public void onError(FacebookException error) {
-
-            }
+            @Override     public void onError(FacebookException error) {            }
         });
 
         mLoginManager.logInWithReadPermissions(this, Arrays.asList("public_profile","email"));
