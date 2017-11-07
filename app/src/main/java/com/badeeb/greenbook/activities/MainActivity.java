@@ -317,7 +317,7 @@ public class MainActivity extends AppCompatActivity {
         ShopSearchFragment shopSearchFragment = new ShopSearchFragment();
         FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.main_frame, shopSearchFragment, shopSearchFragment.TAG);
-        fragmentTransaction.addToBackStack(TAG);
+//        fragmentTransaction.addToBackStack(TAG);
         fragmentTransaction.commit();
 
         changeNavigationIconsState(R.id.aiSearch);
