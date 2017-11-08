@@ -8,6 +8,7 @@
     android:id="@+id/shop_search_fragment">
 
     <LinearLayout
+        android:id="@+id/topBarlayout"
         android:layout_height="85dp"
         android:layout_width="match_parent"
 
@@ -51,8 +52,11 @@
                 android:textColorHint="@color/hint_gray"
                 android:textColor="@color/monsoon"
                 android:textSize="16sp"
+                android:dropDownAnchor="@+id/topBarlayout"
+                android:dropDownWidth="fill_parent"
+                android:dropDownHeight="wrap_content"
                 android:ems="10">
-                ando
+
                 <requestFocus />
             </AutoCompleteTextView>
 
@@ -93,10 +97,12 @@
                 android:layout_alignLeft="@id/ivLocation"
                 android:hint="Current Location"
                 android:textColorHint="@color/hint_gray"
-                android:dropDownWidth="320dp"
                 android:textColor="@color/monsoon"
                 android:textSize="16sp"
                 android:singleLine="true"
+                android:dropDownAnchor="@+id/topBarlayout"
+                android:dropDownWidth="fill_parent"
+                android:dropDownHeight="wrap_content"
                 android:layout_toLeftOf="@+id/ivMap"
                 android:layout_toRightOf="@+id/ivLocation"
                 />
