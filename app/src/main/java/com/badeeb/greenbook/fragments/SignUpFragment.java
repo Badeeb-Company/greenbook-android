@@ -127,6 +127,8 @@ public class SignUpFragment extends Fragment {
         rivProfileImage = (RoundedImageView) view.findViewById(R.id.rivProfilePhoto);
         tvUploadImage = (TextView) view.findViewById(R.id.tvUploadImage);
 
+        mActivity.hideBottomNavigationActionBar();
+
         setupListeners(view);
     }
 
