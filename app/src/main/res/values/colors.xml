@@ -37,6 +37,7 @@
     <color name="clouds">#ecf0f1</color>
 
     <color name="separator_color">#f7f7f7</color>
-
+    <color name="positive_color">#027842</color>
+    <color name="negative_color">#737070</color>
 
 </resources>

@@ -83,6 +83,9 @@ public class UiUtils {
         AlertDialog dialog = builder.create();
         dialog.show();
 
+        dialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(context.getResources().getColor(R.color.positive_color));
+        dialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(context.getResources().getColor(R.color.negative_color));
+
         return dialog;
     }
 
@@ -107,6 +110,8 @@ public class UiUtils {
         AlertDialog dialog = builder.create();
         dialog.show();
 
+        dialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(context.getResources().getColor(R.color.positive_color));
+
         return dialog;
     }
 
@@ -129,6 +134,8 @@ public class UiUtils {
         AlertDialog dialog = builder.create();
         dialog.show();
 
+        dialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(context.getResources().getColor(R.color.positive_color));
+
         return dialog;
     }
 
@@ -143,6 +150,9 @@ public class UiUtils {
         builder.setCancelable(false);
         AlertDialog dialog = builder.create();
         dialog.show();
+
+        dialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(context.getResources().getColor(R.color.positive_color));
+        dialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(context.getResources().getColor(R.color.negative_color));
 
         return dialog;
     }

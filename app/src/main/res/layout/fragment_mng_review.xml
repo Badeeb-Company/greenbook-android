@@ -138,10 +138,10 @@
         android:rating="1"
         android:progressTint="@color/dark_orange"
         android:secondaryProgressTint="@color/dark_orange"
-        android:indeterminateTint="@color/white"
         android:stepSize="1"
         android:layout_gravity="center"
         android:isIndicator="false"
+        android:theme="@style/RatingBar"
         />
 
     <TextView
