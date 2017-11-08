@@ -159,7 +159,7 @@ public class ShopListResultFragment extends Fragment {
         mShopListAdaptor = new ShopRecyclerViewAdapter(mActivity, mShopList, this);
         rvShopList.setAdapter(mShopListAdaptor);
 
-        mAutoCategorySearchAdaptor = new ArrayAdapter<Category>(mActivity, android.R.layout.select_dialog_item, mCategoryList);
+        mAutoCategorySearchAdaptor = new ArrayAdapter<Category>(mActivity, R.layout.categry_card_view, R.id.tvCategoryName, mCategoryList);
 
         actvCategorySearch = (AutoCompleteTextView) view.findViewById(R.id.actvCategorySearch);
         actvCategorySearch.setAdapter(mAutoCategorySearchAdaptor);

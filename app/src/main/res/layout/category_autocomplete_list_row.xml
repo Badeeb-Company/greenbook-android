@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    >
+
+    <TextView
+        android:id="@+id/tvCategoryName"
+        android:layout_width="match_parent"
+        android:layout_height="48.5dp"
+        android:paddingLeft="13.5dp"
+        android:paddingTop="15.7dp"
+        android:text="Resturant"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/sign_up_line_thickness"
+        android:background="@color/light_gray"
+        android:layout_marginBottom="15dp"
+        />
+</LinearLayout>
