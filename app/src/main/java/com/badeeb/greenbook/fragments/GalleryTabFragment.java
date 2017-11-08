@@ -2,6 +2,8 @@ package com.badeeb.greenbook.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,6 +16,8 @@ import android.widget.LinearLayout;
 import com.badeeb.greenbook.R;
 import com.badeeb.greenbook.activities.MainActivity;
 import com.badeeb.greenbook.adaptors.GalleryRecyclerViewAdapter;
+import com.badeeb.greenbook.listener.RecyclerItemClickListener;
+import com.badeeb.greenbook.models.Photo;
 import com.badeeb.greenbook.models.Shop;
 import com.badeeb.greenbook.shared.Constants;
 
@@ -25,6 +29,7 @@ public class GalleryTabFragment extends Fragment {
     private final static String TAG = GalleryTabFragment.class.getName();
 
     private MainActivity mActivity;
+    private FragmentManager mFragmentManager;
     private Shop mShop;
 
     private RecyclerView rvGalleryPhotos;
@@ -39,16 +44,22 @@ public class GalleryTabFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Log.d(TAG, "onCreate - Start");
+
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_gallery_tab, container, false);
 
         init(view);
 
+        Log.d(TAG, "onCreate - End");
         return view;
     }
 
     private void init(View view) {
+        Log.d(TAG, "init - Start");
+
         mActivity = (MainActivity) getActivity();
+        mFragmentManager = mActivity.getSupportFragmentManager();
 
         mShop = Parcels.unwrap(getArguments().getParcelable(ShopDetailsFragment.EXTRA_SHOP_OBJECT));
 
@@ -78,6 +89,43 @@ public class GalleryTabFragment extends Fragment {
         }
 
         mActivity.setSearchButtonAsChecked();
+
+        setupListeners();
+
+        Log.d(TAG, "init - End");
+    }
+
+    private void setupListeners() {
+        Log.d(TAG, "setupListeners - End");
+
+        rvGalleryPhotos.addOnItemTouchListener(new RecyclerItemClickListener(getContext(), new RecyclerItemClickListener.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                Photo selectedPhoto = mShop.getPhotos().get(position);
+
+                goToImageViewFragment(selectedPhoto);
+            }
+        }));
+
+        Log.d(TAG, "setupListeners - End");
+    }
+
+    private void goToImageViewFragment(Photo selectedPhoto) {
+
+//        LoginFragment loginFragment = new LoginFragment();
+//
+//        Bundle bundle = new Bundle();
+//        bundle.putParcelable(ReviewMngFragment.EXTRA_SHOP_OBJECT, Parcels.wrap(mShop));
+//        loginFragment.setArguments(bundle);
+//
+//        FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
+//
+//        fragmentTransaction.replace(R.id.main_frame, loginFragment, loginFragment.TAG);
+//
+//        fragmentTransaction.addToBackStack(TAG);
+//
+//        fragmentTransaction.commit();
+
     }
 
 }
