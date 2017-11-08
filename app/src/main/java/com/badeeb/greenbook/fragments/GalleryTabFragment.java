@@ -103,28 +103,28 @@ public class GalleryTabFragment extends Fragment {
             public void onItemClick(View view, int position) {
                 Photo selectedPhoto = mShop.getPhotos().get(position);
 
-                goToImageViewFragment(selectedPhoto);
+                goToImageFragment(selectedPhoto);
             }
         }));
 
         Log.d(TAG, "setupListeners - End");
     }
 
-    private void goToImageViewFragment(Photo selectedPhoto) {
+    private void goToImageFragment(Photo selectedPhoto) {
 
-//        LoginFragment loginFragment = new LoginFragment();
-//
-//        Bundle bundle = new Bundle();
-//        bundle.putParcelable(ReviewMngFragment.EXTRA_SHOP_OBJECT, Parcels.wrap(mShop));
-//        loginFragment.setArguments(bundle);
-//
-//        FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
-//
-//        fragmentTransaction.replace(R.id.main_frame, loginFragment, loginFragment.TAG);
-//
-//        fragmentTransaction.addToBackStack(TAG);
-//
-//        fragmentTransaction.commit();
+        ImageFragment imageFragment = new ImageFragment();
+
+        Bundle bundle = new Bundle();
+        bundle.putString(ImageFragment.EXTRA_IMAGE_URL, selectedPhoto.getPhotoURL());
+        imageFragment.setArguments(bundle);
+
+        FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
+
+        fragmentTransaction.replace(R.id.main_frame, imageFragment, imageFragment.TAG);
+
+        fragmentTransaction.addToBackStack(TAG);
+
+        fragmentTransaction.commit();
 
     }
 
