@@ -462,12 +462,14 @@ public class ShopSearchFragment extends Fragment {
                     @Override
                     public void onConnectionSuspended(int i) {
                         Toast.makeText(getActivity(), "API client connection suspended", Toast.LENGTH_LONG).show();
+                        mProgressDialog.dismiss();
                     }
 
                 }).addOnConnectionFailedListener(new GoogleApiClient.OnConnectionFailedListener() {
                     @Override
                     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
                         Toast.makeText(getActivity(), "API client connection failed", Toast.LENGTH_LONG).show();
+                        mProgressDialog.dismiss();
                     }
                 })
                 .build();

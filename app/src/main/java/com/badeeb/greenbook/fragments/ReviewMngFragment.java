@@ -3,6 +3,7 @@ package com.badeeb.greenbook.fragments;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -13,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsSeekBar;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RatingBar;
@@ -37,6 +39,7 @@ import com.makeramen.roundedimageview.RoundedImageView;
 
 import org.parceler.Parcels;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 
 /**
@@ -146,6 +149,7 @@ public class ReviewMngFragment extends Fragment {
         etReviewDescription = (EditText) view.findViewById(R.id.etReviewDescription);
         rbShopRate = (RatingBar) view.findViewById(R.id.rbShopRate);
 
+
         tvToolbarEditReview = (TextView) view.findViewById(R.id.tvToolbarEditReview);
         tvTapAstarToRate = (TextView) view.findViewById(R.id.tvTapAstarToRate);
 
@@ -204,7 +208,21 @@ public class ReviewMngFragment extends Fragment {
         rbShopRate.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             @Override
             public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
-                rbShopRate.setRating((float) Math.ceil(rating));
+
+                if (Build.VERSION.SDK_INT == Build.VERSION_CODES.N) {
+                    try {
+                        Field field = AbsSeekBar.class.getDeclaredField("mTouchProgressOffset");
+                        field.setAccessible(true);
+                        field.set(rbShopRate, 0.6f);
+                    } catch (NoSuchFieldException | IllegalAccessException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                if (rating < 1) {
+                    rbShopRate.setRating(1);
+                }
+
                 Log.d(TAG, "Rate Value: " + (float) Math.ceil(rating));
             }
         });
