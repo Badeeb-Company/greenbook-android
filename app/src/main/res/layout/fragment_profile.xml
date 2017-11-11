@@ -135,6 +135,7 @@
                 />
 
             <View
+                android:id="@+id/vChangePasswordSeparator"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/profile_line_thickness"
                 android:background="@color/profile_line_gray"

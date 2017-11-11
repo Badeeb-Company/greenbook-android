@@ -49,6 +49,7 @@ public class ProfileFragment extends Fragment {
     private TextView tvInviteFriend;
     private TextView tvAppRate;
     private TextView tvChangePassword;
+    private View vChangePasswordSeparator;
 
 
     public ProfileFragment() {
@@ -113,6 +114,12 @@ public class ProfileFragment extends Fragment {
         tvInviteFriend =(TextView)  view.findViewById(R.id.tvInviteFriend);
         tvAppRate = (TextView) view.findViewById(R.id.tvAppRate);
         tvChangePassword = (TextView) view.findViewById(R.id.tvChangePassword);
+        vChangePasswordSeparator = view.findViewById(R.id.vChangePasswordSeparator);
+
+        if (! mActivity.getUser().getAccountType().equals("email")) {
+            tvChangePassword.setVisibility(View.GONE);
+            vChangePasswordSeparator.setVisibility(View.GONE);
+        }
 
         mActivity.setProfileButtonAsChecked();
         mActivity.showBottomNavigationActionBar();
