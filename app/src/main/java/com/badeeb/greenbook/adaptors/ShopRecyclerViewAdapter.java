@@ -75,7 +75,6 @@ public class ShopRecyclerViewAdapter extends RecyclerView.Adapter<ShopViewHolder
                 .asBitmap()
                 .into(holder.getRivShopMainPhoto());
 
-        Log.d(TAG, "Number of reviews = " + shop.getNumOfReviews());
         holder.getTvNumberOfReviews().setText("(" + shop.getNumOfReviews() + ")");
 
         setupListener(holder, position);
