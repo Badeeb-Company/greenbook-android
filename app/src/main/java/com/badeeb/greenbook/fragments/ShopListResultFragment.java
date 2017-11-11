@@ -367,10 +367,8 @@ public class ShopListResultFragment extends Fragment {
                     Log.d(TAG, "callSearchApi - NonAuthorizedCallback - onSuccess - mShopList: "
                             + Arrays.toString(mShopList.toArray()));
                     mShopListAdaptor.notifyDataSetChanged();
-
-
-
-                } else {
+                }
+                else {
                     //switch to empty search page
                     Log.d(TAG, "callSearchApi - NonAuthorizedCallback - onSuccess - empty search ");
                 }

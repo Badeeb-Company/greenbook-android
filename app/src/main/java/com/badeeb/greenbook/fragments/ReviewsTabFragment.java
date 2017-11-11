@@ -343,6 +343,7 @@ public class ReviewsTabFragment extends Fragment {
                 if(jsonResponse != null && jsonResponse.getResult() != null){
                     ReviewManage reviewManage = jsonResponse.getResult();
                     mShop.setRate(reviewManage.getShopRate());
+                    mShop.setNumOfReviews(reviewManage.getNumberOfReviews());
                     updateTotalRateBar();
                     Log.d(TAG, "callDeleteReviewApi - Rate Value: " + mShop.getRate());
                 }

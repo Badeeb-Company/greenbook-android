@@ -21,7 +21,9 @@ public class ReviewManage {
     @SerializedName("shop_rate")
     private double shopRate;
 
-
+    @Expose(serialize = false, deserialize = true)
+    @SerializedName("num_of_reviews")
+    private int numberOfReviews;
 
     public Review getReview() {
         return review;
@@ -45,5 +47,13 @@ public class ReviewManage {
 
     public void setShopRate(double shopRate) {
         this.shopRate = shopRate;
+    }
+
+    public int getNumberOfReviews() {
+        return numberOfReviews;
+    }
+
+    public void setNumberOfReviews(int numberOfReviews) {
+        this.numberOfReviews = numberOfReviews;
     }
 }

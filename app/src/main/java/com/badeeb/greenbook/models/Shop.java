@@ -49,6 +49,10 @@ public class Shop {
     @SerializedName("photos")
     private ArrayList<Photo> photos;
 
+    @Expose
+    @SerializedName("num_of_reviews")
+    private int numOfReviews;
+
     public Shop(){
         name = "";
         description = "";
@@ -57,6 +61,7 @@ public class Shop {
         phoneNumber = "";
         mainPhotoURL = "";
         photos = new ArrayList<>();
+        numOfReviews = 0;
     }
 
     public int getId() {
@@ -134,5 +139,13 @@ public class Shop {
     @Override
     public String toString() {
         return "["+id+" - "+name+"] ";
+    }
+
+    public int getNumOfReviews() {
+        return numOfReviews;
+    }
+
+    public void setNumOfReviews(int numOfReviews) {
+        this.numOfReviews = numOfReviews;
     }
 }

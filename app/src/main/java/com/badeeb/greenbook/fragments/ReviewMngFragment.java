@@ -304,6 +304,7 @@ public class ReviewMngFragment extends Fragment {
                 if(jsonResponse != null && jsonResponse.getResult() != null){
                     ReviewManage reviewManage = jsonResponse.getResult();
                     mShop.setRate(reviewManage.getShopRate());
+                    mShop.setNumOfReviews(reviewManage.getNumberOfReviews());
                     Log.d(TAG, "callAddReviewApi - Rate Value: " + mShop.getRate());
                 }
 
@@ -368,6 +369,7 @@ public class ReviewMngFragment extends Fragment {
                 if(jsonResponse != null && jsonResponse.getResult() != null){
                     ReviewManage reviewManage = jsonResponse.getResult();
                     mShop.setRate(reviewManage.getShopRate());
+                    mShop.setNumOfReviews(reviewManage.getNumberOfReviews());
                     Log.d(TAG, "callEditReviewApi - Rate Value: " + mShop.getRate());
                 }
 

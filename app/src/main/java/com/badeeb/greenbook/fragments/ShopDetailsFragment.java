@@ -52,6 +52,7 @@ public class ShopDetailsFragment extends Fragment {
     private TextView tvNearLocation;
     private ImageView ivToolbarBack;
     private TextView tvToolbarShopName;
+    private TextView tvNumberOfReviews;
 
 
     public ShopDetailsFragment() {
@@ -114,6 +115,7 @@ public class ShopDetailsFragment extends Fragment {
         tvNearLocation = (TextView) view.findViewById(R.id.tvNearLocation);
         ivToolbarBack = (ImageView) view.findViewById(R.id.ivToolbarBack);
         tvToolbarShopName = (TextView) view.findViewById(R.id.tvToolbarShopName);
+        tvNumberOfReviews = (TextView) view.findViewById(R.id.tvNumberOfReviews);
 
         mActivity.setSearchButtonAsChecked();
 
@@ -140,6 +142,8 @@ public class ShopDetailsFragment extends Fragment {
         tvNearLocation.setText(getShopDistance());
         tvToolbarShopName.setText(mShop.getName());
 
+        tvNumberOfReviews.setText("(" + mShop.getNumOfReviews() + ")");
+
         Log.d(TAG, "fillUiFields - end");
     }
 
@@ -148,6 +152,7 @@ public class ShopDetailsFragment extends Fragment {
         DecimalFormat df = new DecimalFormat("0.0");
         tvRatingValue.setText(df.format(mShop.getRate()));
         rbShopRate.setRating((float) mShop.getRate());
+        tvNumberOfReviews.setText("(" + mShop.getNumOfReviews() + ")");
     }
 
     private String getShopDistance(){

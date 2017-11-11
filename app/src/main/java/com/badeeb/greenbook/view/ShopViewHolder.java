@@ -27,6 +27,7 @@ public class ShopViewHolder extends RecyclerView.ViewHolder{
     private TextView tvShopName;
     private TextView tvDescription;
     private TextView tvNearLocation;
+    private TextView tvNumberOfReviews;
 
     private LinearLayout shopDetailsLinearLayout;
 
@@ -41,6 +42,7 @@ public class ShopViewHolder extends RecyclerView.ViewHolder{
         tvShopName = (TextView) itemView.findViewById(R.id.tvShopName);
         tvDescription = (TextView) itemView.findViewById(R.id.tvDescription);
         tvNearLocation = (TextView) itemView.findViewById(R.id.tvNearLocation);
+        tvNumberOfReviews = (TextView) itemView.findViewById(R.id.tvNumberOfReviews);
 
         shopDetailsLinearLayout = (LinearLayout) itemView.findViewById(R.id.shopDetailsLinearLayout);
 
@@ -112,5 +114,13 @@ public class ShopViewHolder extends RecyclerView.ViewHolder{
 
     public void setTvRateValue(TextView tvRateValue) {
         this.tvRateValue = tvRateValue;
+    }
+
+    public TextView getTvNumberOfReviews() {
+        return tvNumberOfReviews;
+    }
+
+    public void setTvNumberOfReviews(TextView tvNumberOfReviews) {
+        this.tvNumberOfReviews = tvNumberOfReviews;
     }
 }
