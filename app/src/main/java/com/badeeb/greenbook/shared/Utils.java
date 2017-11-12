@@ -141,7 +141,7 @@ public class Utils {
         } else if (daysDifference == 1) {
             return "Yesterday at " + DateFormat.format(timeFormatString, dateTime);
         } else {
-            return DateFormat.format("MMMM dd 'at' h:mmaa", dateTime).toString();
+            return DateFormat.format("MMM dd 'at' h:mmaa", dateTime).toString();
         }
     }
 

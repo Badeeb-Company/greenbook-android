@@ -97,7 +97,7 @@ public class FavoriteFragment extends Fragment {
         rvFavList.setLayoutManager(mShopLayoutManager);
         rvFavList.setItemAnimator(new DefaultItemAnimator());
 
-        mFavAdapter = new FavouriteRecyclerViewAdapter(mActivity,mShopList,this);
+        mFavAdapter = new FavouriteRecyclerViewAdapter(mActivity, mShopList,this);
         rvFavList.setAdapter(mFavAdapter);
 
         mAdapterNotifier = createAdapterNotifier();
@@ -292,7 +292,7 @@ public class FavoriteFragment extends Fragment {
     public void removeFavourite(int selectedShopIndex){
 //        mProgressDialog.show();
         mActivity.removeFromFavourite(mShopList.get(selectedShopIndex),mAdapterNotifier);
-        mShopList.remove(selectedShopIndex);
+//        mShopList.remove(selectedShopIndex);
         mFavAdapter.notifyDataSetChanged();
     }
 

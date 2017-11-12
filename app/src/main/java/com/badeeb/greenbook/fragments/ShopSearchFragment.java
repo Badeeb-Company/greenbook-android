@@ -80,6 +80,7 @@ public class ShopSearchFragment extends Fragment {
     private static final int PLACE_AUTOCOMPLETE_REQUEST_CODE = 100;
 
     private MainActivity mActivity;
+    private FragmentManager mFragmentManager;
 
     private List<Category> mCategoryList;
     private Category mSelectedCategory;
@@ -130,6 +131,7 @@ public class ShopSearchFragment extends Fragment {
         Log.d(TAG, "init - End");
 
         mActivity = (MainActivity) getActivity();
+        mFragmentManager = getFragmentManager();
         mProgressDialog = UiUtils.createProgressDialog(mActivity);
         mActivity.showBottomNavigationActionBar();
         mActivity.hideToolbar();
@@ -273,8 +275,7 @@ public class ShopSearchFragment extends Fragment {
         ShopListResultFragment shopListResultFragment = new ShopListResultFragment();
         shopListResultFragment.setArguments(bundle);
 
-        FragmentManager fragmentManager = getFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
 
         fragmentTransaction.replace(R.id.main_frame, shopListResultFragment, shopListResultFragment.TAG);
 

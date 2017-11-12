@@ -23,7 +23,7 @@
     <string name="signup_error">Error during signup, please try later</string>
     <string name="success_sign_up">Account is created Successfully</string>
     <string name="aiSearch">Search</string>
-    <string name="aiFavorite">Favorite</string>
+    <string name="aiFavorite">Favourites</string>
     <string name="aiProfile">Profile</string>
     <string name="GPS_disabled_warning_title">GPS is Disabled</string>
     <string name="GPS_disabled_warning_msg">You must allow location access to proceed using our services</string>

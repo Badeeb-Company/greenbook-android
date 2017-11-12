@@ -1,5 +1,6 @@
 package com.badeeb.greenbook.adaptors;
 
+import android.graphics.drawable.ColorDrawable;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -62,6 +63,7 @@ public class FavouriteRecyclerViewAdapter extends RecyclerView.Adapter<ShopViewH
         Glide.with(mActivity)
                 .load(shop.getMainPhotoURL())
                 .asBitmap()
+                .placeholder(new ColorDrawable(mActivity.getResources().getColor(R.color.light_gray)))
                 .into(holder.getRivShopMainPhoto());
 
         setupListener(holder, position);
@@ -76,6 +78,7 @@ public class FavouriteRecyclerViewAdapter extends RecyclerView.Adapter<ShopViewH
             public void onClick(View view) {
                 Log.d(TAG, "setupListener - shop details linear layout - on click position:"+position);
                 mParentFragment.goToSelectedShop(position);
+                mActivity.hideBottomNavigationActionBar();
             }
         });
 

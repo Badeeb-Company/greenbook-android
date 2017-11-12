@@ -24,19 +24,9 @@
             android:gravity="left|center"
             >
 
-            <ImageView
-                android:id="@+id/ivToolbarBack"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/go_back_left_arrow"
-                android:layout_alignParentLeft="true"
-                android:visibility="gone"
-                />
-
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="14dp"
                 android:text="Profile"
                 android:textSize="17sp"
                 android:fontFamily="fonts/OpenSans-Regular.ttf"
@@ -135,6 +125,7 @@
                 />
 
             <View
+                android:id="@+id/vChangePasswordSeparator"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/profile_line_thickness"
                 android:background="@color/profile_line_gray"

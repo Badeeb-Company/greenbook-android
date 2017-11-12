@@ -1,5 +1,6 @@
 package com.badeeb.greenbook.adaptors;
 
+import android.graphics.drawable.ColorDrawable;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -73,7 +74,10 @@ public class ShopRecyclerViewAdapter extends RecyclerView.Adapter<ShopViewHolder
         Glide.with(mActivity)
                 .load(shop.getMainPhotoURL())
                 .asBitmap()
+                .placeholder(new ColorDrawable(mActivity.getResources().getColor(R.color.light_gray)))
                 .into(holder.getRivShopMainPhoto());
+
+        holder.getTvNumberOfReviews().setText("(" + shop.getNumOfReviews() + ")");
 
         setupListener(holder, position);
 
