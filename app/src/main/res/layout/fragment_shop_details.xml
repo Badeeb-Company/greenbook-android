@@ -100,7 +100,7 @@
                             android:id="@+id/tvNumberOfReviews"
                             android:layout_width="wrap_content"
                             android:layout_height="@dimen/rating_bar_height"
-                            android:layout_marginLeft="@dimen/left_margin_rating_value"
+                            android:layout_marginLeft="2dp"
                             android:text="(0)"
                             android:textColor="@color/dark_gray"
                             android:textSize="12sp"

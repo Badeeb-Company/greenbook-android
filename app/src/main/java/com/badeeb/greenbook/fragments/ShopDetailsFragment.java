@@ -1,6 +1,7 @@
 package com.badeeb.greenbook.fragments;
 
 import android.app.ProgressDialog;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -125,7 +126,12 @@ public class ShopDetailsFragment extends Fragment {
     private void fillUiFields() {
         Log.d(TAG, "fillUiFields - Start");
 
-        Glide.with(mActivity).load(mShop.getMainPhotoURL()).into(rivShopMainPhoto);
+        Glide.with(mActivity)
+                .load(mShop.getMainPhotoURL())
+                .asBitmap()
+                .placeholder(new ColorDrawable(mActivity.getResources().getColor(R.color.light_gray)))
+                .into(rivShopMainPhoto);
+
         DecimalFormat df = new DecimalFormat("0.0");
         tvRatingValue.setText(df.format(mShop.getRate()));
         Log.d(TAG, "shop Rate in - fillUiFields : "+mShop.getRate());
@@ -139,7 +145,8 @@ public class ShopDetailsFragment extends Fragment {
 
         tvShopName.setText(mShop.getName());
         tvDescription.setText(mShop.getDescription());
-        tvNearLocation.setText(getShopDistance());
+        tvNearLocation.setVisibility(View.GONE);
+//        tvNearLocation.setText(getShopDistance());
         tvToolbarShopName.setText(mShop.getName());
 
         tvNumberOfReviews.setText("(" + mShop.getNumOfReviews() + ")");

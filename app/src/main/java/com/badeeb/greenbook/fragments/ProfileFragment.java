@@ -94,7 +94,6 @@ public class ProfileFragment extends Fragment {
     }
 
     private void initUi(View view) {
-        ivToolbarBack = (ImageView) view.findViewById(R.id.ivToolbarBack);
 
         rivImage = (ImageView) view.findViewById(R.id.rivImage);
         Glide.with(mContext)
@@ -128,13 +127,6 @@ public class ProfileFragment extends Fragment {
     private void setupListeners() {
         Log.d(TAG, "setupListeners - Start");
 
-        ivToolbarBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG, "setupListeners - ivToolbarBack - onClick");
-                mFragmentManager.popBackStack();
-            }
-        });
 
         tvEditProfile.setOnClickListener(new View.OnClickListener() {
             @Override
