@@ -11,7 +11,6 @@
         android:id="@+id/topBarlayout"
         android:layout_height="85dp"
         android:layout_width="match_parent"
-
         android:background="@color/green"
         android:orientation="vertical">
 
@@ -24,10 +23,10 @@
             android:background="@drawable/rounded_corner_light_green">
 
             <ImageView
-                android:id="@+id/ivBack"
+                android:id="@+id/ivSearch"
                 android:layout_width="27dp"
                 android:layout_height="19.3dp"
-                android:src="@drawable/arrow_back"
+                android:src="@drawable/ic_search_pressed"
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="15dp"
                 android:layout_marginLeft="5dp"/>
@@ -40,8 +39,8 @@
                 android:background="@color/gray"
                 />
 
-            <AutoCompleteTextView
-                android:id="@+id/actvCategorySearch"
+            <TextView
+                android:id="@+id/tvCategorySearch"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="45dp"
@@ -49,16 +48,14 @@
                 android:hint="Choose category "
                 android:imeOptions="actionSearch"
                 android:inputType="text"
+                android:gravity="center_vertical"
                 android:textColorHint="@color/hint_gray"
                 android:textColor="@color/monsoon"
                 android:textSize="16sp"
-                android:dropDownAnchor="@+id/topBarlayout"
-                android:dropDownWidth="fill_parent"
-                android:dropDownHeight="wrap_content"
                 android:ems="10">
 
                 <requestFocus />
-            </AutoCompleteTextView>
+            </TextView>
 
 
         </RelativeLayout>
@@ -107,60 +104,18 @@
                 android:layout_toRightOf="@+id/ivLocation"
                 />
 
-            <ImageView
-                android:id="@+id/ivMap"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:src="@drawable/ic_location_map"
-                android:layout_marginTop="5.5dp"
-                android:layout_marginBottom="7.5dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="11.4dp"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                />
+
 
         </RelativeLayout>
 
-
-    </LinearLayout>
-
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/shopList_form"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        >
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/rvShopList"
+        <ListView
+            android:id="@+id/lvCategoryList"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:scrollbars="vertical"/>
-    </android.support.v4.widget.SwipeRefreshLayout>
-
-    <LinearLayout
-        android:id="@+id/llEmptyResult"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:visibility="gone"
-        >
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_search"
-            />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="No Search Result, please try again"
-            android:textSize="18sp"
-            android:textColor="#0ca55f"
-            />
-
+            android:layout_height="match_parent"
+            ></ListView>
     </LinearLayout>
 
 </LinearLayout>
+
+
+

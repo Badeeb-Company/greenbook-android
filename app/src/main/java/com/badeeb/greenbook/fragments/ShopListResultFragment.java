@@ -24,10 +24,12 @@ import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.QuickContactBadge;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
+import com.badeeb.greenbook.CategoryFilterFragment;
 import com.badeeb.greenbook.R;
 import com.badeeb.greenbook.activities.MainActivity;
 import com.badeeb.greenbook.adaptors.PlaceAutocompleteAdapter;
@@ -70,7 +72,7 @@ public class ShopListResultFragment extends Fragment {
     public final static String TAG = ShopListResultFragment.class.getName();
     public final static String EXTRA_SELECTED_CATEGORY = "EXTRA_SELECTED_CATEGORY";
     public final static String EXTRA_SELECTED_CATEGORY_LIST = "EXTRA_SELECTED_CATEGORY_LIST";
-    public final static String EXTRA_SELECTED_ADRESS = "EXTRA_SELECTED_ADRESS";
+    public final static String EXTRA_SELECTED_ADDRESS = "EXTRA_SELECTED_ADRESS";
     public final static String EXTRA_SELECTED_LATITUDE = "EXTRA_SELECTED_LATITUDE";
     public final static String EXTRA_SELECTED_LONGITUDE = "EXTRA_SELECTED_LONGITUDE";
 
@@ -93,7 +95,7 @@ public class ShopListResultFragment extends Fragment {
     private SwipeRefreshLayout srlShopList;
     private AutoCompleteTextView actvCategorySearch;
     private ArrayAdapter<Category> mAutoCategorySearchAdaptor;
-    private ImageView ivSearch;
+    private ImageView ivBack;
     private AutoCompleteTextView actvLocationSearch;
     private PlaceAutocompleteAdapter mPlaceAutocompleteAdapter;
     private ImageView ivMap;
@@ -171,7 +173,7 @@ public class ShopListResultFragment extends Fragment {
         mPlaceAutocompleteAdapter = new PlaceAutocompleteAdapter(mActivity,mActivity.getmPlaceGoogleApiClient(),Constants.BOUNDS_MIDDLE_EAST, null);
         actvLocationSearch.setAdapter(mPlaceAutocompleteAdapter);
 
-        ivSearch = (ImageView) view.findViewById(R.id.ivSearch);
+        ivBack = (ImageView) view.findViewById(R.id.ivBack);
         ivMap = (ImageView) view.findViewById(R.id.ivMap);
 
         llEmptyResult = (LinearLayout) view.findViewById(R.id.llEmptyResult);
@@ -180,7 +182,7 @@ public class ShopListResultFragment extends Fragment {
     }
 
     private void loadBundleData(){
-        String searchAddress =getArguments().getString(EXTRA_SELECTED_ADRESS);
+        String searchAddress =getArguments().getString(EXTRA_SELECTED_ADDRESS);
         double lat = getArguments().getDouble(EXTRA_SELECTED_LATITUDE);
         double lng = getArguments().getDouble(EXTRA_SELECTED_LONGITUDE);
 
@@ -218,6 +220,20 @@ public class ShopListResultFragment extends Fragment {
                 return false;
             }
         });
+
+        ivBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getFragmentManager().popBackStack();
+            }
+        });
+
+//        actvCategorySearch.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                goCategoryFilter();
+//            }
+//        });
 
         actvCategorySearch.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -262,6 +278,29 @@ public class ShopListResultFragment extends Fragment {
                 Log.d(TAG, "actvLocationSearch - setOnItemClickListener - end ");
             }
         });
+    }
+
+    private void goCategoryFilter() {
+        Log.d(TAG, "goCategoryFilter - Start");
+
+        CategoryFilterFragment categoryFilterFragment = new CategoryFilterFragment();
+
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(EXTRA_SELECTED_CATEGORY_LIST, Parcels.wrap(mCategoryList));
+        bundle.putString(EXTRA_SELECTED_ADDRESS, actvLocationSearch.getText().toString());
+        categoryFilterFragment.setArguments(bundle);
+
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+        fragmentTransaction.replace(R.id.main_frame, categoryFilterFragment, categoryFilterFragment.TAG);
+
+        fragmentTransaction.addToBackStack(TAG);
+
+
+        fragmentTransaction.commit();
+
+        Log.d(TAG, "goCategoryFilter - End");
     }
 
     private ResultCallback<PlaceBuffer> mUpdatePlaceDetailsCallback

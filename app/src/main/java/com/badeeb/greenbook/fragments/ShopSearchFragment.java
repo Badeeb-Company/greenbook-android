@@ -265,7 +265,7 @@ public class ShopSearchFragment extends Fragment {
         Log.d(TAG, "mSelectedPlace: "+mSelectedPlaceName);
         Bundle bundle = new Bundle();
         bundle.putParcelable(ShopListResultFragment.EXTRA_SELECTED_CATEGORY, Parcels.wrap(mSelectedCategory));
-        bundle.putString(ShopListResultFragment.EXTRA_SELECTED_ADRESS, mSelectedPlaceName);
+        bundle.putString(ShopListResultFragment.EXTRA_SELECTED_ADDRESS, mSelectedPlaceName);
         bundle.putParcelable(ShopListResultFragment.EXTRA_SELECTED_CATEGORY_LIST, Parcels.wrap(mCategoryList));
         bundle.putDouble(ShopListResultFragment.EXTRA_SELECTED_LATITUDE, mSelectedPlacesLatitude);
         bundle.putDouble(ShopListResultFragment.EXTRA_SELECTED_LONGITUDE, mSelectedPlaceLongitude);
