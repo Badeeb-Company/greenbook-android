@@ -187,7 +187,13 @@ public class ShopListResultFragment extends Fragment {
         double lng = getArguments().getDouble(EXTRA_SELECTED_LONGITUDE);
 
         Category category = Parcels.unwrap(getArguments().getParcelable(EXTRA_SELECTED_CATEGORY));
-        mCategoryList = Parcels.unwrap(getArguments().getParcelable(EXTRA_SELECTED_CATEGORY_LIST));
+        List<Category> bundleCategoryList = Parcels.unwrap(getArguments().getParcelable(EXTRA_SELECTED_CATEGORY_LIST));
+
+        if(bundleCategoryList != null) {
+            mCategoryList = bundleCategoryList;
+        }
+
+        Log.d(TAG, "Null parcal unwrap: "+Parcels.unwrap(null));
         mAutoCategorySearchAdaptor.clear();
         mAutoCategorySearchAdaptor.addAll(mCategoryList);
 
@@ -210,17 +216,17 @@ public class ShopListResultFragment extends Fragment {
 
     private void setupListener(){
 
-        actvCategorySearch.setOnEditorActionListener(new AutoCompleteTextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                if (i == EditorInfo.IME_ACTION_SEARCH) {
-                    goSearch();
-                    return true;
-                }
-                return false;
-            }
-        });
-
+//        actvCategorySearch.setOnEditorActionListener(new AutoCompleteTextView.OnEditorActionListener() {
+//            @Override
+//            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+//                if (i == EditorInfo.IME_ACTION_SEARCH) {
+//                    goSearch();
+//                    return true;
+//                }
+//                return false;
+//            }
+//        });
+//
         ivBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -228,20 +234,13 @@ public class ShopListResultFragment extends Fragment {
             }
         });
 
-//        actvCategorySearch.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                goCategoryFilter();
-//            }
-//        });
-
-        actvCategorySearch.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        actvCategorySearch.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                mSelectedCategory = mCategoryList.get(i);
-                goSearch();
+            public void onClick(View v) {
+                goCategoryFilter();
             }
         });
+
 
         ivMap.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -1,18 +1,18 @@
 package com.badeeb.greenbook;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Parcel;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -22,6 +22,8 @@ import com.badeeb.greenbook.models.Category;
 
 import org.parceler.Parcels;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class CategoryFilterFragment extends Fragment {
@@ -29,13 +31,14 @@ public class CategoryFilterFragment extends Fragment {
 
     private MainActivity mActivity;
     private List<Category> mCategoryList;
+    private Category mSelectedCategory;
     private String mSelectedLocation;
 
+    private ImageView ivBack;
     private TextView tvCategorySearch;
     private ListView lvCategoryList;
     private ArrayAdapter<Category> mCategoryArrayAdapter;
-    private AutoCompleteTextView actvLocationSearch;
-
+    private FragmentManager mFragmentManager;
 
 
     @Override
@@ -47,6 +50,11 @@ public class CategoryFilterFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        if (container != null) {
+            // this code is used to prevent fragment overlapping
+            container.removeAllViews();
+        }
+
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_category_filter, container, false);
 
@@ -59,6 +67,8 @@ public class CategoryFilterFragment extends Fragment {
         Log.d(TAG, "init - start");
 
         mActivity = (MainActivity) getActivity();
+        mFragmentManager = getFragmentManager();
+        mCategoryList = new ArrayList<>();
 
         loadBundleData();
 
@@ -75,6 +85,7 @@ public class CategoryFilterFragment extends Fragment {
         Bundle bundle = getArguments();
 
         mCategoryList = Parcels.unwrap(bundle.getParcelable(ShopListResultFragment.EXTRA_SELECTED_CATEGORY_LIST));
+        Log.d(TAG, "Bundle mCategoryList : "+ Arrays.toString(mCategoryList.toArray()));
 
         mSelectedLocation = bundle.getString(ShopListResultFragment.EXTRA_SELECTED_ADDRESS);
 
@@ -84,16 +95,18 @@ public class CategoryFilterFragment extends Fragment {
     private void  initUi(View view){
         Log.d(TAG, "initUi - start");
 
+        ivBack = (ImageView) view.findViewById(R.id.ivBack);
+
         tvCategorySearch = (TextView) view.findViewById(R.id.tvCategorySearch) ;
 
-        actvLocationSearch = (AutoCompleteTextView) view.findViewById(R.id.actvLocationSearch) ;
-        if(mSelectedLocation != null && !mSelectedLocation.isEmpty()){
-            actvLocationSearch.setText(mSelectedLocation);
-        }
 
-        mCategoryArrayAdapter = new ArrayAdapter<Category>(mActivity, R.layout.categry_card_view, R.id.lvCategoryList, mCategoryList);
         lvCategoryList = (ListView) view.findViewById(R.id.lvCategoryList) ;
+
+        mCategoryArrayAdapter = new ArrayAdapter<Category>(mActivity, R.layout.categry_card_view, R.id.tvCategoryName, mCategoryList);
+
         lvCategoryList.setAdapter(mCategoryArrayAdapter);
+
+        Log.d(TAG, "first item in  mCategoryArrayAdapter : "+ mCategoryArrayAdapter.getItem(0));
 
 
         Log.d(TAG, "initUi - end");
@@ -102,12 +115,17 @@ public class CategoryFilterFragment extends Fragment {
     private void setupListener() {
         Log.d(TAG, "setupListener - start");
 
+        ivBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mFragmentManager.popBackStack();
+            }
+        });
+
         tvCategorySearch.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                Log.d(TAG, "addTextChangedListener - beforeTextChanged - seq: "+s);
 
-                mCategoryArrayAdapter.getFilter().filter(s);
             }
 
             @Override
@@ -117,11 +135,41 @@ public class CategoryFilterFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {
+                Log.d(TAG, "addTextChangedListener - afterTextChanged - seq: "+s);
 
+                mCategoryArrayAdapter.getFilter().filter(s);
+            }
+        });
+
+        lvCategoryList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                mSelectedCategory = mCategoryList.get(i);
+                goToShopListResultFragment();
             }
         });
 
         Log.d(TAG, "setupListener - end");
+    }
+
+    private void goToShopListResultFragment(){
+        Log.d(TAG, "goToShopResultListFragment - Start");
+        Log.d(TAG, "mSelectedPlace: "+mSelectedLocation);
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(ShopListResultFragment.EXTRA_SELECTED_CATEGORY, Parcels.wrap(mSelectedCategory));
+        bundle.putString(ShopListResultFragment.EXTRA_SELECTED_ADDRESS, mSelectedLocation);
+        bundle.putParcelable(ShopListResultFragment.EXTRA_SELECTED_CATEGORY_LIST, Parcels.wrap(mCategoryList));
+
+        ShopListResultFragment shopListResultFragment = new ShopListResultFragment();
+        shopListResultFragment.setArguments(bundle);
+
+        FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
+
+        fragmentTransaction.replace(R.id.main_frame, shopListResultFragment, shopListResultFragment.TAG);
+
+        fragmentTransaction.commit();
+
+        Log.d(TAG, "goToShopResultListFragment - End");
     }
 
 
