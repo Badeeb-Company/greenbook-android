@@ -44,7 +44,7 @@
 
             <EditText
                 android:id="@+id/etCategorySearch"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="45dp"
                 android:background="@android:color/transparent"

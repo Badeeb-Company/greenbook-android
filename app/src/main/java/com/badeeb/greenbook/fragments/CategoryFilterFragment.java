@@ -71,7 +71,7 @@ public class CategoryFilterFragment extends Fragment {
         mActivity = (MainActivity) getActivity();
         mFragmentManager = getFragmentManager();
         mCategoryList = new ArrayList<>();
-//        mActivity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+//        mActivity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
 
         loadBundleData();
 
@@ -103,6 +103,9 @@ public class CategoryFilterFragment extends Fragment {
         ivBack = (ImageView) view.findViewById(R.id.ivBack);
 
         etCategorySearch = (EditText) view.findViewById(R.id.etCategorySearch) ;
+        if(etCategorySearch.requestFocus()) {
+            mActivity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+        }
 
         lvCategoryList = (ListView) view.findViewById(R.id.lvCategoryList) ;
 
