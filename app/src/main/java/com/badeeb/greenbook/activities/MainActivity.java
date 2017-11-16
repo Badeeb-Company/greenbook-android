@@ -262,7 +262,7 @@ public class MainActivity extends AppCompatActivity {
         if (view != null) {
             Log.d(TAG, "Show Keyboard");
             InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.SHOW_IMPLICIT);
+            imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.SHOW_IMPLICIT);
         }
     }
 

@@ -125,6 +125,7 @@ public class CategoryFilterFragment extends Fragment {
         ivBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mActivity.hideKeyboard();
                 mFragmentManager.popBackStack();
             }
         });
