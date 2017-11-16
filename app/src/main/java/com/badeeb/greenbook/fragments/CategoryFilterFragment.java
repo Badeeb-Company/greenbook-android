@@ -10,8 +10,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -35,7 +37,7 @@ public class CategoryFilterFragment extends Fragment {
     private String mSelectedLocation;
 
     private ImageView ivBack;
-    private TextView tvCategorySearch;
+    private EditText etCategorySearch;
     private ListView lvCategoryList;
     private ArrayAdapter<Category> mCategoryArrayAdapter;
     private FragmentManager mFragmentManager;
@@ -69,6 +71,7 @@ public class CategoryFilterFragment extends Fragment {
         mActivity = (MainActivity) getActivity();
         mFragmentManager = getFragmentManager();
         mCategoryList = new ArrayList<>();
+//        mActivity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 
         loadBundleData();
 
@@ -97,7 +100,7 @@ public class CategoryFilterFragment extends Fragment {
 
         ivBack = (ImageView) view.findViewById(R.id.ivBack);
 
-        tvCategorySearch = (TextView) view.findViewById(R.id.tvCategorySearch) ;
+        etCategorySearch = (EditText) view.findViewById(R.id.etCategorySearch) ;
 
 
         lvCategoryList = (ListView) view.findViewById(R.id.lvCategoryList) ;
@@ -122,7 +125,7 @@ public class CategoryFilterFragment extends Fragment {
             }
         });
 
-        tvCategorySearch.addTextChangedListener(new TextWatcher() {
+        etCategorySearch.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 

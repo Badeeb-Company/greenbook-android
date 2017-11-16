@@ -41,8 +41,8 @@
                 android:background="@color/gray"
                 />
 
-            <TextView
-                android:id="@+id/tvCategorySearch"
+            <EditText
+                android:id="@+id/etCategorySearch"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="45dp"
@@ -57,7 +57,7 @@
                 android:ems="10">
 
                 <requestFocus />
-            </TextView>
+            </EditText>
 
 
         </RelativeLayout>
