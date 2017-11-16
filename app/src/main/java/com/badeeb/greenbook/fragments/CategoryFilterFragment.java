@@ -1,4 +1,4 @@
-package com.badeeb.greenbook;
+package com.badeeb.greenbook.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -16,8 +16,8 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.badeeb.greenbook.R;
 import com.badeeb.greenbook.activities.MainActivity;
-import com.badeeb.greenbook.fragments.ShopListResultFragment;
 import com.badeeb.greenbook.models.Category;
 
 import org.parceler.Parcels;
