@@ -22,7 +22,8 @@
             android:layout_marginLeft="7.3dp"
             android:layout_marginRight="6dp"
             android:layout_marginBottom="2dp"
-            android:background="@drawable/rounded_corner_light_green">
+            android:background="@drawable/rounded_corner_light_green"
+            >
 
             <ImageView
                 android:id="@+id/ivBack"
@@ -54,7 +55,8 @@
                 android:textColorHint="@color/hint_gray"
                 android:textColor="@color/monsoon"
                 android:textSize="16sp"
-                android:ems="10">
+                android:ems="10"
+                >
 
                 <requestFocus />
             </EditText>

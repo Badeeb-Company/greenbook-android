@@ -79,6 +79,8 @@ public class CategoryFilterFragment extends Fragment {
 
         setupListener();
 
+        mActivity.showKeyboard(etCategorySearch);
+
         Log.d(TAG, "init - end");
     }
 
@@ -101,7 +103,6 @@ public class CategoryFilterFragment extends Fragment {
         ivBack = (ImageView) view.findViewById(R.id.ivBack);
 
         etCategorySearch = (EditText) view.findViewById(R.id.etCategorySearch) ;
-
 
         lvCategoryList = (ListView) view.findViewById(R.id.lvCategoryList) ;
 
