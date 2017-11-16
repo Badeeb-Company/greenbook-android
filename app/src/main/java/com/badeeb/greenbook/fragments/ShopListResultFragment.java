@@ -19,6 +19,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.badeeb.greenbook.R;
@@ -74,8 +75,7 @@ public class ShopListResultFragment extends Fragment {
     private RecyclerView rvShopList;
     private ShopRecyclerViewAdapter mShopListAdaptor;
     private SwipeRefreshLayout srlShopList;
-    private AutoCompleteTextView actvCategorySearch;
-    private ArrayAdapter<Category> mAutoCategorySearchAdaptor;
+    private TextView tvCategorySearch;
     private ImageView ivBack;
     private AutoCompleteTextView actvLocationSearch;
     private PlaceAutocompleteAdapter mPlaceAutocompleteAdapter;
@@ -142,11 +142,8 @@ public class ShopListResultFragment extends Fragment {
         mShopListAdaptor = new ShopRecyclerViewAdapter(mActivity, mShopList, this);
         rvShopList.setAdapter(mShopListAdaptor);
 
-        mAutoCategorySearchAdaptor = new ArrayAdapter<Category>(mActivity, R.layout.categry_card_view, R.id.tvCategoryName, mCategoryList);
 
-        actvCategorySearch = (AutoCompleteTextView) view.findViewById(R.id.actvCategorySearch);
-        actvCategorySearch.setAdapter(mAutoCategorySearchAdaptor);
-        actvCategorySearch.setThreshold(Constants.THRESHOLD);
+        tvCategorySearch = (TextView) view.findViewById(R.id.actvCategorySearch);
 
         srlShopList = (SwipeRefreshLayout) view.findViewById(R.id.shopList_form);
 
@@ -175,13 +172,11 @@ public class ShopListResultFragment extends Fragment {
         }
 
         Log.d(TAG, "Null parcal unwrap: "+Parcels.unwrap(null));
-        mAutoCategorySearchAdaptor.clear();
-        mAutoCategorySearchAdaptor.addAll(mCategoryList);
 
         if(category != null){
             Log.d(TAG, "category selected EXTRA: "+category.getName());
             mSelectedCategory = category;
-            actvCategorySearch.setText(category.getName());
+            tvCategorySearch.setText(category.getName());
         }
         if(!"".equals(searchAddress)){
             Log.d(TAG, "location address search EXTRA: "+searchAddress);
@@ -215,7 +210,7 @@ public class ShopListResultFragment extends Fragment {
             }
         });
 
-        actvCategorySearch.setOnClickListener(new View.OnClickListener() {
+        tvCategorySearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 goCategoryFilter();
@@ -343,7 +338,7 @@ public class ShopListResultFragment extends Fragment {
     }
 
     private boolean fetchSelectedCategory() {
-        String selectedCategory = actvCategorySearch.getText().toString();
+        String selectedCategory = tvCategorySearch.getText().toString();
 
         if (selectedCategory != null && !selectedCategory.isEmpty()) {
             Log.d(TAG, "goSearch - categorySearch selected : " + selectedCategory+" - category list: "+Arrays.toString(mCategoryList.toArray()));
@@ -451,8 +446,6 @@ public class ShopListResultFragment extends Fragment {
                     mCategoryList.clear();
                     mCategoryList.addAll(jsonResponse.getResult().getCategoryList());
                     Log.d(TAG, "callCategoryListApi - updated category list: "+ Arrays.toString(mCategoryList.toArray()));
-                    mAutoCategorySearchAdaptor.clear();
-                    mAutoCategorySearchAdaptor.addAll(mCategoryList);
                 } else {
                     mActivity.getmSnackBarDisplayer().displayError("Categories not loaded from the server");
                 }
