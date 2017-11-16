@@ -15,10 +15,5 @@
         android:textColor="@color/black"
         android:textSize="18sp"
         />
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/sign_up_line_thickness"
-        android:background="@color/light_gray"
-        android:layout_marginBottom="15dp"
-        />
+
 </LinearLayout>

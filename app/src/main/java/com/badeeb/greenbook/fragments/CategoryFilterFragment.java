@@ -103,13 +103,10 @@ public class CategoryFilterFragment extends Fragment {
         ivBack = (ImageView) view.findViewById(R.id.ivBack);
 
         etCategorySearch = (EditText) view.findViewById(R.id.etCategorySearch) ;
-        if(etCategorySearch.requestFocus()) {
-            mActivity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-        }
 
         lvCategoryList = (ListView) view.findViewById(R.id.lvCategoryList) ;
 
-        mCategoryArrayAdapter = new ArrayAdapter<Category>(mActivity, R.layout.categry_card_view, R.id.tvCategoryName, mCategoryList);
+        mCategoryArrayAdapter = new ArrayAdapter<Category>(mActivity, R.layout.category_autocomplete_list_row, R.id.tvCategoryName, mCategoryList);
 
         lvCategoryList.setAdapter(mCategoryArrayAdapter);
 
