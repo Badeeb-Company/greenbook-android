@@ -84,8 +84,8 @@
                 android:background="@color/gray"
                 />
 
-            <AutoCompleteTextView
-                android:id="@+id/actvLocationSearch"
+            <TextView
+                android:id="@+id/tvLocationSearch"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:paddingBottom="7.5dp"
@@ -98,9 +98,6 @@
                 android:textColor="@color/monsoon"
                 android:textSize="16sp"
                 android:singleLine="true"
-                android:dropDownAnchor="@+id/topBarlayout"
-                android:dropDownWidth="fill_parent"
-                android:dropDownHeight="wrap_content"
                 android:layout_toLeftOf="@+id/ivMap"
                 android:layout_toRightOf="@+id/ivLocation"
                 />

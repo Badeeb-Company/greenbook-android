@@ -77,8 +77,8 @@ public class ShopListResultFragment extends Fragment {
     private SwipeRefreshLayout srlShopList;
     private TextView tvCategorySearch;
     private ImageView ivBack;
-    private AutoCompleteTextView actvLocationSearch;
-    private PlaceAutocompleteAdapter mPlaceAutocompleteAdapter;
+    private TextView tvLocationSearch;
+
     private ImageView ivMap;
     private LinearLayout llEmptyResult;
 
@@ -129,7 +129,7 @@ public class ShopListResultFragment extends Fragment {
 
         goSearch();
 
-        mActivity.connectPlaceGoogleApiClient();
+
 
     }
 
@@ -147,9 +147,7 @@ public class ShopListResultFragment extends Fragment {
 
         srlShopList = (SwipeRefreshLayout) view.findViewById(R.id.shopList_form);
 
-        actvLocationSearch = (AutoCompleteTextView) view.findViewById(R.id.actvLocationSearch);
-        mPlaceAutocompleteAdapter = new PlaceAutocompleteAdapter(mActivity,mActivity.getmPlaceGoogleApiClient(),Constants.BOUNDS_MIDDLE_EAST, null);
-        actvLocationSearch.setAdapter(mPlaceAutocompleteAdapter);
+        tvLocationSearch = (TextView) view.findViewById(R.id.tvLocationSearch);
 
         ivBack = (ImageView) view.findViewById(R.id.ivBack);
         ivMap = (ImageView) view.findViewById(R.id.ivMap);
@@ -180,7 +178,7 @@ public class ShopListResultFragment extends Fragment {
         }
         if(!"".equals(searchAddress)){
             Log.d(TAG, "location address search EXTRA: "+searchAddress);
-            actvLocationSearch.setText(searchAddress);
+            tvLocationSearch.setText(searchAddress);
             mLatitude = lat;
             mLongitude = lng;
             isLocationSelected = true;
@@ -231,28 +229,36 @@ public class ShopListResultFragment extends Fragment {
             }
         });
 
-        actvLocationSearch.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+        tvLocationSearch.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Log.d(TAG, "actvLocationSearch - setOnItemClickListener - start ");
-                final AutocompletePrediction item = mPlaceAutocompleteAdapter.getItem(i);
-                final String placeId = item.getPlaceId();
-                final CharSequence primaryText = item.getPrimaryText(null);
-
-                Log.i(TAG, "Autocomplete item selected: " + primaryText);
-
-            /*
-             Issue a request to the Places Geo Data API to retrieve a Place object with additional
-             details about the place.
-              */
-                PendingResult<PlaceBuffer> placeResult = Places.GeoDataApi
-                        .getPlaceById(mActivity.getmPlaceGoogleApiClient(), placeId);
-                placeResult.setResultCallback(mUpdatePlaceDetailsCallback);
-
-                Log.i(TAG, "Called getPlaceById to get Place details for " + placeId);
-                Log.d(TAG, "actvLocationSearch - setOnItemClickListener - end ");
+            public void onClick(View v) {
+                goPlaceFilter();
             }
         });
+    }
+
+    private void goPlaceFilter() {
+        Log.d(TAG, "goPlaceFilter - Start");
+
+        PlaceFilterFragment placeFilterFragment = new PlaceFilterFragment();
+
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(EXTRA_SELECTED_CATEGORY, Parcels.wrap(mSelectedCategory));
+        bundle.putParcelable(EXTRA_SELECTED_CATEGORY_LIST,Parcels.wrap(mCategoryList));
+        placeFilterFragment.setArguments(bundle);
+
+
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+        fragmentTransaction.replace(R.id.main_frame, placeFilterFragment, placeFilterFragment.TAG);
+
+        fragmentTransaction.addToBackStack(TAG);
+
+        fragmentTransaction.commit();
+
+        Log.d(TAG, "goPlaceFilter - End");
     }
 
     private void goCategoryFilter() {
@@ -262,7 +268,7 @@ public class ShopListResultFragment extends Fragment {
 
         Bundle bundle = new Bundle();
         bundle.putParcelable(EXTRA_SELECTED_CATEGORY_LIST, Parcels.wrap(mCategoryList));
-        bundle.putString(EXTRA_SELECTED_ADDRESS, actvLocationSearch.getText().toString());
+        bundle.putString(EXTRA_SELECTED_ADDRESS, tvLocationSearch.getText().toString());
         categoryFilterFragment.setArguments(bundle);
 
         FragmentManager fragmentManager = getFragmentManager();
@@ -278,37 +284,7 @@ public class ShopListResultFragment extends Fragment {
         Log.d(TAG, "goCategoryFilter - End");
     }
 
-    private ResultCallback<PlaceBuffer> mUpdatePlaceDetailsCallback
-            = new ResultCallback<PlaceBuffer>() {
-        @Override
-        public void onResult(PlaceBuffer places) {
-            Log.d(TAG, "mUpdatePlaceDetailsCallback - onResult - start ");
-            if (!places.getStatus().isSuccess()) {
-                Log.d(TAG, "mUpdatePlaceDetailsCallback - onResult - status not success ");
-                // Request did not complete successfully
-                Log.e(TAG, "Place query did not complete. Error: " + places.getStatus().toString());
-                places.release();
-                return;
-            }
-            // Get the Place object from the buffer.
-            final Place place = places.get(0);
 
-            Log.i(TAG, "Place details received: " + place.getName());
-
-            mLatitude = place.getLatLng().latitude;
-            mLongitude = place.getLatLng().longitude;
-            isLocationSelected = true;
-
-
-            Log.i(TAG, "location after autocomplete - lat: " + mLatitude+" - lng: "+mLongitude);
-
-            places.release();
-
-            goSearch();
-
-            Log.d(TAG, "mUpdatePlaceDetailsCallback - onResult - end ");
-        }
-    };
 
 
     private void goSearch() {
@@ -480,7 +456,7 @@ public class ShopListResultFragment extends Fragment {
     private void prepareSearchLocation() {
         Log.d(TAG, "prepareLocation - Start");
 
-        String searchLocation = actvLocationSearch.getText().toString();
+        String searchLocation = tvLocationSearch.getText().toString();
 
         if (searchLocation == null || searchLocation.isEmpty()) {
 
@@ -517,7 +493,7 @@ public class ShopListResultFragment extends Fragment {
 
         fragmentTransaction.commit();
 
-        mActivity.disconnectPlaceGoogleApiClient();
+
         Log.d(TAG, "goToSelectedShop - End");
     }
 
@@ -541,7 +517,7 @@ public class ShopListResultFragment extends Fragment {
 
     @Override
     public void onDestroy() {
-        mActivity.disconnectPlaceGoogleApiClient();
+
         super.onDestroy();
     }
 

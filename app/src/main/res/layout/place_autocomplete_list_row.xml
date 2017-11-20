@@ -26,13 +26,6 @@
         android:textColor="@color/aluminum"
         />
 
-    <View
-
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/sign_up_line_thickness"
-        android:layout_margin="10dp"
-        android:background="@color/hint_gray"
-        />
 
 
 </LinearLayout>
