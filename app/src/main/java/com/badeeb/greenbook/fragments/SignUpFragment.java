@@ -174,7 +174,7 @@ public class SignUpFragment extends Fragment {
         }
         byte[] inputData = Utils.getBytes(inputStream);
 
-        StorageReference storageRef = mFirebaseStorage.getReferenceFromUrl("gs://greenbook-e6f97.appspot.com/");
+        StorageReference storageRef = mFirebaseStorage.getReferenceFromUrl("gs://greenbook-1509124900563.appspot.com/");
         StorageReference imageReference = storageRef.child("clients/" + UUID.randomUUID());
         final ProgressDialog uploadPhotoProgressDialog = UiUtils.createProgressDialog(mActivity, "Uploading photo...");
 

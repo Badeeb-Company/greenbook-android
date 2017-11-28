@@ -27,7 +27,7 @@ android {
     compileSdkVersion 25
     buildToolsVersion '26.0.2'
     defaultConfig {
-        applicationId "com.badeeb.greenbook"
+        applicationId "com.org.badeeb.greenbook"
         minSdkVersion 15
         targetSdkVersion 25
         versionCode 4
