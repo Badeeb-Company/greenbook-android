@@ -151,11 +151,9 @@ public class MainActivity extends AppCompatActivity {
             mUser = mAppSettings.getUser();
             // Go to Search screen directly
             goToShopSearch();
-        }
-        else if (mAppSettings.isShowLoginRequired()) {
+        } else if (mAppSettings.isShowLoginRequired()) {
             goToShopSearch();
-        }
-        else {
+        } else {
             // Go to login screen
             goToLogin();
             mAppSettings.saveLoginCounter(1);
@@ -170,7 +168,7 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "init - End");
     }
 
-    public void initPlaceAutoComplete(){
+    public void initPlaceAutoComplete() {
         Log.d(TAG, "initPlaceAutoComplete - start ");
         mPlaceGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addApi(Places.GEO_DATA_API)
@@ -253,7 +251,7 @@ public class MainActivity extends AppCompatActivity {
     public void hideKeyboard() {
         View view = getCurrentFocus();
         if (view != null) {
-            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }
@@ -261,14 +259,14 @@ public class MainActivity extends AppCompatActivity {
     public void showKeyboard(View view) {
         if (view != null) {
             Log.d(TAG, "Show Keyboard");
-            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.SHOW_IMPLICIT);
         }
     }
 
     public void hideKeyboard(View view) {
         if (view != null) {
-            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }
@@ -388,12 +386,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private ErrorDisplayHandler createSnackBarDisplayer() {
-        return new ErrorDisplayHandler(){
+        return new ErrorDisplayHandler() {
             @Override
             public void displayError(String message) {
-                UiUtils.showSnackBar(findViewById(R.id.main_frame),message, Snackbar.LENGTH_LONG,
+                UiUtils.showSnackBar(findViewById(R.id.main_frame), message, Snackbar.LENGTH_LONG,
                         getResources().getColor(R.color.orange),
-                        R.drawable.btn_close,new View.OnClickListener(){
+                        R.drawable.btn_close, new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
                             }
@@ -403,9 +401,9 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void displayErrorWithAction(String message, int icon, View.OnClickListener onClickListener) {
-                UiUtils.showSnackBar(findViewById(R.id.main_frame),message,Snackbar.LENGTH_LONG,
+                UiUtils.showSnackBar(findViewById(R.id.main_frame), message, Snackbar.LENGTH_LONG,
                         getResources().getColor(R.color.orange),
-                        icon,onClickListener);
+                        icon, onClickListener);
             }
         };
     }
@@ -422,14 +420,14 @@ public class MainActivity extends AppCompatActivity {
         return mPlaceGoogleApiClient;
     }
 
-    public void connectPlaceGoogleApiClient(){
-        if(mPlaceGoogleApiClient != null && !mPlaceGoogleApiClient.isConnected()){
+    public void connectPlaceGoogleApiClient() {
+        if (mPlaceGoogleApiClient != null && !mPlaceGoogleApiClient.isConnected()) {
             mPlaceGoogleApiClient.connect();
         }
     }
 
-    public void disconnectPlaceGoogleApiClient(){
-        if(mPlaceGoogleApiClient != null && mPlaceGoogleApiClient.isConnected()){
+    public void disconnectPlaceGoogleApiClient() {
+        if (mPlaceGoogleApiClient != null && mPlaceGoogleApiClient.isConnected()) {
             mPlaceGoogleApiClient.disconnect();
         }
     }
@@ -451,7 +449,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public Set<Integer> getFavSet() {
-        if(mFavSet == null)
+        if (mFavSet == null)
             mFavSet = new HashSet<>();
 
         return mFavSet;
@@ -460,22 +458,22 @@ public class MainActivity extends AppCompatActivity {
 
     public void updateFavouriteSet() {
         Log.d(TAG, "updateFavouriteSet - Start");
-        if(getUser() != null){
+        if (getUser() != null) {
             Log.d(TAG, "getFavouriteList - in login mode");
             callFavApi();
-        }else{
+        } else {
             Log.d(TAG, "getFavouriteList - in offline mode");
             updateFavShopListFromDb();
         }
         Log.d(TAG, "updateFavouriteSet - end");
     }
 
-    public void addToFavourite(Shop selectedShop, AdapterNotifier adapterNotifier){
+    public void addToFavourite(Shop selectedShop, AdapterNotifier adapterNotifier) {
         Log.d(TAG, "addToFavourite - Start");
         mFavAdapterNotifier = adapterNotifier;
-        if(getUser() != null){
+        if (getUser() != null) {
             callAddFavouriteApi(selectedShop);
-        }else{
+        } else {
             favouriteSQLiteHelper.addFavourite(selectedShop.getId());
             updateFavShopListFromDb();
         }
@@ -483,16 +481,15 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "addToFavourite - End");
     }
 
-    public void removeFromFavourite(Shop selectedShop, AdapterNotifier adapterNotifier){
+    public void removeFromFavourite(Shop selectedShop, AdapterNotifier adapterNotifier) {
         Log.d(TAG, "removeFromFavourite - Start");
         mFavAdapterNotifier = adapterNotifier;
-        if(getUser() != null){
+        if (getUser() != null) {
             callRemoveFavouriteApi(selectedShop);
-        }else{
+        } else {
             favouriteSQLiteHelper.removeFavourite(selectedShop.getId());
             updateFavShopListFromDb();
         }
-
 
 
         Log.d(TAG, "removeFromFavourite - End");
@@ -503,17 +500,15 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "updateFavShopListFromDb - Start");
 
         List<Integer> updatedList = favouriteSQLiteHelper.getAllFavouriteIds();
-        Log.d(TAG, "updateFavShopListFromDb - updatedList : "+Arrays.toString(updatedList.toArray()));
+        Log.d(TAG, "updateFavShopListFromDb - updatedList : " + Arrays.toString(updatedList.toArray()));
 
         mFavSet = new HashSet<>();
         mFavSet.addAll(updatedList);
 
-        Log.d(TAG, "updateFavShopListFromDb - mFavSet : "+Arrays.toString(mFavSet.toArray()));
+        Log.d(TAG, "updateFavShopListFromDb - mFavSet : " + Arrays.toString(mFavSet.toArray()));
 
 
-
-
-        if(mFavAdapterNotifier != null ) {
+        if (mFavAdapterNotifier != null) {
             if (mFavSet.isEmpty()) {
                 Log.d(TAG, "updateFavShopListFromDb - notify empty list");
                 mFavAdapterNotifier.notifyEmptyList();
@@ -530,7 +525,7 @@ public class MainActivity extends AppCompatActivity {
     private void callFavApi() {
         Log.d(TAG, "callFavApi - Start");
 //        mProgressDialog.show();
-        String url = Constants.BASE_URL + "/shops/favourites" ;
+        String url = Constants.BASE_URL + "/shops/favourites";
         Log.d(TAG, "callFavApi - Request URL: " + url);
 
         AuthorizedCallback<JsonResponse<FavouriteInquiry>> callback = new AuthorizedCallback<JsonResponse<FavouriteInquiry>>(getUser().getToken()) {
@@ -548,22 +543,20 @@ public class MainActivity extends AppCompatActivity {
                             + Arrays.toString(jsonResponse.getResult().getShopList().toArray()));
 
 
-
-
                     mFavSet = new HashSet<>();
-                    for(Shop fav : jsonResponse.getResult().getShopList()){
-                        if(fav != null){
-                            Log.d(TAG, "updateFavouriteSet - insert fav: "+fav.getName()+" in set");
+                    for (Shop fav : jsonResponse.getResult().getShopList()) {
+                        if (fav != null) {
+                            Log.d(TAG, "updateFavouriteSet - insert fav: " + fav.getName() + " in set");
                             getFavSet().add(fav.getId());
                         }
                     }
 
-                    if(mFavAdapterNotifier != null)
+                    if (mFavAdapterNotifier != null)
                         mFavAdapterNotifier.notifyAdapter();
                 } else {
                     //switch to empty search
                     mFavSet = new HashSet<>();
-                    if(mFavAdapterNotifier != null)
+                    if (mFavAdapterNotifier != null)
                         mFavAdapterNotifier.notifyEmptyList();
                     Log.d(TAG, "callFavApi - AuthorizedCallback - onSuccess - empty search ");
                 }
@@ -588,7 +581,7 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "callFavApi - end");
     }
 
-    private void callAddFavouriteApi(Shop selectedShop){
+    private void callAddFavouriteApi(Shop selectedShop) {
 //        mProgressDialog.show();
 
         final Shop shop = selectedShop;
@@ -611,7 +604,7 @@ public class MainActivity extends AppCompatActivity {
 //                updateFavouriteSet();
 
                 mFavSet.add(shop.getId());
-                if(mFavAdapterNotifier != null){
+                if (mFavAdapterNotifier != null) {
                     mFavAdapterNotifier.notifyAdapter();
                 }
                 Log.d(TAG, "callAddFavouriteApi - onSuccess - End");
@@ -621,7 +614,7 @@ public class MainActivity extends AppCompatActivity {
             public void onError() {
                 Log.d(TAG, "callAddFavouriteApi - onError - Start");
 
-                getmSnackBarDisplayer().displayError(shop.getName()+" couldn't be added to favourite");
+                getmSnackBarDisplayer().displayError(shop.getName() + " couldn't be added to favourite");
 //                mProgressDialog.dismiss();
 
                 Log.d(TAG, "callAddFavouriteApi - onError - End");
@@ -629,7 +622,8 @@ public class MainActivity extends AppCompatActivity {
         };
 
         // Prepare response type
-        Type responseType = new TypeToken<JsonResponse<FavouriteInquiry>>() {}.getType();
+        Type responseType = new TypeToken<JsonResponse<FavouriteInquiry>>() {
+        }.getType();
 
         VolleyWrapper<JsonRequest<FavouriteInquiry>, JsonResponse<FavouriteInquiry>> volleyWrapper =
                 new VolleyWrapper<>(null, responseType, Request.Method.POST, url,
@@ -638,7 +632,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void callRemoveFavouriteApi(Shop selectedShop){
+    private void callRemoveFavouriteApi(Shop selectedShop) {
 //        mProgressDialog.show();
 
         final Shop shop = selectedShop;
@@ -655,10 +649,10 @@ public class MainActivity extends AppCompatActivity {
                 hideKeyboard();
 //                mProgressDialog.dismiss();
                 mFavSet.remove(shop.getId());
-                if(mFavAdapterNotifier != null){
-                    if(mFavSet.isEmpty()){
+                if (mFavAdapterNotifier != null) {
+                    if (mFavSet.isEmpty()) {
                         mFavAdapterNotifier.notifyEmptyList();
-                    }else{
+                    } else {
                         mFavAdapterNotifier.notifyAdapter();
                     }
                 }
@@ -672,7 +666,7 @@ public class MainActivity extends AppCompatActivity {
             public void onError() {
                 Log.d(TAG, "callRemoveFavouriteApi - onError - Start");
 
-                getmSnackBarDisplayer().displayError(shop.getName()+" couldn't be deleted!");
+                getmSnackBarDisplayer().displayError(shop.getName() + " couldn't be deleted!");
 //                mProgressDialog.dismiss();
 
                 Log.d(TAG, "callRemoveFavouriteApi - onError - End");
@@ -680,7 +674,8 @@ public class MainActivity extends AppCompatActivity {
         };
 
         // Prepare response type
-        Type responseType = new TypeToken<JsonResponse<FavouriteInquiry>>() {}.getType();
+        Type responseType = new TypeToken<JsonResponse<FavouriteInquiry>>() {
+        }.getType();
 
         VolleyWrapper<JsonRequest<FavouriteInquiry>, JsonResponse<FavouriteInquiry>> volleyWrapper =
                 new VolleyWrapper<>(null, responseType, Request.Method.DELETE, url,
@@ -688,7 +683,6 @@ public class MainActivity extends AppCompatActivity {
         volleyWrapper.execute();
 
     }
-
 
 
     public void clearBackStack() {
@@ -699,7 +693,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //-------------------------------Facebook Login----------------------------------------------
-    public void prepareFacebookLogin(){
+    public void prepareFacebookLogin() {
 
         // Facebook
         FacebookSdk.sdkInitialize(getApplicationContext());
@@ -719,26 +713,28 @@ public class MainActivity extends AppCompatActivity {
 
             }
 
-            @Override     public void onError(FacebookException error) {            }
+            @Override
+            public void onError(FacebookException error) {
+            }
         });
 
-        mLoginManager.logInWithReadPermissions(this, Arrays.asList("public_profile","email"));
+        mLoginManager.logInWithReadPermissions(this, Arrays.asList("public_profile", "email"));
 
     }
 
-    private void graphRequest(final AccessToken token){
-        GraphRequest request = GraphRequest.newMeRequest(token,new GraphRequest.GraphJSONObjectCallback(){
+    private void graphRequest(final AccessToken token) {
+        GraphRequest request = GraphRequest.newMeRequest(token, new GraphRequest.GraphJSONObjectCallback() {
 
             @Override
             public void onCompleted(JSONObject object, GraphResponse response) {
 
-                Log.d(TAG," Facebook JSON: "+object.toString());
-                Log.d(TAG," Facebook Token: "+token.getToken());
+                Log.d(TAG, " Facebook JSON: " + object.toString());
+                Log.d(TAG, " Facebook Token: " + token.getToken());
 
                 try {
                     User user = new User();
                     user.setEmail(object.getString("email"));
-                    user.setName(object.getString("first_name")+" "+object.getString("last_name"));
+                    user.setName(object.getString("first_name") + " " + object.getString("last_name"));
 
                     user.setImageURL(object.getJSONObject("picture").getJSONObject("data").getString("url"));
                     user.setSocialAcctId(object.getString("id"));
@@ -762,7 +758,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         Bundle b = new Bundle();
-        b.putString("fields","id,email,first_name,last_name,picture.type(large)");
+        b.putString("fields", "id,email,first_name,last_name,picture.type(large)");
         request.setParameters(b);
         request.executeAsync();
 
@@ -787,13 +783,11 @@ public class MainActivity extends AppCompatActivity {
                 if (getState().equals(Constants.GO_TO_ADD_REVIEW)) {
                     // pop back stack
                     mFragmentManager.popBackStack();
-                }
-                else if (getState().equals(Constants.GO_TO_PROFILE_TAB)) {
+                } else if (getState().equals(Constants.GO_TO_PROFILE_TAB)) {
                     mFragmentManager.popBackStack();
                     mFragmentManager.popBackStack();
                     goToProfileEdit();
-                }
-                else {
+                } else {
                     // Clear back stack
                     clearBackStack();
                     goToShopSearch();
@@ -819,7 +813,8 @@ public class MainActivity extends AppCompatActivity {
         };
 
         // Prepare response type
-        Type responseType = new TypeToken<JsonResponse<JsonUser>>() {}.getType();
+        Type responseType = new TypeToken<JsonResponse<JsonUser>>() {
+        }.getType();
 
         JsonUser jsonUser = new JsonUser();
         jsonUser.setUser(user);
@@ -884,8 +879,8 @@ public class MainActivity extends AppCompatActivity {
             Log.d(TAG, "onActivityResult - Google activity result");
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             handleSignInResult(result);
-        }else if(requestCode == FB_REQUEST_CODE){
-            mFacebookCallbackManager.onActivityResult(requestCode,resultCode,data);
+        } else if (requestCode == FB_REQUEST_CODE) {
+            mFacebookCallbackManager.onActivityResult(requestCode, resultCode, data);
         }
 
         Log.d(TAG, "onActivityResult - End");
