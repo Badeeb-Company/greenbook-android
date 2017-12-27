@@ -28,7 +28,7 @@ public class SQLiteHelper extends SQLiteOpenHelper{
         Log.d(TAG, " onCreate - Start");
 
         String CREATE_FAVOURITE_TABLE = "CREATE TABLE " + TABLE_FAVOURITE + "("
-                + SHOP_ID + " INTEGER PRIMARY KEY)";
+                + SHOP_ID + " TEXT PRIMARY KEY)";
 
         sqLiteDatabase.execSQL(CREATE_FAVOURITE_TABLE);
 

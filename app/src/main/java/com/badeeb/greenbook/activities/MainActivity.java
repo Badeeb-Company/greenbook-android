@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
     private ErrorDisplayHandler mSnackBarDisplayer;
     private Location mCurrentLocation;
 
-    private Set<Integer> mFavSet;
+    private Set<String> mFavSet;
     private AdapterNotifier mFavAdapterNotifier;
     private FavouriteSQLiteHelper favouriteSQLiteHelper;
 
@@ -448,7 +448,7 @@ public class MainActivity extends AppCompatActivity {
         this.mShopUnderReview = mShopUnderReview;
     }
 
-    public Set<Integer> getFavSet() {
+    public Set<String> getFavSet() {
         if (mFavSet == null)
             mFavSet = new HashSet<>();
 
@@ -474,7 +474,7 @@ public class MainActivity extends AppCompatActivity {
         if (getUser() != null) {
             callAddFavouriteApi(selectedShop);
         } else {
-            favouriteSQLiteHelper.addFavourite(selectedShop.getId());
+            favouriteSQLiteHelper.addFavourite(selectedShop.getGooglePlaceId());
             updateFavShopListFromDb();
         }
 
@@ -487,7 +487,7 @@ public class MainActivity extends AppCompatActivity {
         if (getUser() != null) {
             callRemoveFavouriteApi(selectedShop);
         } else {
-            favouriteSQLiteHelper.removeFavourite(selectedShop.getId());
+            favouriteSQLiteHelper.removeFavourite(selectedShop.getGooglePlaceId());
             updateFavShopListFromDb();
         }
 
@@ -499,7 +499,7 @@ public class MainActivity extends AppCompatActivity {
     private void updateFavShopListFromDb() {
         Log.d(TAG, "updateFavShopListFromDb - Start");
 
-        List<Integer> updatedList = favouriteSQLiteHelper.getAllFavouriteIds();
+        List<String> updatedList = favouriteSQLiteHelper.getAllFavouriteIds();
         Log.d(TAG, "updateFavShopListFromDb - updatedList : " + Arrays.toString(updatedList.toArray()));
 
         mFavSet = new HashSet<>();
@@ -547,7 +547,7 @@ public class MainActivity extends AppCompatActivity {
                     for (Shop fav : jsonResponse.getResult().getShopList()) {
                         if (fav != null) {
                             Log.d(TAG, "updateFavouriteSet - insert fav: " + fav.getName() + " in set");
-                            getFavSet().add(fav.getId());
+                            getFavSet().add(fav.getGooglePlaceId());
                         }
                     }
 
@@ -586,7 +586,7 @@ public class MainActivity extends AppCompatActivity {
 
         final Shop shop = selectedShop;
 
-        String url = Constants.BASE_URL + "/shops/" + shop.getId() + "/favourite";
+        String url = Constants.BASE_URL + "/shops/" + shop.getGooglePlaceId() + "/favourite";
 
         Log.d(TAG, "callAddFavouriteApi - url: " + url);
 
@@ -603,7 +603,7 @@ public class MainActivity extends AppCompatActivity {
 
 //                updateFavouriteSet();
 
-                mFavSet.add(shop.getId());
+                mFavSet.add(shop.getGooglePlaceId());
                 if (mFavAdapterNotifier != null) {
                     mFavAdapterNotifier.notifyAdapter();
                 }
@@ -637,7 +637,7 @@ public class MainActivity extends AppCompatActivity {
 
         final Shop shop = selectedShop;
 
-        String url = Constants.BASE_URL + "/shops/" + shop.getId() + "/favourite";
+        String url = Constants.BASE_URL + "/shops/" + shop.getGooglePlaceId() + "/favourite";
 
         Log.d(TAG, "callRemoveFavouriteApi - url: " + url);
 

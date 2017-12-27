@@ -203,7 +203,7 @@ public class FavoriteFragment extends Fragment {
 //        mProgressDialog.show();
         String url = Constants.BASE_URL + "/shops?ids=" ;
 
-        for(int shopId: mActivity.getFavSet()){
+        for(String shopId: mActivity.getFavSet()){
             url += shopId + ",";
         }
 

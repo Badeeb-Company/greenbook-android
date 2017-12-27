@@ -25,7 +25,7 @@ public class FavouriteSQLiteHelper  {
         sqLiteHelper = new SQLiteHelper(context);
     }
 
-    public void addFavourite(int shopId){
+    public void addFavourite(String shopId){
         Log.d(TAG, "addFavourite - start");
 
         SQLiteDatabase db = sqLiteHelper.getWritableDatabase();
@@ -41,7 +41,7 @@ public class FavouriteSQLiteHelper  {
         Log.d(TAG, "addFavourite - end");
     }
 
-    public void removeFavourite(int shopId){
+    public void removeFavourite(String shopId){
         Log.d(TAG, "removeFavourite - start");
 
         SQLiteDatabase db = sqLiteHelper.getWritableDatabase();
@@ -54,10 +54,10 @@ public class FavouriteSQLiteHelper  {
         Log.d(TAG, "removeFavourite - end");
     }
 
-    public List<Integer> getAllFavouriteIds(){
+    public List<String> getAllFavouriteIds(){
         Log.d(TAG, "getAllFavouriteIds - start");
 
-        List<Integer> favList = new ArrayList<>();
+        List<String> favList = new ArrayList<>();
         // Select All Query
         String selectQuery = "SELECT  * FROM " + sqLiteHelper.TABLE_FAVOURITE;
 
@@ -67,7 +67,7 @@ public class FavouriteSQLiteHelper  {
         // looping through all rows and adding to list
         if (cursor.moveToFirst()) {
             do {
-                favList.add(Integer.parseInt(cursor.getString(0)));
+                favList.add(cursor.getString(0));
             } while (cursor.moveToNext());
         }
         Log.d(TAG, "getAllFavouriteIds - favList: "+ Arrays.toString(favList.toArray()));

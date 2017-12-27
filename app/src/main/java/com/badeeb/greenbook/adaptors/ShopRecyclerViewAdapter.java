@@ -59,7 +59,7 @@ public class ShopRecyclerViewAdapter extends RecyclerView.Adapter<ShopViewHolder
         holder.getTvRateValue().setText(df.format(shop.getRate()));
         holder.getRbShopRate().setRating((float)shop.getRate());
 
-        if(!mActivity.getFavSet().isEmpty() && mActivity.getFavSet().contains(shop.getId())){
+        if(!mActivity.getFavSet().isEmpty() && mActivity.getFavSet().contains(shop.getGooglePlaceId())){
             Log.d(TAG, " onBindViewHolder - shop is fav: "+shop.getName());
             holder.getIvFavShop().setImageDrawable(mActivity.getResources().getDrawable(R.drawable.btn_fav_prassed));
         }else{
