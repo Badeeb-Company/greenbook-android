@@ -52,7 +52,7 @@ public class FavouriteRecyclerViewAdapter extends RecyclerView.Adapter<ShopViewH
 
         Log.d(TAG, " onBindViewHolder - ShopName: "+shop.getName());
         holder.getTvShopName().setText(shop.getName());
-        holder.getTvDescription().setText(shop.getDescription());
+        holder.getTvAddress().setText(shop.getGooglePlaceId());
 
         holder.getIvFavShop().setImageDrawable(mActivity.getResources().getDrawable(R.drawable.btn_fav_prassed));
 

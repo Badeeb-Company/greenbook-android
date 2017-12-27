@@ -49,7 +49,7 @@ public class ShopDetailsFragment extends Fragment {
     private RatingBar rbShopRate;
     private TextView tvRatingValue;
     private TextView tvShopName;
-    private TextView tvDescription;
+    private TextView tvAddress;
     private TextView tvNearLocation;
     private ImageView ivToolbarBack;
     private TextView tvToolbarShopName;
@@ -112,7 +112,7 @@ public class ShopDetailsFragment extends Fragment {
         rbShopRate = (RatingBar) view.findViewById(R.id.rbShopRate) ;
         tvRatingValue = (TextView) view.findViewById(R.id.tvRatingValue);
         tvShopName = (TextView) view.findViewById(R.id.tvShopName);
-        tvDescription = (TextView) view.findViewById(R.id.tvDescription);
+        tvAddress = (TextView) view.findViewById(R.id.tvAddress);
         tvNearLocation = (TextView) view.findViewById(R.id.tvNearLocation);
         ivToolbarBack = (ImageView) view.findViewById(R.id.ivToolbarBack);
         tvToolbarShopName = (TextView) view.findViewById(R.id.tvToolbarShopName);
@@ -144,7 +144,7 @@ public class ShopDetailsFragment extends Fragment {
         }
 
         tvShopName.setText(mShop.getName());
-        tvDescription.setText(mShop.getDescription());
+        tvAddress.setText(mShop.getLocation().getAddress());
         tvNearLocation.setVisibility(View.GONE);
 //        tvNearLocation.setText(getShopDistance());
         tvToolbarShopName.setText(mShop.getName());

@@ -53,7 +53,7 @@ public class ShopRecyclerViewAdapter extends RecyclerView.Adapter<ShopViewHolder
 
         Log.d(TAG, " onBindViewHolder - ShopName: "+shop.getName());
         holder.getTvShopName().setText(shop.getName());
-        holder.getTvDescription().setText(shop.getDescription());
+        holder.getTvAddress().setText(shop.getLocation().getAddress());
 
         DecimalFormat df = new DecimalFormat("0.0");
         holder.getTvRateValue().setText(df.format(shop.getRate()));

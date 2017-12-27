@@ -1,9 +1,6 @@
 package com.badeeb.greenbook.view;
 
-import android.graphics.drawable.Drawable;
-import android.media.Image;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -25,7 +22,7 @@ public class ShopViewHolder extends RecyclerView.ViewHolder{
     private RatingBar rbShopRate;
     private TextView tvRateValue;
     private TextView tvShopName;
-    private TextView tvDescription;
+    private TextView tvAddress;
     private TextView tvNearLocation;
     private TextView tvNumberOfReviews;
 
@@ -40,7 +37,7 @@ public class ShopViewHolder extends RecyclerView.ViewHolder{
         rbShopRate = (RatingBar) itemView.findViewById(R.id.rbShopRate);
         tvRateValue = (TextView) itemView.findViewById(R.id.tvRatingValue) ;
         tvShopName = (TextView) itemView.findViewById(R.id.tvShopName);
-        tvDescription = (TextView) itemView.findViewById(R.id.tvDescription);
+        tvAddress = (TextView) itemView.findViewById(R.id.tvAddress);
         tvNearLocation = (TextView) itemView.findViewById(R.id.tvNearLocation);
         tvNumberOfReviews = (TextView) itemView.findViewById(R.id.tvNumberOfReviews);
 
@@ -68,12 +65,12 @@ public class ShopViewHolder extends RecyclerView.ViewHolder{
         this.tvShopName = tvShopName;
     }
 
-    public TextView getTvDescription() {
-        return tvDescription;
+    public TextView getTvAddress() {
+        return tvAddress;
     }
 
-    public void setTvDescription(TextView tvDescription) {
-        this.tvDescription = tvDescription;
+    public void setTvAddress(TextView tvAddress) {
+        this.tvAddress = tvAddress;
     }
 
     public TextView getTvNearLocation() {

@@ -22,8 +22,8 @@ public class Shop {
     private String name;
 
     @Expose
-    @SerializedName("description")
-    private String description;
+    @SerializedName("google_place_id")
+    private String googlePlaceId;
 
     @Expose
     @SerializedName("rate")
@@ -55,7 +55,7 @@ public class Shop {
 
     public Shop(){
         name = "";
-        description = "";
+        googlePlaceId = "";
         workingDays = new ArrayList<>();
         location = new ShopLocation();
         phoneNumber = "";
@@ -80,12 +80,12 @@ public class Shop {
         this.name = name;
     }
 
-    public String getDescription() {
-        return description;
+    public String getGooglePlaceId() {
+        return googlePlaceId;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setGooglePlaceId(String googlePlaceId) {
+        this.googlePlaceId = googlePlaceId;
     }
 
     public double getRate() {

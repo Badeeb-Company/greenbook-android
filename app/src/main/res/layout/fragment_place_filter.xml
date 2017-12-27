@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
-    tools:context="com.badeeb.greenbook.fragments.ShopSearchFragment"
+    tools:context="com.badeeb.greenbook.fragments.PlaceFilterFragment"
     android:id="@+id/shop_search_fragment">
 
     <LinearLayout
