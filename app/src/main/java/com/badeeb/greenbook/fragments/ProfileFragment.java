@@ -211,17 +211,4 @@ public class ProfileFragment extends Fragment {
         mActivity.changeNavigationIconsState(R.id.aiProfile);
     }
 
-    private void goToShopSearchFragment() {
-
-        ShopSearchFragment shopSearchFragment = new ShopSearchFragment();
-
-        FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
-
-        fragmentTransaction.replace(R.id.main_frame, shopSearchFragment, shopSearchFragment.TAG);
-
-        fragmentTransaction.commit();
-
-        mActivity.changeNavigationIconsState(R.id.aiSearch);
-    }
-
 }

@@ -304,9 +304,9 @@ public class LoginFragment extends Fragment {
         if (fragment != null && fragment instanceof ShopSearchFragment && fragment.isVisible())
             return;
 
-        ShopSearchFragment shopSearchFragment = new ShopSearchFragment();
+        ShopListResultFragment shopListResultFragment = new ShopListResultFragment();
         FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.main_frame, shopSearchFragment, shopSearchFragment.TAG);
+        fragmentTransaction.replace(R.id.main_frame, shopListResultFragment, shopListResultFragment.TAG);
         fragmentTransaction.commit();
 
         mActivity.changeNavigationIconsState(R.id.aiSearch);

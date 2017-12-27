@@ -30,6 +30,7 @@ import com.badeeb.greenbook.fragments.LoginFragment;
 import com.badeeb.greenbook.fragments.NotLoggedInProfileFragment;
 import com.badeeb.greenbook.fragments.ProfileFragment;
 import com.badeeb.greenbook.fragments.ShopDetailsFragment;
+import com.badeeb.greenbook.fragments.ShopListResultFragment;
 import com.badeeb.greenbook.fragments.ShopSearchFragment;
 import com.badeeb.greenbook.models.FavouriteInquiry;
 import com.badeeb.greenbook.models.JsonRequest;
@@ -320,9 +321,9 @@ public class MainActivity extends AppCompatActivity {
         if (fragment != null && fragment instanceof ShopSearchFragment && fragment.isVisible())
             return;
 
-        ShopSearchFragment shopSearchFragment = new ShopSearchFragment();
+        ShopListResultFragment shopListResultFragment = new ShopListResultFragment();
         FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.main_frame, shopSearchFragment, shopSearchFragment.TAG);
+        fragmentTransaction.replace(R.id.main_frame, shopListResultFragment, shopListResultFragment.TAG);
 //        fragmentTransaction.addToBackStack(TAG);
         fragmentTransaction.commit();
 

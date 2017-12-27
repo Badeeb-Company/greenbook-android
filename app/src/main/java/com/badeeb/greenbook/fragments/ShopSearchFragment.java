@@ -62,7 +62,9 @@ import com.google.android.gms.location.places.PlaceBuffer;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.location.places.ui.*;
 import com.google.gson.reflect.TypeToken;
+
 import org.parceler.Parcels;
+
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -82,16 +84,11 @@ public class ShopSearchFragment extends Fragment {
     private MainActivity mActivity;
     private FragmentManager mFragmentManager;
 
-    private List<Category> mCategoryList;
-    private Category mSelectedCategory;
     private String mSelectedPlaceName;
     private double mSelectedPlacesLatitude;
     private double mSelectedPlaceLongitude;
 
     // UI Fields
-    private RecyclerView rvCategoryList;
-    private CategoryRecyclerViewAdapter mCategoryListAdaptor;
-    private SwipeRefreshLayout srlCategoryList;
     private AutoCompleteTextView actvLocationSearch;
     private PlaceAutocompleteAdapter mPlaceAutocompleteAdapter;
 
@@ -137,8 +134,6 @@ public class ShopSearchFragment extends Fragment {
         mActivity.hideToolbar();
         mActivity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
-        mCategoryList = new ArrayList<Category>();
-
         initUIComponents(view);
 
         setupListener();
@@ -158,19 +153,8 @@ public class ShopSearchFragment extends Fragment {
 
 
     public void initUIComponents(View view) {
-        rvCategoryList = (RecyclerView) view.findViewById(R.id.rvCategoryList);
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mActivity);
-        rvCategoryList.setLayoutManager(mLayoutManager);
-        rvCategoryList.setItemAnimator(new DefaultItemAnimator());
-
-        mCategoryListAdaptor = new CategoryRecyclerViewAdapter(mActivity, mCategoryList);
-        rvCategoryList.setAdapter(mCategoryListAdaptor);
-
-        srlCategoryList = (SwipeRefreshLayout) view.findViewById(R.id.category_form);
-        srlCategoryList.setVisibility(View.VISIBLE);
-
         actvLocationSearch = (AutoCompleteTextView) view.findViewById(R.id.actvLocation);
-        mPlaceAutocompleteAdapter = new PlaceAutocompleteAdapter(mActivity,mActivity.getmPlaceGoogleApiClient(),Constants.BOUNDS_MIDDLE_EAST, null);
+        mPlaceAutocompleteAdapter = new PlaceAutocompleteAdapter(mActivity, mActivity.getmPlaceGoogleApiClient(), Constants.BOUNDS_MIDDLE_EAST, null);
         actvLocationSearch.setAdapter(mPlaceAutocompleteAdapter);
 
         mActivity.setSearchButtonAsChecked();
@@ -180,32 +164,8 @@ public class ShopSearchFragment extends Fragment {
     public void setupListener() {
         Log.d(TAG, "setupListeners - Start");
 
-        srlCategoryList.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                Log.d(TAG, "setupListeners - srlCategoryList:onItemClick - Start");
-
-                prepareCategoryList();
-
-                Log.d(TAG, "setupListeners - srlCategoryList:onItemClick - Start");
-            }
-        });
-
-        rvCategoryList.addOnItemTouchListener(
-                new RecyclerItemClickListener(getContext(), new RecyclerItemClickListener.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(View view, int position) {
-                        Log.d(TAG, "setupListeners - rvCategoryList:onItemClick - Start");
-
-                        mSelectedCategory = mCategoryList.get(position);
-
-                        PermissionsChecker.checkPermissions(ShopSearchFragment.this, onLocationPermissionGrantedHandler,
-                                PERM_LOCATION_RQST_CODE, Manifest.permission.ACCESS_FINE_LOCATION);
-
-                        Log.d(TAG, "setupListeners - rvCategoryList - End");
-                    }
-                })
-        );
+        PermissionsChecker.checkPermissions(ShopSearchFragment.this, onLocationPermissionGrantedHandler,
+                PERM_LOCATION_RQST_CODE, Manifest.permission.ACCESS_FINE_LOCATION);
 
         actvLocationSearch.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -233,42 +193,38 @@ public class ShopSearchFragment extends Fragment {
         Log.d(TAG, "setupListeners - Start");
     }
 
-    private ResultCallback<PlaceBuffer> mUpdatePlaceDetailsCallback
-            = new ResultCallback<PlaceBuffer>() {
-        @Override
-        public void onResult(PlaceBuffer places) {
-            Log.d(TAG, "mUpdatePlaceDetailsCallback - onResult - start ");
-            if (!places.getStatus().isSuccess()) {
-                Log.d(TAG, "mUpdatePlaceDetailsCallback - onResult - status not success ");
-                // Request did not complete successfully
-                Log.e(TAG, "Place query did not complete. Error: " + places.getStatus().toString());
-                places.release();
-                return;
-            }
-            // Get the Place object from the buffer.
-            final Place place = places.get(0);
+    private ResultCallback<PlaceBuffer> mUpdatePlaceDetailsCallback =
+            new ResultCallback<PlaceBuffer>() {
+                @Override
+                public void onResult(PlaceBuffer places) {
+                    Log.d(TAG, "mUpdatePlaceDetailsCallback - onResult - start ");
+                    if (!places.getStatus().isSuccess()) {
+                        Log.d(TAG, "mUpdatePlaceDetailsCallback - onResult - status not success ");
+                        // Request did not complete successfully
+                        Log.e(TAG, "Place query did not complete. Error: " + places.getStatus().toString());
+                        places.release();
+                        return;
+                    }
+                    // Get the Place object from the buffer.
+                    final Place place = places.get(0);
 
-            Log.i(TAG, "Place details received: " + place.getName());
+                    Log.i(TAG, "Place details received: " + place.getName());
 
-            mSelectedPlaceName = place.getName().toString();
-            mSelectedPlacesLatitude = place.getLatLng().latitude;
-            mSelectedPlaceLongitude = place.getLatLng().longitude;
+                    mSelectedPlaceName = place.getName().toString();
+                    mSelectedPlacesLatitude = place.getLatLng().latitude;
+                    mSelectedPlaceLongitude = place.getLatLng().longitude;
 
-            Log.i(TAG, "location after autocomplete - lat: " + mSelectedPlacesLatitude+" - lng: "+mSelectedPlaceLongitude);
+                    Log.i(TAG, "location after autocomplete - lat: " + mSelectedPlacesLatitude + " - lng: " + mSelectedPlaceLongitude);
 
-            places.release();
+                    places.release();
 
-            Log.d(TAG, "mUpdatePlaceDetailsCallback - onResult - end ");
-        }
-    };
+                    Log.d(TAG, "mUpdatePlaceDetailsCallback - onResult - end ");
+                }
+            };
 
-    private void goToShopListResultFragment(){
-        Log.d(TAG, "goToShopResultListFragment - Start");
-        Log.d(TAG, "mSelectedPlace: "+mSelectedPlaceName);
+    private void goToShopListResultFragment() {
         Bundle bundle = new Bundle();
-        bundle.putParcelable(ShopListResultFragment.EXTRA_SELECTED_CATEGORY, Parcels.wrap(mSelectedCategory));
         bundle.putString(ShopListResultFragment.EXTRA_SELECTED_ADDRESS, mSelectedPlaceName);
-        bundle.putParcelable(ShopListResultFragment.EXTRA_SELECTED_CATEGORY_LIST, Parcels.wrap(mCategoryList));
         bundle.putDouble(ShopListResultFragment.EXTRA_SELECTED_LATITUDE, mSelectedPlacesLatitude);
         bundle.putDouble(ShopListResultFragment.EXTRA_SELECTED_LONGITUDE, mSelectedPlaceLongitude);
 
@@ -290,58 +246,6 @@ public class ShopSearchFragment extends Fragment {
 
     private void prepareCategoryList() {
         mProgressDialog.show();
-        callCategoryListApi();
-    }
-
-    private void callCategoryListApi() {
-        Log.d(TAG, "callCategoryListApi - Start");
-        String url = Constants.BASE_URL + "/categories";
-
-        Log.d(TAG, "callCategoryListApi - url: " + url);
-
-        NonAuthorizedCallback<JsonResponse<CategoryInquiry>> callback = new NonAuthorizedCallback<JsonResponse<CategoryInquiry>>() {
-            @Override
-            public void onSuccess(JsonResponse<CategoryInquiry> jsonResponse) {
-                Log.d(TAG, "callCategoryListApi - onSuccess - Start");
-
-                if (jsonResponse != null && jsonResponse.getResult() != null && jsonResponse.getResult().getCategoryList() != null) {
-                    mCategoryList.clear();
-                    mCategoryList.addAll(jsonResponse.getResult().getCategoryList());
-                    mCategoryListAdaptor.notifyDataSetChanged();
-
-                    Log.d(TAG, "callCategoryListApi - onSuccess - mCategoryList: "+ Arrays.toString(mCategoryList.toArray()));
-
-                } else {
-                    mActivity.getmSnackBarDisplayer().displayError("Categories not loaded from the server");
-                }
-
-                mProgressDialog.dismiss();
-                srlCategoryList.setRefreshing(false);
-
-                Log.d(TAG, "callCategoryListApi - onSuccess - End");
-            }
-
-            @Override
-            public void onError() {
-                Log.d(TAG, "callCategoryListApi - onError - Start");
-
-                mActivity.getmSnackBarDisplayer().displayError("Error loading categories from the server");
-
-                mProgressDialog.dismiss();
-                srlCategoryList.setRefreshing(false);
-
-                Log.d(TAG, "callCategoryListApi - onError - End");
-            }
-        };
-
-        // Prepare response type
-        Type responseType = new TypeToken<JsonResponse<CategoryInquiry>>() {
-        }.getType();
-
-        VolleyWrapper<Object, JsonResponse<CategoryInquiry>> volleyWrapper = new VolleyWrapper<>(null, responseType, Request.Method.GET, url,
-                callback, getContext(), mActivity.getmSnackBarDisplayer(), mActivity.findViewById(R.id.ll_main_view));
-        volleyWrapper.execute();
-        Log.d(TAG, "callCategoryListApi - End");
     }
 
     //----------------------------------------------------------------------------------------------
@@ -349,7 +253,7 @@ public class ShopSearchFragment extends Fragment {
     private final class LocationChangeReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (intent.getAction().equals(LocationManager.PROVIDERS_CHANGED_ACTION)){
+            if (intent.getAction().equals(LocationManager.PROVIDERS_CHANGED_ACTION)) {
                 Log.d(TAG, "LocationChangeReceiver - onReceive - Start");
 
                 checkLocationService();
@@ -366,9 +270,9 @@ public class ShopSearchFragment extends Fragment {
         Log.d(TAG, "onRequestPermissionsResult - Start");
 
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode){
+        switch (requestCode) {
             case PERM_LOCATION_RQST_CODE:
-                if(PermissionsChecker.permissionsGranted(grantResults)){
+                if (PermissionsChecker.permissionsGranted(grantResults)) {
                     onLocationPermissionGrantedHandler.onPermissionsGranted();
                 }
                 break;
@@ -403,8 +307,7 @@ public class ShopSearchFragment extends Fragment {
                 // This part is only used to dismiss alert dialog when GPS is enabled but we don't get location in same time.
                 Log.d(TAG, "checkLocationService - showGPSDisabledWarningDialog - Dismiss");
                 locationDisabledWarningDialog.dismiss();
-            }
-            else {
+            } else {
                 // Get current location
                 Log.d(TAG, "checkLocationService - Get current location");
                 initGoogleApiClient();
@@ -460,6 +363,7 @@ public class ShopSearchFragment extends Fragment {
                         fetchUserCurrentLocation();
                         Log.d(TAG, "initGoogleApiClient - onConnected - End");
                     }
+
                     @Override
                     public void onConnectionSuspended(int i) {
                         Toast.makeText(getActivity(), "API client connection suspended", Toast.LENGTH_LONG).show();
@@ -547,10 +451,10 @@ public class ShopSearchFragment extends Fragment {
         Log.d(TAG, "onLocationNotFound - End");
     }
 
-    private void disconnectGoogleApiClient(){
+    private void disconnectGoogleApiClient() {
         Log.d(TAG, "disconnectGoogleApiClient - Start");
 
-        if(mGoogleApiClient != null && mGoogleApiClient.isConnected()){
+        if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
             mGoogleApiClient.disconnect();
         }
 
@@ -563,7 +467,7 @@ public class ShopSearchFragment extends Fragment {
             public void onLocationChanged(Location location) {
                 Log.d(TAG, "onLocationChanged - Start");
 
-                if(cancelFetchLocationTask != null){
+                if (cancelFetchLocationTask != null) {
                     cancelFetchLocationTask.cancel();
                 }
                 LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);

@@ -41,8 +41,6 @@ public class PlaceFilterFragment extends Fragment {
     private String mAddress;
     private double mLatitude;
     private double mLongitude;
-    private Category mSelectedCategory;
-    private List<Category> mCategoryList;
 
     private ImageView ivBack;
     private TextView tvCurrentLocation;
@@ -69,19 +67,11 @@ public class PlaceFilterFragment extends Fragment {
 
         mActivity = (MainActivity) getActivity();
 
-        loadBundle();
-
         initUi(view);
 
         mActivity.connectPlaceGoogleApiClient();
 
         setupListener();
-    }
-
-    private void loadBundle(){
-        Bundle bundle = getArguments();
-        mSelectedCategory = Parcels.unwrap(bundle.getParcelable(ShopListResultFragment.EXTRA_SELECTED_CATEGORY));
-        mCategoryList = Parcels.unwrap(bundle.getParcelable(ShopListResultFragment.EXTRA_SELECTED_CATEGORY_LIST));
     }
 
     private void initUi(View view){
@@ -193,12 +183,9 @@ public class PlaceFilterFragment extends Fragment {
         Log.d(TAG, "goToShopResultListFragment - Start");
         Log.d(TAG, "mSelectedPlace: "+mAddress);
         Bundle bundle = new Bundle();
-        bundle.putParcelable(ShopListResultFragment.EXTRA_SELECTED_CATEGORY, Parcels.wrap(mSelectedCategory));
-        bundle.putParcelable(ShopListResultFragment.EXTRA_SELECTED_CATEGORY_LIST, Parcels.wrap(mCategoryList));
         bundle.putString(ShopListResultFragment.EXTRA_SELECTED_ADDRESS, mAddress);
         bundle.putDouble(ShopListResultFragment.EXTRA_SELECTED_LATITUDE, mLatitude);
         bundle.putDouble(ShopListResultFragment.EXTRA_SELECTED_LONGITUDE, mLongitude);
-
 
         ShopListResultFragment shopListResultFragment = new ShopListResultFragment();
         shopListResultFragment.setArguments(bundle);

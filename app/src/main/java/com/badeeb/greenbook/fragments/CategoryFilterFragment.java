@@ -89,9 +89,6 @@ public class CategoryFilterFragment extends Fragment {
 
         Bundle bundle = getArguments();
 
-        mCategoryList = Parcels.unwrap(bundle.getParcelable(ShopListResultFragment.EXTRA_SELECTED_CATEGORY_LIST));
-        Log.d(TAG, "Bundle mCategoryList : "+ Arrays.toString(mCategoryList.toArray()));
-
         mSelectedLocation = bundle.getString(ShopListResultFragment.EXTRA_SELECTED_ADDRESS);
 
         Log.d(TAG, "loadBundleData - end");
@@ -161,9 +158,7 @@ public class CategoryFilterFragment extends Fragment {
         Log.d(TAG, "goToShopResultListFragment - Start");
         Log.d(TAG, "mSelectedPlace: "+mSelectedLocation);
         Bundle bundle = new Bundle();
-        bundle.putParcelable(ShopListResultFragment.EXTRA_SELECTED_CATEGORY, Parcels.wrap(mSelectedCategory));
         bundle.putString(ShopListResultFragment.EXTRA_SELECTED_ADDRESS, mSelectedLocation);
-        bundle.putParcelable(ShopListResultFragment.EXTRA_SELECTED_CATEGORY_LIST, Parcels.wrap(mCategoryList));
 
         ShopListResultFragment shopListResultFragment = new ShopListResultFragment();
         shopListResultFragment.setArguments(bundle);

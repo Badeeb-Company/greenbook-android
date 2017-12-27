@@ -1,11 +1,21 @@
 package com.badeeb.greenbook.fragments;
 
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -20,6 +30,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.badeeb.greenbook.R;
@@ -34,9 +45,15 @@ import com.badeeb.greenbook.models.ShopInquiry;
 import com.badeeb.greenbook.network.NonAuthorizedCallback;
 import com.badeeb.greenbook.network.VolleyWrapper;
 import com.badeeb.greenbook.shared.Constants;
+import com.badeeb.greenbook.shared.OnPermissionsGrantedHandler;
 import com.badeeb.greenbook.shared.UiUtils;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.AutocompletePrediction;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.PlaceBuffer;
@@ -49,11 +66,14 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class ShopListResultFragment extends Fragment {
     public final static String TAG = ShopListResultFragment.class.getName();
-    public final static String EXTRA_SELECTED_CATEGORY = "EXTRA_SELECTED_CATEGORY";
-    public final static String EXTRA_SELECTED_CATEGORY_LIST = "EXTRA_SELECTED_CATEGORY_LIST";
+
+    private static final long FETCH_LOCATION_TIMEOUT = 10 * 1000;
+
     public final static String EXTRA_SELECTED_ADDRESS = "EXTRA_SELECTED_ADRESS";
     public final static String EXTRA_SELECTED_LATITUDE = "EXTRA_SELECTED_LATITUDE";
     public final static String EXTRA_SELECTED_LONGITUDE = "EXTRA_SELECTED_LONGITUDE";
@@ -63,10 +83,8 @@ public class ShopListResultFragment extends Fragment {
     private MainActivity mActivity;
     private ProgressDialog mProgressDialog;
     private List<Shop> mShopList;
-    private List<Category> mCategoryList;
 
     // search parameters
-    private Category mSelectedCategory;
     private double mLatitude;
     private double mLongitude;
     private boolean isLocationSelected;
@@ -82,10 +100,13 @@ public class ShopListResultFragment extends Fragment {
     private ImageView ivMap;
     private LinearLayout llEmptyResult;
 
-
-
-
-
+    private OnPermissionsGrantedHandler onLocationPermissionGrantedHandler;
+    private AlertDialog locationDisabledWarningDialog;
+    private GoogleApiClient mGoogleApiClient;
+    private TimerTask cancelFetchLocationTask;
+    private LocationListener locationListener;
+    private LocationManager locationManager;
+    private LocationChangeReceiver locationChangeReceiver;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -109,6 +130,8 @@ public class ShopListResultFragment extends Fragment {
         return view;
     }
 
+
+
     private void init(View view){
         mActivity = (MainActivity) getActivity();
         mProgressDialog = UiUtils.createProgressDialog(mActivity);
@@ -116,21 +139,69 @@ public class ShopListResultFragment extends Fragment {
         mActivity.hideToolbar();
         mActivity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
-        mCategoryList = new ArrayList<>();
         mShopList = new ArrayList<>();
 
         initUi(view);
 
-        loadBundleData();
-
-//        prepareCategoryList();
+//        loadBundleData();
 
         setupListener();
 
+        // location preparation
+        onLocationPermissionGrantedHandler = createOnLocationPermissionGrantedHandler();
+        locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
+        locationChangeReceiver = new LocationChangeReceiver();
+        locationListener = createLocationListener();
+
+        mActivity.connectPlaceGoogleApiClient();
+
         goSearch();
+    }
 
+    private LocationListener createLocationListener() {
+        return new LocationListener() {
+            @Override
+            public void onLocationChanged(Location location) {
+                if(cancelFetchLocationTask != null){
+                    cancelFetchLocationTask.cancel();
+                }
+                LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+                mActivity.setCurrentLocation(location);
+                onLocationFound();
+            }
+        };
+    }
 
+    private void onLocationFound() {
+        Log.d(TAG, "onLocationFound - Start");
 
+        // Go to next fragment
+//        goToShopListResultFragment();
+
+        mProgressDialog.dismiss();
+
+        Log.d(TAG, "onLocationFound - End");
+    }
+
+    private void showGPSDisabledWarningDialog() {
+
+        Log.d(TAG, "showGPSDisabledWarningDialog - Start");
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.DialogTheme);
+        builder.setTitle(R.string.GPS_disabled_warning_title);
+        builder.setMessage(R.string.GPS_disabled_warning_msg);
+        builder.setPositiveButton(R.string.ok_btn_dialog, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Intent i = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                startActivity(i);
+            }
+        });
+        builder.setCancelable(false);
+        locationDisabledWarningDialog = builder.create();
+        locationDisabledWarningDialog.show();
+
+        Log.d(TAG, "showGPSDisabledWarningDialog - End");
     }
 
     private void initUi(View view){
@@ -157,32 +228,132 @@ public class ShopListResultFragment extends Fragment {
         mActivity.setSearchButtonAsChecked();
     }
 
+    private OnPermissionsGrantedHandler createOnLocationPermissionGrantedHandler() {
+
+        return new OnPermissionsGrantedHandler() {
+            @Override
+            public void onPermissionsGranted() {
+                checkLocationService();
+            }
+        };
+    }
+
+    private boolean checkLocationService() {
+        boolean gpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        if (!gpsEnabled) {
+            if (locationDisabledWarningDialog == null || !locationDisabledWarningDialog.isShowing()) {
+                showGPSDisabledWarningDialog();
+                getActivity().registerReceiver(locationChangeReceiver, new IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION));
+            }
+        } else {
+            if (locationDisabledWarningDialog != null && locationDisabledWarningDialog.isShowing()) {
+                // This part is only used to dismiss alert dialog when GPS is enabled but we don't get location in same time.
+                Log.d(TAG, "checkLocationService - showGPSDisabledWarningDialog - Dismiss");
+                locationDisabledWarningDialog.dismiss();
+            }
+            else {
+                // Get current location
+                initGoogleApiClient();
+                onFindingLocation();
+            }
+        }
+
+        Log.d(TAG, "checkLocationService - End");
+
+        return gpsEnabled;
+    }
+
+    @SuppressWarnings({"MissingPermission"})
+    private void onFindingLocation() {
+        mProgressDialog.show();
+        disconnectGoogleApiClient();
+        mGoogleApiClient.connect();
+    }
+
+    private void disconnectGoogleApiClient(){
+        if(mGoogleApiClient != null && mGoogleApiClient.isConnected()){
+            mGoogleApiClient.disconnect();
+        }
+    }
+
+    private void initGoogleApiClient() {
+        mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
+                .addApi(LocationServices.API)
+                .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
+                    @Override
+                    public void onConnected(Bundle bundle) {
+                        fetchUserCurrentLocation();
+                    }
+                    @Override
+                    public void onConnectionSuspended(int i) {
+                        Toast.makeText(getActivity(), "API client connection suspended", Toast.LENGTH_LONG).show();
+                        mProgressDialog.dismiss();
+                    }
+
+                }).addOnConnectionFailedListener(new GoogleApiClient.OnConnectionFailedListener() {
+                    @Override
+                    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+                        Toast.makeText(getActivity(), "API client connection failed", Toast.LENGTH_LONG).show();
+                        mProgressDialog.dismiss();
+                    }
+                })
+                .build();
+    }
+
+    /*
+    We try to get the last known location if found then no problem, if not found then we
+    will set current location to default location(Australia) and register location update
+    to get the current location whenever received.
+ */
+    @SuppressWarnings({"MissingPermission"})
+    private void fetchUserCurrentLocation() {
+        cancelFetchLocationTask = new TimerTask() {
+            @Override
+            public void run() {
+                LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, locationListener);
+                mActivity.setCurrentLocation(LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient));
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (mActivity.getCurrentLocation() == null) {
+                            onLocationNotFound();
+                        } else {
+                            onLocationFound();
+                        }
+                    }
+                });
+            }
+        };
+        registerLocationUpdate();
+        Timer timer = new Timer();
+        timer.schedule(cancelFetchLocationTask, FETCH_LOCATION_TIMEOUT);
+    }
+
+    @SuppressWarnings({"MissingPermission"})
+    protected void registerLocationUpdate() {
+        LocationRequest request = LocationRequest.create();
+        request.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        request.setSmallestDisplacement(0);
+        request.setInterval(0);
+        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, request, locationListener);
+    }
+
+    private void onLocationNotFound() {
+        mProgressDialog.dismiss();
+        disconnectGoogleApiClient();
+        UiUtils.showDialog(getContext(), R.style.DialogTheme, R.string.location_not_found, R.string.ok_btn_dialog, null);
+    }
+
     private void loadBundleData(){
-        String searchAddress =getArguments().getString(EXTRA_SELECTED_ADDRESS);
+        String searchAddress = getArguments().getString(EXTRA_SELECTED_ADDRESS);
         double lat = getArguments().getDouble(EXTRA_SELECTED_LATITUDE);
         double lng = getArguments().getDouble(EXTRA_SELECTED_LONGITUDE);
 
-        Category category = Parcels.unwrap(getArguments().getParcelable(EXTRA_SELECTED_CATEGORY));
-        List<Category> bundleCategoryList = Parcels.unwrap(getArguments().getParcelable(EXTRA_SELECTED_CATEGORY_LIST));
-
-        if(bundleCategoryList != null) {
-            mCategoryList = bundleCategoryList;
-        }
-
-        Log.d(TAG, "Null parcal unwrap: "+Parcels.unwrap(null));
-
-        if(category != null){
-            Log.d(TAG, "category selected EXTRA: "+category.getName());
-            mSelectedCategory = category;
-            tvCategorySearch.setText(category.getName());
-        }
         if(!"".equals(searchAddress)){
-            Log.d(TAG, "location address search EXTRA: "+searchAddress);
             tvLocationSearch.setText(searchAddress);
             mLatitude = lat;
             mLongitude = lng;
             isLocationSelected = true;
-            Log.d(TAG, "location address search EXTRA - lat: "+mLatitude+" - lng: "+mLongitude);
         }
     }
 
@@ -190,17 +361,6 @@ public class ShopListResultFragment extends Fragment {
 
     private void setupListener(){
 
-//        actvCategorySearch.setOnEditorActionListener(new AutoCompleteTextView.OnEditorActionListener() {
-//            @Override
-//            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-//                if (i == EditorInfo.IME_ACTION_SEARCH) {
-//                    goSearch();
-//                    return true;
-//                }
-//                return false;
-//            }
-//        });
-//
         ivBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -244,8 +404,6 @@ public class ShopListResultFragment extends Fragment {
         PlaceFilterFragment placeFilterFragment = new PlaceFilterFragment();
 
         Bundle bundle = new Bundle();
-        bundle.putParcelable(EXTRA_SELECTED_CATEGORY, Parcels.wrap(mSelectedCategory));
-        bundle.putParcelable(EXTRA_SELECTED_CATEGORY_LIST,Parcels.wrap(mCategoryList));
         placeFilterFragment.setArguments(bundle);
 
 
@@ -267,7 +425,6 @@ public class ShopListResultFragment extends Fragment {
         CategoryFilterFragment categoryFilterFragment = new CategoryFilterFragment();
 
         Bundle bundle = new Bundle();
-        bundle.putParcelable(EXTRA_SELECTED_CATEGORY_LIST, Parcels.wrap(mCategoryList));
         bundle.putString(EXTRA_SELECTED_ADDRESS, tvLocationSearch.getText().toString());
         categoryFilterFragment.setArguments(bundle);
 
@@ -288,8 +445,6 @@ public class ShopListResultFragment extends Fragment {
 
 
     private void goSearch() {
-        Log.d(TAG, "goSearch - Start");
-
         mActivity.hideKeyboard();
         mProgressDialog.show();
 
@@ -298,45 +453,17 @@ public class ShopListResultFragment extends Fragment {
         if (!isLocationSelected) {
             Log.d(TAG, "goSearch - location not selected");
             mProgressDialog.dismiss();
-            mActivity.getmSnackBarDisplayer().displayError("Search Failed because search can not be determined!");
-            return;
-        }
-
-        if(!fetchSelectedCategory()){
-            mActivity.getmSnackBarDisplayer().displayError("The entered category does not exist");
-            mProgressDialog.dismiss();
-            enableNoSearchFoundScreen();
+            mActivity.getmSnackBarDisplayer().displayError("Your location cannot be detected!");
             return;
         }
 
         callSearchApi();
-        Log.d(TAG, "goSearch - end");
     }
-
-    private boolean fetchSelectedCategory() {
-        String selectedCategory = tvCategorySearch.getText().toString();
-
-        if (selectedCategory != null && !selectedCategory.isEmpty()) {
-            Log.d(TAG, "goSearch - categorySearch selected : " + selectedCategory+" - category list: "+Arrays.toString(mCategoryList.toArray()));
-            for (Category category : mCategoryList) {
-                Log.d(TAG, "goSearch - categorySearch - category.getName() : " + category.getName().toUpperCase()
-                +" - selectedCategory: "+selectedCategory.toUpperCase());
-                if (category.getName().toUpperCase().equals(selectedCategory.toUpperCase())) {
-                    Log.d(TAG, "goSearch - selectCategoryId: " + category.getName());
-                    mSelectedCategory = category;
-                    return true;
-                }
-            }
-        }
-
-
-        return false;
-    }
-
 
     private void callSearchApi() {
         Log.d(TAG, "callSearchApi - Start");
-        String url = Constants.BASE_URL + "/shops/search?category_id=" + mSelectedCategory.getId() + "&lat=" + mLatitude + "&lng=" + mLongitude;
+        String url = Constants.BASE_URL + "/shops/search?query=" + "restaurant"
+                + "&lat=" + mLatitude + "&lng=" + mLongitude;
         Log.d(TAG, "callSearchApi - Request URL: " + url);
 
         NonAuthorizedCallback<JsonResponse<ShopInquiry>> callback = new NonAuthorizedCallback<JsonResponse<ShopInquiry>>() {
@@ -402,64 +529,9 @@ public class ShopListResultFragment extends Fragment {
         llEmptyResult.setVisibility(View.GONE);
     }
 
-    private void prepareCategoryList() {
-        mProgressDialog.show();
-        callCategoryListApi();
-    }
-
-    private void callCategoryListApi() {
-        Log.d(TAG, "callCategoryListApi - Start");
-        String url = Constants.BASE_URL + "/categories";
-
-        Log.d(TAG, "callCategoryListApi - url: " + url);
-
-        NonAuthorizedCallback<JsonResponse<CategoryInquiry>> callback = new NonAuthorizedCallback<JsonResponse<CategoryInquiry>>() {
-            @Override
-            public void onSuccess(JsonResponse<CategoryInquiry> jsonResponse) {
-                Log.d(TAG, "callCategoryListApi - onSuccess - Start");
-
-                if (jsonResponse != null && jsonResponse.getResult() != null && jsonResponse.getResult().getCategoryList() != null) {
-                    mCategoryList.clear();
-                    mCategoryList.addAll(jsonResponse.getResult().getCategoryList());
-                    Log.d(TAG, "callCategoryListApi - updated category list: "+ Arrays.toString(mCategoryList.toArray()));
-                } else {
-                    mActivity.getmSnackBarDisplayer().displayError("Categories not loaded from the server");
-                }
-
-                mProgressDialog.dismiss();
-
-                Log.d(TAG, "callCategoryListApi - onSuccess - End");
-            }
-
-            @Override
-            public void onError() {
-                Log.d(TAG, "callCategoryListApi - onError - Start");
-
-                mActivity.getmSnackBarDisplayer().displayError("Error loading categories from the server");
-
-                mProgressDialog.dismiss();
-
-                Log.d(TAG, "callCategoryListApi - onError - End");
-            }
-        };
-
-        // Prepare response type
-        Type responseType = new TypeToken<JsonResponse<CategoryInquiry>>() {
-        }.getType();
-
-        VolleyWrapper<Object, JsonResponse<CategoryInquiry>> volleyWrapper = new VolleyWrapper<>(null, responseType, Request.Method.GET, url,
-                callback, getContext(), mActivity.getmSnackBarDisplayer(), mActivity.findViewById(R.id.ll_main_view));
-        volleyWrapper.execute();
-        Log.d(TAG, "callCategoryListApi - End");
-    }
-
     private void prepareSearchLocation() {
-        Log.d(TAG, "prepareLocation - Start");
-
         String searchLocation = tvLocationSearch.getText().toString();
-
         if (searchLocation == null || searchLocation.isEmpty()) {
-
             fetchCurrentLocation();
         }
     }
@@ -541,6 +613,20 @@ public class ShopListResultFragment extends Fragment {
         fragmentTransaction.addToBackStack(TAG);
         fragmentTransaction.commit();
 
+    }
+
+    private final class LocationChangeReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals(LocationManager.PROVIDERS_CHANGED_ACTION)){
+                Log.d(TAG, "LocationChangeReceiver - onReceive - Start");
+
+                checkLocationService();
+                getActivity().unregisterReceiver(this);
+
+                Log.d(TAG, "LocationChangeReceiver - onReceive - End");
+            }
+        }
     }
 
 }
