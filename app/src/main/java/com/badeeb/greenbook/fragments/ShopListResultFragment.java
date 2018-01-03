@@ -21,10 +21,13 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -118,13 +121,14 @@ public class ShopListResultFragment extends Fragment {
 
         init(view);
 
+        mActivity.showBottomNavigationActionBar();
+
         return view;
     }
 
     private void init(View view) {
         mActivity = (MainActivity) getActivity();
         mProgressDialog = UiUtils.createProgressDialog(mActivity);
-//        mActivity.hideBottomNavigationActionBar();
         mActivity.hideToolbar();
         mActivity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
@@ -375,6 +379,18 @@ public class ShopListResultFragment extends Fragment {
             }
         });
 
+        etSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    UiUtils.hideKeyboardIfShown(mActivity);
+                    goSearch();
+                    return true;
+                }
+                return false;
+            }
+        });
+
 
         tvLocationSearch.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -530,7 +546,7 @@ public class ShopListResultFragment extends Fragment {
         Log.d(TAG, "goToSelectedShop - Start");
 
         Shop selectShop = mShopList.get(position);
-
+        mActivity.hideBottomNavigationActionBar();
         ShopDetailsFragment shopDetailsFragment = new ShopDetailsFragment();
 
         Bundle bundle = new Bundle();

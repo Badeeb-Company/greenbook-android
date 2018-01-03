@@ -13,20 +13,28 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.android.volley.Request;
 import com.badeeb.greenbook.R;
 import com.badeeb.greenbook.activities.MainActivity;
 import com.badeeb.greenbook.adaptors.FragmentViewPagerAdapter;
+import com.badeeb.greenbook.models.JsonResponse;
 import com.badeeb.greenbook.models.Shop;
+import com.badeeb.greenbook.network.NonAuthorizedCallback;
+import com.badeeb.greenbook.network.VolleyWrapper;
+import com.badeeb.greenbook.shared.Constants;
 import com.badeeb.greenbook.shared.UiUtils;
 import com.badeeb.greenbook.shared.Utils;
 import com.bumptech.glide.Glide;
+import com.google.gson.reflect.TypeToken;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import org.parceler.Parcels;
 
+import java.lang.reflect.Type;
 import java.text.DecimalFormat;
 
 public class ShopDetailsFragment extends Fragment {
@@ -54,6 +62,7 @@ public class ShopDetailsFragment extends Fragment {
     private ImageView ivToolbarBack;
     private TextView tvToolbarShopName;
     private TextView tvNumberOfReviews;
+    private ProgressBar loadingProgressBar;
 
 
     public ShopDetailsFragment() {
@@ -66,7 +75,6 @@ public class ShopDetailsFragment extends Fragment {
     }
 
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -75,25 +83,26 @@ public class ShopDetailsFragment extends Fragment {
             container.removeAllViews();
         }
         // Inflate the layout for this fragment
-        View view =  inflater.inflate(R.layout.fragment_shop_details, container, false);
+        View view = inflater.inflate(R.layout.fragment_shop_details, container, false);
 
         init(view);
 
         return view;
     }
 
-    public void init(View view){
+    public void init(View view) {
         Log.d(TAG, "init - start ");
         mActivity = (MainActivity) getActivity();
         mProgressDialog = UiUtils.createProgressDialog(mActivity);
         fragmentManager = getFragmentManager();
 
         mShop = Parcels.unwrap(getArguments().getParcelable(EXTRA_SHOP_OBJECT));
-        int selectedTab = getArguments().getInt(EXTRA_OPEN_TAB,0);
+        int selectedTab = getArguments().getInt(EXTRA_OPEN_TAB, 0);
 
         // ViewPager
-        this.mViewPager = (ViewPager) view.findViewById(R.id.viewpager);
-        this.setupViewPager(this.mViewPager);    // Defines the number of tabs by setting appropriate fragment and tab name
+        this.mViewPager = view.findViewById(R.id.viewpager);
+        // Defines the number of tabs by setting appropriate fragment and tab name
+
         mViewPager.setCurrentItem(selectedTab);
 
         // Tabs
@@ -103,13 +112,47 @@ public class ShopDetailsFragment extends Fragment {
         initUiFields(view);
 
         setupListener();
-        Log.d(TAG, "init - end ");
+
+        callGetShopDetailsApi();
+    }
+
+    private void callGetShopDetailsApi() {
+//        mProgressDialog.show();
+        UiUtils.show(loadingProgressBar);
+
+        String url = Constants.BASE_URL + "/shops/" + mShop.getGooglePlaceId();
+
+        NonAuthorizedCallback<JsonResponse<Shop>> callback = new NonAuthorizedCallback<JsonResponse<Shop>>() {
+            @Override
+            public void onSuccess(JsonResponse<Shop> jsonResponse) {
+                if (jsonResponse != null && jsonResponse.getResult() != null) {
+                    mShop = jsonResponse.getResult();
+                    setupViewPager(mViewPager);
+                }
+                mProgressDialog.dismiss();
+                UiUtils.hide(loadingProgressBar);
+            }
+
+            @Override
+            public void onError() {
+                mActivity.getmSnackBarDisplayer().displayError("Error while getting shops from the server");
+                mProgressDialog.dismiss();
+                UiUtils.hide(loadingProgressBar);
+            }
+        };
+
+        Type responseType = new TypeToken<JsonResponse<Shop>>() {
+        }.getType();
+
+        VolleyWrapper<Object, JsonResponse<Shop>> volleyWrapper = new VolleyWrapper<>(null, responseType, Request.Method.GET, url,
+                callback, getContext(), mActivity.getmSnackBarDisplayer(), mActivity.findViewById(R.id.ll_main_view));
+        volleyWrapper.execute();
     }
 
     private void initUiFields(View view) {
-        rivShopMainPhoto = (RoundedImageView)  view.findViewById(R.id.rivShopMainPhoto);
-        ivFavShop = (ImageView) view.findViewById(R.id.ivFav) ;
-        rbShopRate = (RatingBar) view.findViewById(R.id.rbShopRate) ;
+        rivShopMainPhoto = (RoundedImageView) view.findViewById(R.id.rivShopMainPhoto);
+        ivFavShop = (ImageView) view.findViewById(R.id.ivFav);
+        rbShopRate = (RatingBar) view.findViewById(R.id.rbShopRate);
         tvRatingValue = (TextView) view.findViewById(R.id.tvRatingValue);
         tvShopName = (TextView) view.findViewById(R.id.tvShopName);
         tvAddress = (TextView) view.findViewById(R.id.tvAddress);
@@ -117,6 +160,7 @@ public class ShopDetailsFragment extends Fragment {
         ivToolbarBack = (ImageView) view.findViewById(R.id.ivToolbarBack);
         tvToolbarShopName = (TextView) view.findViewById(R.id.tvToolbarShopName);
         tvNumberOfReviews = (TextView) view.findViewById(R.id.tvNumberOfReviews);
+        loadingProgressBar = view.findViewById(R.id.loadingProgressBar);
 
         mActivity.setSearchButtonAsChecked();
 
@@ -134,19 +178,18 @@ public class ShopDetailsFragment extends Fragment {
 
         DecimalFormat df = new DecimalFormat("0.0");
         tvRatingValue.setText(df.format(mShop.getRate()));
-        Log.d(TAG, "shop Rate in - fillUiFields : "+mShop.getRate());
+        Log.d(TAG, "shop Rate in - fillUiFields : " + mShop.getRate());
         rbShopRate.setRating((float) mShop.getRate());
 
-        if(!mActivity.getFavSet().isEmpty() && mActivity.getFavSet().contains(mShop.getId())){
+        if (!mActivity.getFavSet().isEmpty() && mActivity.getFavSet().contains(mShop.getId())) {
             ivFavShop.setImageDrawable(mActivity.getResources().getDrawable(R.drawable.btn_fav_prassed));
-        }else{
+        } else {
             ivFavShop.setImageDrawable(mActivity.getResources().getDrawable(R.drawable.ic_fav));
         }
 
         tvShopName.setText(mShop.getName());
         tvAddress.setText(mShop.getLocation().getAddress());
         tvNearLocation.setVisibility(View.GONE);
-//        tvNearLocation.setText(getShopDistance());
         tvToolbarShopName.setText(mShop.getName());
 
         tvNumberOfReviews.setText("(" + mShop.getNumOfReviews() + ")");
@@ -162,28 +205,27 @@ public class ShopDetailsFragment extends Fragment {
         tvNumberOfReviews.setText("(" + mShop.getNumOfReviews() + ")");
     }
 
-    private String getShopDistance(){
-        int distance = (int) Utils.distance(mShop.getLocation().getLat(), mShop.getLocation().getLng() ,
-                mActivity.getCurrentLocation().getLatitude(),mActivity.getCurrentLocation().getLongitude());
-        return distance+" Km around you";
+    private String getShopDistance() {
+        int distance = (int) Utils.distance(mShop.getLocation().getLat(), mShop.getLocation().getLng(),
+                mActivity.getCurrentLocation().getLatitude(), mActivity.getCurrentLocation().getLongitude());
+        return distance + " Km around you";
     }
 
-
-    public void setupListener(){
+    public void setupListener() {
         Log.d(TAG, "setupListener - Start");
 
-        ivFavShop.setOnClickListener(new View.OnClickListener(){
+        ivFavShop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Log.d(TAG, "setupListener - ivFavShop - icon pressed");
                 Drawable iconPressed = getResources().getDrawable(R.drawable.btn_fav_prassed);
                 Drawable iconNotPressed = getResources().getDrawable(R.drawable.ic_fav);
 
-                if(!mActivity.getFavSet().isEmpty() && mActivity.getFavSet().contains(mShop.getId())) {
+                if (!mActivity.getFavSet().isEmpty() && mActivity.getFavSet().contains(mShop.getId())) {
                     Log.d(TAG, "setupListener - ivFavShop - change to not pressed");
                     mActivity.removeFromFavourite(mShop, null);
                     ivFavShop.setImageDrawable(iconNotPressed);
-                }else{
+                } else {
                     Log.d(TAG, "setupListener - ivFavShop - change to pressed");
                     mActivity.addToFavourite(mShop, null);
                     ivFavShop.setImageDrawable(iconPressed);
@@ -210,7 +252,7 @@ public class ShopDetailsFragment extends Fragment {
         GalleryTabFragment galleryTabFragment = new GalleryTabFragment();
         ReviewsTabFragment reviewsTabFragment = new ReviewsTabFragment();
 
-        Log.d(TAG, "setupViewPager - mShop"+mShop.getName());
+        Log.d(TAG, "setupViewPager - mShop" + mShop.getName());
 
         Bundle bundle = new Bundle();
         bundle.putParcelable(EXTRA_SHOP_OBJECT, Parcels.wrap(mShop));

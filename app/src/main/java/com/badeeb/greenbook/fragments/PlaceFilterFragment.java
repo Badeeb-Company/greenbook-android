@@ -184,6 +184,8 @@ public class PlaceFilterFragment extends Fragment {
         bundle.putDouble(ShopListResultFragment.EXTRA_SELECTED_LATITUDE, mLatitude);
         bundle.putDouble(ShopListResultFragment.EXTRA_SELECTED_LONGITUDE, mLongitude);
 
+        mActivity.showBottomNavigationActionBar();
+
         ShopListResultFragment shopListResultFragment = new ShopListResultFragment();
         shopListResultFragment.setArguments(bundle);
 

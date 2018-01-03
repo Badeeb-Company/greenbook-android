@@ -44,7 +44,6 @@ public class DetailsTabFragment extends Fragment {
     OnPermissionsGrantedHandler onCallPermissionGrantedHandler;
 
     // UI Fields
-    private TextView tvAddress;
     private TextView tvWorkingHours;
     private TextView tvPhone;
     private ImageView ivCall;
@@ -91,7 +90,6 @@ public class DetailsTabFragment extends Fragment {
     private void initUi(View view) {
         Log.d(TAG, "initUi - Start");
 
-        tvAddress = (TextView) view.findViewById(R.id.tvAddress) ;
         tvWorkingHours = (TextView) view.findViewById(R.id.tvWorkingHours);
         tvPhone = (TextView) view.findViewById(R.id.tvPhone);
         ivCall = (ImageView) view.findViewById(R.id.ivCall);
@@ -101,9 +99,8 @@ public class DetailsTabFragment extends Fragment {
 
     private void fillUiFields(){
         Log.d(TAG, "fillUiFields - Start");
-
-        tvAddress.setText(mShop.getLocation().getAddress());
-        tvWorkingHours.setText(getShopWorkingStatus());
+        String openText = mShop.isOpenNow() ? "Open" : "Closed";
+        tvWorkingHours.setText(openText);
         tvPhone.setText(mShop.getPhoneNumber());
 
         Log.d(TAG, "fillUiFields - Start");

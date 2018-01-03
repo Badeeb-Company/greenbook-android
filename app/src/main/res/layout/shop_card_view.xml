@@ -20,6 +20,7 @@
                 android:layout_width="45dp"
                 android:layout_height="45dp"
                 app:riv_oval="true"
+                android:scaleType="centerCrop"
                 android:layout_marginTop="13dp"
                 android:layout_marginLeft="10dp"/>
 

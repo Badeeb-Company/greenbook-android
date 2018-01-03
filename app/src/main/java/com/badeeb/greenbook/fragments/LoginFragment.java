@@ -300,10 +300,7 @@ public class LoginFragment extends Fragment {
     }
 
     private void goToShopSearch() {
-        Fragment fragment = getFragmentManager().findFragmentByTag(ShopSearchFragment.TAG);
-        if (fragment != null && fragment instanceof ShopSearchFragment && fragment.isVisible())
-            return;
-
+        mActivity.showBottomNavigationActionBar();
         ShopListResultFragment shopListResultFragment = new ShopListResultFragment();
         FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.main_frame, shopListResultFragment, shopListResultFragment.TAG);

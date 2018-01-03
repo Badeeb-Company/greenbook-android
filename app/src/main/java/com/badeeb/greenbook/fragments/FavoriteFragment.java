@@ -268,7 +268,7 @@ public class FavoriteFragment extends Fragment {
         Log.d(TAG, "goToSelectedShop - Start");
 
         Shop selectShop = mShopList.get(position);
-
+        mActivity.hideBottomNavigationActionBar();
         ShopDetailsFragment shopDetailsFragment = new ShopDetailsFragment();
 
         Bundle bundle = new Bundle();

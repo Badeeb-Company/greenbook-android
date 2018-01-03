@@ -1,5 +1,6 @@
 package com.badeeb.greenbook.shared;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -30,6 +31,15 @@ public class UiUtils {
     public static void enable(View v) {
         v.setEnabled(true);
         v.setAlpha(1f);
+    }
+
+    public static void hideKeyboardIfShown(Activity context) {
+        InputMethodManager imm = (InputMethodManager) context
+                .getSystemService(Context.INPUT_METHOD_SERVICE);
+        View view = context.getCurrentFocus();
+        if (view != null) {
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
     }
 
     public static void disable(View v) {

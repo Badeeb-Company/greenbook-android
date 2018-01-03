@@ -31,7 +31,6 @@ import com.badeeb.greenbook.fragments.NotLoggedInProfileFragment;
 import com.badeeb.greenbook.fragments.ProfileFragment;
 import com.badeeb.greenbook.fragments.ShopDetailsFragment;
 import com.badeeb.greenbook.fragments.ShopListResultFragment;
-import com.badeeb.greenbook.fragments.ShopSearchFragment;
 import com.badeeb.greenbook.models.FavouriteInquiry;
 import com.badeeb.greenbook.models.JsonRequest;
 import com.badeeb.greenbook.models.JsonResponse;
@@ -317,19 +316,12 @@ public class MainActivity extends AppCompatActivity {
 
     private void goToShopSearch() {
         Log.d(TAG, "goTo shop search - start");
-        Fragment fragment = mFragmentManager.findFragmentByTag(ShopSearchFragment.TAG);
-        if (fragment != null && fragment instanceof ShopSearchFragment && fragment.isVisible())
-            return;
-
+        showBottomNavigationActionBar();
         ShopListResultFragment shopSearchFragment = new ShopListResultFragment();
         FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.main_frame, shopSearchFragment, shopSearchFragment.TAG);
-//        fragmentTransaction.addToBackStack(TAG);
         fragmentTransaction.commit();
-
         changeNavigationIconsState(R.id.aiSearch);
-        Log.d(TAG, "goTo shop search - end");
-
     }
 
     public void changeNavigationIconsState(int itemId) {

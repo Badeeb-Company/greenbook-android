@@ -49,6 +49,7 @@
                 android:layout_width="45dp"
                 android:layout_height="45dp"
                 app:riv_oval="true"
+                android:scaleType="centerCrop"
                 android:layout_marginTop="13dp"
                 android:layout_marginLeft="10dp"/>
 
@@ -168,6 +169,13 @@
 
             />
     </android.support.design.widget.AppBarLayout>
+
+    <ProgressBar
+        android:id="@+id/loadingProgressBar"
+        android:layout_width="wrap_content"
+        android:visibility="gone"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"/>
 
     <android.support.v4.view.ViewPager
         android:id="@+id/viewpager"

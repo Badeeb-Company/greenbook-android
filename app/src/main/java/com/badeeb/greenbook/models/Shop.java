@@ -53,6 +53,10 @@ public class Shop {
     @SerializedName("num_of_reviews")
     private int numOfReviews;
 
+    @Expose
+    @SerializedName("open_now")
+    private boolean openNow;
+
     public Shop(){
         name = "";
         googlePlaceId = "";
@@ -147,5 +151,13 @@ public class Shop {
 
     public void setNumOfReviews(int numOfReviews) {
         this.numOfReviews = numOfReviews;
+    }
+
+    public boolean isOpenNow() {
+        return openNow;
+    }
+
+    public void setOpenNow(boolean openNow) {
+        this.openNow = openNow;
     }
 }

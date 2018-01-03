@@ -159,6 +159,7 @@ public class CategoryFilterFragment extends Fragment {
 
         ShopListResultFragment shopListResultFragment = new ShopListResultFragment();
         shopListResultFragment.setArguments(bundle);
+        mActivity.showBottomNavigationActionBar();
 
         FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
 
