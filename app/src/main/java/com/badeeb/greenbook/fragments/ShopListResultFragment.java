@@ -1,5 +1,6 @@
 package com.badeeb.greenbook.fragments;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -24,9 +25,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -35,10 +34,7 @@ import android.widget.Toast;
 import com.android.volley.Request;
 import com.badeeb.greenbook.R;
 import com.badeeb.greenbook.activities.MainActivity;
-import com.badeeb.greenbook.adaptors.PlaceAutocompleteAdapter;
 import com.badeeb.greenbook.adaptors.ShopRecyclerViewAdapter;
-import com.badeeb.greenbook.models.Category;
-import com.badeeb.greenbook.models.CategoryInquiry;
 import com.badeeb.greenbook.models.JsonResponse;
 import com.badeeb.greenbook.models.Shop;
 import com.badeeb.greenbook.models.ShopInquiry;
@@ -46,18 +42,13 @@ import com.badeeb.greenbook.network.NonAuthorizedCallback;
 import com.badeeb.greenbook.network.VolleyWrapper;
 import com.badeeb.greenbook.shared.Constants;
 import com.badeeb.greenbook.shared.OnPermissionsGrantedHandler;
+import com.badeeb.greenbook.shared.PermissionsChecker;
 import com.badeeb.greenbook.shared.UiUtils;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.PendingResult;
-import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.places.AutocompletePrediction;
-import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.PlaceBuffer;
-import com.google.android.gms.location.places.Places;
 import com.google.gson.reflect.TypeToken;
 
 import org.parceler.Parcels;
@@ -73,11 +64,11 @@ public class ShopListResultFragment extends Fragment {
     public final static String TAG = ShopListResultFragment.class.getName();
 
     private static final long FETCH_LOCATION_TIMEOUT = 10 * 1000;
+    private static final int PERM_LOCATION_RQST_CODE = 100;
 
     public final static String EXTRA_SELECTED_ADDRESS = "EXTRA_SELECTED_ADRESS";
     public final static String EXTRA_SELECTED_LATITUDE = "EXTRA_SELECTED_LATITUDE";
     public final static String EXTRA_SELECTED_LONGITUDE = "EXTRA_SELECTED_LONGITUDE";
-
 
     // Class Attributes
     private MainActivity mActivity;
@@ -93,7 +84,7 @@ public class ShopListResultFragment extends Fragment {
     private RecyclerView rvShopList;
     private ShopRecyclerViewAdapter mShopListAdaptor;
     private SwipeRefreshLayout srlShopList;
-    private TextView tvCategorySearch;
+    private EditText etSearch;
     private ImageView ivBack;
     private TextView tvLocationSearch;
 
@@ -123,19 +114,17 @@ public class ShopListResultFragment extends Fragment {
         }
 
         // Inflate the layout for this fragment
-        View view =  inflater.inflate(R.layout.fragment_shop_list_result, container, false);
+        View view = inflater.inflate(R.layout.fragment_shop_list_result, container, false);
 
         init(view);
 
         return view;
     }
 
-
-
-    private void init(View view){
+    private void init(View view) {
         mActivity = (MainActivity) getActivity();
         mProgressDialog = UiUtils.createProgressDialog(mActivity);
-        mActivity.hideBottomNavigationActionBar();
+//        mActivity.hideBottomNavigationActionBar();
         mActivity.hideToolbar();
         mActivity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
@@ -143,9 +132,7 @@ public class ShopListResultFragment extends Fragment {
 
         initUi(view);
 
-//        loadBundleData();
-
-        setupListener();
+        loadBundleData();
 
         // location preparation
         onLocationPermissionGrantedHandler = createOnLocationPermissionGrantedHandler();
@@ -153,16 +140,20 @@ public class ShopListResultFragment extends Fragment {
         locationChangeReceiver = new LocationChangeReceiver();
         locationListener = createLocationListener();
 
-        mActivity.connectPlaceGoogleApiClient();
+        if (isLocationSelected) {
+            goSearch();
+        } else {
+            mActivity.connectPlaceGoogleApiClient();
+        }
 
-        goSearch();
+        setupListener();
     }
 
     private LocationListener createLocationListener() {
         return new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                if(cancelFetchLocationTask != null){
+                if (cancelFetchLocationTask != null) {
                     cancelFetchLocationTask.cancel();
                 }
                 LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
@@ -172,15 +163,30 @@ public class ShopListResultFragment extends Fragment {
         };
     }
 
-    private void onLocationFound() {
-        Log.d(TAG, "onLocationFound - Start");
+    private void loadBundleData() {
+        if (getArguments() == null) {
+            return;
+        }
 
+        String searchAddress = getArguments().getString(EXTRA_SELECTED_ADDRESS);
+        double lat = getArguments().getDouble(EXTRA_SELECTED_LATITUDE);
+        double lng = getArguments().getDouble(EXTRA_SELECTED_LONGITUDE);
+
+        if (!"".equals(searchAddress)) {
+            Log.d(TAG, "location address search EXTRA: " + searchAddress);
+            tvLocationSearch.setText(searchAddress);
+            mLatitude = lat;
+            mLongitude = lng;
+            isLocationSelected = true;
+            Log.d(TAG, "location address search EXTRA - lat: " + mLatitude + " - lng: " + mLongitude);
+        }
+    }
+
+    private void onLocationFound() {
         // Go to next fragment
 //        goToShopListResultFragment();
-
         mProgressDialog.dismiss();
-
-        Log.d(TAG, "onLocationFound - End");
+        goSearch();
     }
 
     private void showGPSDisabledWarningDialog() {
@@ -204,7 +210,7 @@ public class ShopListResultFragment extends Fragment {
         Log.d(TAG, "showGPSDisabledWarningDialog - End");
     }
 
-    private void initUi(View view){
+    private void initUi(View view) {
         rvShopList = (RecyclerView) view.findViewById(R.id.rvShopList);
         RecyclerView.LayoutManager mShopLayoutManager = new LinearLayoutManager(mActivity);
         rvShopList.setLayoutManager(mShopLayoutManager);
@@ -214,7 +220,7 @@ public class ShopListResultFragment extends Fragment {
         rvShopList.setAdapter(mShopListAdaptor);
 
 
-        tvCategorySearch = (TextView) view.findViewById(R.id.actvCategorySearch);
+        etSearch = view.findViewById(R.id.etSearch);
 
         srlShopList = (SwipeRefreshLayout) view.findViewById(R.id.shopList_form);
 
@@ -250,8 +256,7 @@ public class ShopListResultFragment extends Fragment {
                 // This part is only used to dismiss alert dialog when GPS is enabled but we don't get location in same time.
                 Log.d(TAG, "checkLocationService - showGPSDisabledWarningDialog - Dismiss");
                 locationDisabledWarningDialog.dismiss();
-            }
-            else {
+            } else {
                 // Get current location
                 initGoogleApiClient();
                 onFindingLocation();
@@ -270,8 +275,8 @@ public class ShopListResultFragment extends Fragment {
         mGoogleApiClient.connect();
     }
 
-    private void disconnectGoogleApiClient(){
-        if(mGoogleApiClient != null && mGoogleApiClient.isConnected()){
+    private void disconnectGoogleApiClient() {
+        if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
             mGoogleApiClient.disconnect();
         }
     }
@@ -284,6 +289,7 @@ public class ShopListResultFragment extends Fragment {
                     public void onConnected(Bundle bundle) {
                         fetchUserCurrentLocation();
                     }
+
                     @Override
                     public void onConnectionSuspended(int i) {
                         Toast.makeText(getActivity(), "API client connection suspended", Toast.LENGTH_LONG).show();
@@ -344,22 +350,10 @@ public class ShopListResultFragment extends Fragment {
         UiUtils.showDialog(getContext(), R.style.DialogTheme, R.string.location_not_found, R.string.ok_btn_dialog, null);
     }
 
-    private void loadBundleData(){
-        String searchAddress = getArguments().getString(EXTRA_SELECTED_ADDRESS);
-        double lat = getArguments().getDouble(EXTRA_SELECTED_LATITUDE);
-        double lng = getArguments().getDouble(EXTRA_SELECTED_LONGITUDE);
-
-        if(!"".equals(searchAddress)){
-            tvLocationSearch.setText(searchAddress);
-            mLatitude = lat;
-            mLongitude = lng;
-            isLocationSelected = true;
-        }
-    }
-
-
-
-    private void setupListener(){
+    private void setupListener() {
+        PermissionsChecker.checkPermissions(ShopListResultFragment.this,
+                onLocationPermissionGrantedHandler, PERM_LOCATION_RQST_CODE,
+                Manifest.permission.ACCESS_FINE_LOCATION);
 
         ivBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -367,14 +361,6 @@ public class ShopListResultFragment extends Fragment {
                 getFragmentManager().popBackStack();
             }
         });
-
-        tvCategorySearch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goCategoryFilter();
-            }
-        });
-
 
         ivMap.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -442,8 +428,6 @@ public class ShopListResultFragment extends Fragment {
     }
 
 
-
-
     private void goSearch() {
         mActivity.hideKeyboard();
         mProgressDialog.show();
@@ -461,13 +445,12 @@ public class ShopListResultFragment extends Fragment {
     }
 
     private void callSearchApi() {
-        Log.d(TAG, "callSearchApi - Start");
-        String url = Constants.BASE_URL + "/shops/search?query=" + "restaurant"
+        String queryText = etSearch.getText().toString();
+
+        String url = Constants.BASE_URL + "/shops/search?query=" + queryText
                 + "&lat=" + mLatitude + "&lng=" + mLongitude;
-        Log.d(TAG, "callSearchApi - Request URL: " + url);
 
         NonAuthorizedCallback<JsonResponse<ShopInquiry>> callback = new NonAuthorizedCallback<JsonResponse<ShopInquiry>>() {
-
             @Override
             public void onSuccess(JsonResponse<ShopInquiry> jsonResponse) {
                 Log.d(TAG, "callSearchApi - NonAuthorizedCallback - onSuccess");
@@ -484,8 +467,7 @@ public class ShopListResultFragment extends Fragment {
                     Log.d(TAG, "callSearchApi - NonAuthorizedCallback - onSuccess - mShopList: "
                             + Arrays.toString(mShopList.toArray()));
                     mShopListAdaptor.notifyDataSetChanged();
-                }
-                else {
+                } else {
                     //switch to empty search page
                     Log.d(TAG, "callSearchApi - NonAuthorizedCallback - onSuccess - empty search ");
                 }
@@ -494,7 +476,7 @@ public class ShopListResultFragment extends Fragment {
 
                 if (mShopList != null && mShopList.size() == 0) {
                     enableNoSearchFoundScreen();
-                }else{
+                } else {
                     disableNoSearchFoundScreen();
                 }
 
@@ -569,7 +551,7 @@ public class ShopListResultFragment extends Fragment {
         Log.d(TAG, "goToSelectedShop - End");
     }
 
-    public void addToFavourite(int position){
+    public void addToFavourite(int position) {
         Log.d(TAG, "addToFavourite - Start");
 
         mActivity.addToFavourite(mShopList.get(position), null);
@@ -577,14 +559,13 @@ public class ShopListResultFragment extends Fragment {
         Log.d(TAG, "addToFavourite - End");
     }
 
-    public void removeFromFavourite(int position){
+    public void removeFromFavourite(int position) {
         Log.d(TAG, "removeFromFavourite - Start");
 
         mActivity.removeFromFavourite(mShopList.get(position), null);
 
         Log.d(TAG, "removeFromFavourite - End");
     }
-
 
 
     @Override
@@ -618,7 +599,7 @@ public class ShopListResultFragment extends Fragment {
     private final class LocationChangeReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (intent.getAction().equals(LocationManager.PROVIDERS_CHANGED_ACTION)){
+            if (intent.getAction().equals(LocationManager.PROVIDERS_CHANGED_ACTION)) {
                 Log.d(TAG, "LocationChangeReceiver - onReceive - Start");
 
                 checkLocationService();

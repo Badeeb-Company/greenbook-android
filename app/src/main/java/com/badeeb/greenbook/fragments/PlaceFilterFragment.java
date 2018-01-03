@@ -139,9 +139,6 @@ public class PlaceFilterFragment extends Fragment {
                 PendingResult<PlaceBuffer> placeResult = Places.GeoDataApi
                         .getPlaceById(mActivity.getmPlaceGoogleApiClient(), placeId);
                 placeResult.setResultCallback(mUpdatePlaceDetailsCallback);
-
-                Log.i(TAG, "Called getPlaceById to get Place details for " + placeId);
-                Log.d(TAG, "actvLocationSearch - setOnItemClickListener - end ");
             }
         });
     }

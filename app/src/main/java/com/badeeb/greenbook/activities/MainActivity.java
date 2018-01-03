@@ -321,9 +321,9 @@ public class MainActivity extends AppCompatActivity {
         if (fragment != null && fragment instanceof ShopSearchFragment && fragment.isVisible())
             return;
 
-        ShopListResultFragment shopListResultFragment = new ShopListResultFragment();
+        ShopListResultFragment shopSearchFragment = new ShopListResultFragment();
         FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.main_frame, shopListResultFragment, shopListResultFragment.TAG);
+        fragmentTransaction.replace(R.id.main_frame, shopSearchFragment, shopSearchFragment.TAG);
 //        fragmentTransaction.addToBackStack(TAG);
         fragmentTransaction.commit();
 

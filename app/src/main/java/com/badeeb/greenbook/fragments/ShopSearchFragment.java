@@ -223,14 +223,7 @@ public class ShopSearchFragment extends Fragment {
             };
 
     private void goToShopListResultFragment() {
-        Bundle bundle = new Bundle();
-        bundle.putString(ShopListResultFragment.EXTRA_SELECTED_ADDRESS, mSelectedPlaceName);
-        bundle.putDouble(ShopListResultFragment.EXTRA_SELECTED_LATITUDE, mSelectedPlacesLatitude);
-        bundle.putDouble(ShopListResultFragment.EXTRA_SELECTED_LONGITUDE, mSelectedPlaceLongitude);
-
         ShopListResultFragment shopListResultFragment = new ShopListResultFragment();
-        shopListResultFragment.setArguments(bundle);
-
         FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
 
         fragmentTransaction.replace(R.id.main_frame, shopListResultFragment, shopListResultFragment.TAG);
