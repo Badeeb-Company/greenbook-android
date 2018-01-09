@@ -1,7 +1,6 @@
 package com.badeeb.greenbook.fragments;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -105,51 +104,6 @@ public class DetailsTabFragment extends Fragment {
 
         Log.d(TAG, "fillUiFields - Start");
     }
-
-    private String getShopWorkingStatus() {
-        Log.d(TAG, "getShopWorkingStatus - Start");
-
-        String[] daysOfWeek = {"","SUNDAY","MONDAY","TUESDAY","WEDNESDAY","THURSDAY","FRIDAY","SATURDAY"};
-        SimpleDateFormat timeParser = new SimpleDateFormat("hh:mm a");
-        Calendar calendar = Calendar.getInstance();
-        int day = calendar.get(Calendar.DAY_OF_WEEK);
-
-        List<WorkingDay> shopWorkingDays = mShop.getWorkingDays();
-        if(shopWorkingDays != null) {
-            try {
-                for(WorkingDay workDay : shopWorkingDays) {
-                    Log.d(TAG, "getShopWorkingStatus - workDay: "+workDay.getName()+" - day: "+day);
-                    if (daysOfWeek[day].equals(workDay.getName().toUpperCase())){
-
-                        Date currentDate = calendar.getTime();
-                        Date openAt = timeParser.parse(workDay.getOpenedAt());
-                        Date closeAt = timeParser.parse(workDay.getClosedAt()) ;
-                        SimpleDateFormat df = new SimpleDateFormat("dd-mm-yyyy hh:mm a");
-                        Log.d(TAG, "getShopWorkingStatus - openAt: "+df.format(openAt)+" - current: "+df.format(currentDate)+" - closeAt: "+df.format(closeAt));
-
-                        Log.d(TAG, "getShopWorkingStatus - after openAt: "+ Utils.compareTimes(openAt,currentDate)+" - before closeAt: "+Utils.compareTimes(currentDate,closeAt));
-
-
-                        if(Utils.compareTimes(openAt,currentDate) < 0 && Utils.compareTimes(currentDate,closeAt) < 0){
-                            return "Opened now";
-                        }else{
-                            return "Closed now";
-                        }
-
-
-                    }
-                }
-            } catch (ParseException e) {
-                Log.d(TAG, "getShopWorkingStatus - ParseException");
-                e.printStackTrace();
-                return "Not Determined";
-            }
-        }
-        Log.d(TAG, "getShopWorkingStatus - end");
-        return "Not Determined";
-    }
-
-
 
     private void setupListener() {
         Log.d(TAG, "setupListener - Start");

@@ -17,21 +17,12 @@ public class WorkingDay {
 
     @Expose
     @SerializedName("opened_at")
-    private String openedAt;
+    private String openingHours;
 
-    @Expose
-    @SerializedName("closed_at")
-    private String closedAt;
-
-    @Expose
-    @SerializedName("state")
-    private String state;
 
     public WorkingDay() {
         this.name = "";
-        this.openedAt = "";
-        this.closedAt = "";
-        this.state = "";
+        this.openingHours = "";
     }
 
     public String getName() {
@@ -42,27 +33,12 @@ public class WorkingDay {
         this.name = name;
     }
 
-    public String getOpenedAt() {
-        return openedAt;
+    public String getOpeningHours() {
+        return openingHours;
     }
 
-    public void setOpenedAt(String openedAt) {
-        this.openedAt = openedAt;
+    public void setOpeningHours(String openingHours) {
+        this.openingHours = openingHours;
     }
 
-    public String getClosedAt() {
-        return closedAt;
-    }
-
-    public void setClosedAt(String closedAt) {
-        this.closedAt = closedAt;
-    }
-
-    public String getState() {
-        return state;
-    }
-
-    public void setState(String state) {
-        this.state = state;
-    }
 }
