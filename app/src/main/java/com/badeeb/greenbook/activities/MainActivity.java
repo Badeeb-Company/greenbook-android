@@ -21,6 +21,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 
 import com.android.volley.Request;
 import com.badeeb.greenbook.R;
@@ -90,7 +91,6 @@ public class MainActivity extends AppCompatActivity {
     private HashSet<Integer> mOwnedShopsSet;
     private AppSettings mAppSettings;
     private ErrorDisplayHandler mSnackBarDisplayer;
-    private Location mCurrentLocation;
 
     private Set<String> mFavSet;
     private AdapterNotifier mFavAdapterNotifier;
@@ -256,12 +256,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void showKeyboard(View view) {
-        if (view != null) {
-            Log.d(TAG, "Show Keyboard");
-            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.SHOW_IMPLICIT);
-        }
+    public void showKeyboard(EditText editText) {
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT);
     }
 
     public void hideKeyboard(View view) {
@@ -315,9 +312,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void goToShopSearch() {
-        Log.d(TAG, "goTo shop search - start");
         showBottomNavigationActionBar();
-        ShopListResultFragment shopSearchFragment = new ShopListResultFragment();
+        ShopListResultFragment shopSearchFragment = (ShopListResultFragment) mFragmentManager.
+                findFragmentByTag(ShopListResultFragment.TAG);
+
+        if(shopSearchFragment == null){
+            shopSearchFragment = new ShopListResultFragment();
+        }
+
         FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.main_frame, shopSearchFragment, shopSearchFragment.TAG);
         fragmentTransaction.commit();
@@ -399,14 +401,6 @@ public class MainActivity extends AppCompatActivity {
                         icon, onClickListener);
             }
         };
-    }
-
-    public Location getCurrentLocation() {
-        return mCurrentLocation;
-    }
-
-    public void setCurrentLocation(Location currentLocation) {
-        this.mCurrentLocation = currentLocation;
     }
 
     public GoogleApiClient getmPlaceGoogleApiClient() {

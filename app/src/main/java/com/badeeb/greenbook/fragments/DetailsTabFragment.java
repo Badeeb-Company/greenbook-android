@@ -7,11 +7,14 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.badeeb.greenbook.R;
@@ -24,16 +27,34 @@ import com.badeeb.greenbook.shared.Utils;
 
 import org.parceler.Parcels;
 
+import java.net.URLDecoder;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class DetailsTabFragment extends Fragment {
 
     public final static String TAG = DetailsTabFragment.class.getName();
     private static final int REQUEST_CALL_PERMISSION = 100;
+
+    private static List<String> dayNames;
+
+    static {
+        dayNames = new ArrayList<>();
+        dayNames.add("Sunday");
+        dayNames.add("Monday");
+        dayNames.add("Tuesday");
+        dayNames.add("Wednesday");
+        dayNames.add("Thursday");
+        dayNames.add("Friday");
+        dayNames.add("Saturday");
+    }
 
     private MainActivity mActivity;
     private DetailsTabFragment mCurrentFragment;
@@ -43,10 +64,13 @@ public class DetailsTabFragment extends Fragment {
     OnPermissionsGrantedHandler onCallPermissionGrantedHandler;
 
     // UI Fields
-    private TextView tvWorkingHours;
+    private Spinner sWorkingHours;
     private TextView tvPhone;
     private ImageView ivCall;
+    private TextView tvWebsite;
     private String mSelectedMobileNumber;
+
+    private ArrayAdapter<String> spinnerAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -89,20 +113,53 @@ public class DetailsTabFragment extends Fragment {
     private void initUi(View view) {
         Log.d(TAG, "initUi - Start");
 
-        tvWorkingHours = (TextView) view.findViewById(R.id.tvWorkingHours);
+        sWorkingHours = (Spinner) view.findViewById(R.id.sWorkingHours);
         tvPhone = (TextView) view.findViewById(R.id.tvPhone);
         ivCall = (ImageView) view.findViewById(R.id.ivCall);
+        tvWebsite = view.findViewById(R.id.tvWebsite);
+
+        spinnerAdapter =  new ArrayAdapter<>(mActivity, R.layout.spinner_item);
+
+        sWorkingHours.setAdapter(spinnerAdapter);
+
+        sWorkingHours.setEnabled(false);
 
         Log.d(TAG, "initUi - Start");
     }
 
     private void fillUiFields(){
         Log.d(TAG, "fillUiFields - Start");
-        String openText = mShop.isOpenNow() ? "Open" : "Closed";
-        tvWorkingHours.setText(openText);
+
         tvPhone.setText(mShop.getPhoneNumber());
 
-        Log.d(TAG, "fillUiFields - Start");
+        Date date = new Date();
+        SimpleDateFormat format = new SimpleDateFormat("EEEE");
+        String dayName = format.format(date);
+        int dayIndex = dayNames.indexOf(dayName);
+
+        spinnerAdapter.addAll(getHoursList(dayIndex));
+        spinnerAdapter.notifyDataSetChanged();
+
+        tvWebsite.setText(mShop.getWebsite());
+    }
+
+    private List<String> getHoursList(int dayIndex){
+        List<String> result = new ArrayList<>();
+        for (int i = dayIndex; i < dayIndex + 7; i++) {
+            String dayName = dayNames.get(i%7);
+            WorkingDay wDay = searchWorkingDay(dayName);
+            result.add(wDay.getOpeningHours());
+        }
+        return result;
+    }
+
+    private WorkingDay searchWorkingDay(String dayName) {
+        for (WorkingDay day : mShop.getWorkingDays()) {
+            if(day.getName().equals(dayName)){
+                return day;
+            }
+        }
+        return null;
     }
 
     private void setupListener() {

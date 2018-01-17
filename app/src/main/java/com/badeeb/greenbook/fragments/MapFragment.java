@@ -4,27 +4,32 @@ package com.badeeb.greenbook.fragments;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.content.res.AppCompatResources;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.volley.Request;
 import com.badeeb.greenbook.R;
 import com.badeeb.greenbook.activities.MainActivity;
-import com.badeeb.greenbook.models.Category;
+import com.badeeb.greenbook.models.JsonResponse;
 import com.badeeb.greenbook.models.Shop;
+import com.badeeb.greenbook.models.ShopInquiry;
+import com.badeeb.greenbook.network.NonAuthorizedCallback;
+import com.badeeb.greenbook.network.VolleyWrapper;
+import com.badeeb.greenbook.shared.Constants;
+import com.badeeb.greenbook.shared.UiUtils;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -32,14 +37,16 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.gson.reflect.TypeToken;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import org.parceler.Parcels;
 
+import java.lang.reflect.Type;
 import java.text.DecimalFormat;
 import java.util.List;
 
@@ -53,19 +60,24 @@ public class MapFragment extends Fragment {
     public final static String EXTRA_SHOPS_LIST = "EXTRA_SHOPS_LIST";
     public final static String EXTRA_CURRENT_LATITUDE = "EXTRA_CURRENT_LATITUDE";
     public final static String EXTRA_CURRENT_LONGITUDE = "EXTRA_CURRENT_LONGITUDE";
+    public static final String EXTRA_SEARCH_KEYWORD = "EXTRA_SEARCH_KEYWORD";
     public final static String HOME_MARKER_TITLE = "Search Location";
 
     private OnMapReadyCallback mOnMapReadyCallback;
     private GoogleMap mMap;
     private MapView mMapView;
+    private TextView tvRedoSearch;
 
     private double mLatitude;      // Current Latitude
     private double mLongitude;      // Current Longitude
 
-    private List<Shop> mShopsList;
+    private boolean redoClicked = false;
+
+    private List<Shop> mShopList;
 
     private MainActivity mActivity;
     private FragmentManager fragmentManager;
+    private String mSearchKeyword;
 
     public MapFragment() {
         // Required empty public constructor
@@ -97,11 +109,13 @@ public class MapFragment extends Fragment {
 
         loadBundleData();
 
-        mOnMapReadyCallback = createOnMapReayCallback();
+        mOnMapReadyCallback = createOnMapReadyCallback();
 
         // Map Initialization
         MapsInitializer.initialize(getContext());
         mMapView = (MapView) view.findViewById(R.id.map);
+        tvRedoSearch = view.findViewById(R.id.tvRedoSearch);
+
         mMapView.onCreate(savedInstanceState);
         mMapView.getMapAsync(mOnMapReadyCallback);
 
@@ -111,43 +125,134 @@ public class MapFragment extends Fragment {
         mActivity.setSearchButtonAsChecked();
 
         setupListeners(view);
-
-        Log.d(TAG, "init - End");
     }
 
     private void setupListeners(View view) {
 
-        ImageView back = (ImageView) view.findViewById(R.id.ivback);
+        ImageView back = view.findViewById(R.id.ivback);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                fragmentManager.popBackStack();
+                if(redoClicked){
+                    Bundle bundle = new Bundle();
+                    bundle.putString(ShopListResultFragment.EXTRA_SELECTED_ADDRESS, "Current Map Area");
+                    bundle.putDouble(ShopListResultFragment.EXTRA_SELECTED_LATITUDE, mLatitude);
+                    bundle.putDouble(ShopListResultFragment.EXTRA_SELECTED_LONGITUDE, mLongitude);
+
+                    ShopListResultFragment shopListResultFragment = new ShopListResultFragment();
+                    shopListResultFragment.setArguments(bundle);
+
+                    FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+
+                    fragmentTransaction.replace(R.id.main_frame, shopListResultFragment, shopListResultFragment.TAG);
+
+                    fragmentTransaction.commit();
+                } else {
+                    fragmentManager.popBackStack();
+                }
+            }
+        });
+
+        tvRedoSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                UiUtils.hide(tvRedoSearch);
+                callSearchApi();
             }
         });
     }
 
-    private OnMapReadyCallback createOnMapReayCallback() {
+    private void callSearchApi() {
+        String url = Constants.BASE_URL + "/shops/search?query=" + mSearchKeyword
+                + "&lat=" + mLatitude + "&lng=" + mLongitude;
+
+        NonAuthorizedCallback<JsonResponse<ShopInquiry>> callback = new NonAuthorizedCallback<JsonResponse<ShopInquiry>>() {
+            @Override
+            public void onSuccess(JsonResponse<ShopInquiry> jsonResponse) {
+                mShopList.clear();
+                if (jsonResponse != null
+                        && jsonResponse.getResult() != null
+                        && jsonResponse.getResult().getShopList() != null
+                        && !jsonResponse.getResult().getShopList().isEmpty()) {
+
+                    mShopList.addAll(jsonResponse.getResult().getShopList());
+                }
+                redoClicked = true;
+                mMap.clear();
+                drawMarkers();
+            }
+
+            @Override
+            public void onError() {
+                mActivity.getmSnackBarDisplayer().displayError("Error while getting shops from the server");
+            }
+        };
+
+        Type responseType = new TypeToken<JsonResponse<ShopInquiry>>() {
+        }.getType();
+
+        VolleyWrapper<Object, JsonResponse<ShopInquiry>> volleyWrapper = new VolleyWrapper<>(null, responseType, Request.Method.GET, url,
+                callback, getContext(), mActivity.getmSnackBarDisplayer(), mActivity.findViewById(R.id.ll_main_view));
+        volleyWrapper.execute();
+    }
+
+    private OnMapReadyCallback createOnMapReadyCallback() {
         return new OnMapReadyCallback() {
             @Override
             public void onMapReady(GoogleMap googleMap) {
-                Log.d(TAG, "onMapReady - Start");
-
-                LatLng currentLocation = new LatLng(mLatitude, mLongitude);
-
                 mMap = googleMap;
+                mMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
+                    @Override
+                    public void onCameraIdle() {
+                        LatLng mapTargetLatLng = mMap.getCameraPosition().target;
 
-                drawCurrentLocationOnMap(currentLocation);
+                        Location currentMapLocation = new Location("");
+                        currentMapLocation.setLatitude(mapTargetLatLng.latitude);
+                        currentMapLocation.setLongitude(mapTargetLatLng.longitude);
 
-                mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation));
+                        Location previousMapLocations = new Location("");
+                        previousMapLocations.setLatitude(mLatitude);
+                        previousMapLocations.setLongitude(mLongitude);
 
-                drawShopsOnMap();
+                        double distance = currentMapLocation.distanceTo(previousMapLocations);
 
-                // to adjust the zoom and the map options
+                        if(distance > 100){
+                            mLatitude = mapTargetLatLng.latitude;
+                            mLongitude = mapTargetLatLng.longitude;
+                            UiUtils.show(tvRedoSearch);
+                        }
+                    }
+                });
                 initCamera(mMap);
-
-                Log.d(TAG, "onMapReady - End");
+                drawMarkers();
             }
         };
+    }
+
+    private void drawMarkers(){
+        LatLng currentLocation = new LatLng(mLatitude, mLongitude);
+        drawCurrentLocationOnMap(currentLocation);
+
+        LatLngBounds.Builder builder = LatLngBounds.builder();
+        builder.include(currentLocation);
+        for (Shop s: mShopList) {
+            builder.include(s.getLocation().getPosition());
+        }
+        final LatLngBounds bounds = builder.build();
+
+        mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 200));
+
+        drawShopsOnMap();
+    }
+
+    private void initCamera( GoogleMap googleMap) {
+        googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        if (ActivityCompat.checkSelfPermission(this.getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this.getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        googleMap.setMyLocationEnabled(true);
+        googleMap.getUiSettings().setZoomControlsEnabled( true );
     }
 
 
@@ -155,7 +260,6 @@ public class MapFragment extends Fragment {
 
         BitmapDrawable bitmapdraw = (BitmapDrawable) getResources().getDrawable(R.drawable.cir_location);
         Bitmap b = bitmapdraw.getBitmap();
-//                Bitmap curLocIcon = Bitmap.createScaledBitmap(b, 200, 200, false);
 
         MarkerOptions currentLocationMarker = new MarkerOptions();
         currentLocationMarker.position(currentLocation);
@@ -170,11 +274,10 @@ public class MapFragment extends Fragment {
 
         BitmapDrawable bitmapdraw = (BitmapDrawable) getResources().getDrawable(R.drawable.ic_map_location);
         Bitmap b = bitmapdraw.getBitmap();
-//                Bitmap curLocIcon = Bitmap.createScaledBitmap(b, 200, 200, false);
 
-        for (int i = 0; i < mShopsList.size(); i++) {
+        for (int i = 0; i < mShopList.size(); i++) {
             MarkerOptions marker = new MarkerOptions();
-            marker.position(new LatLng(mShopsList.get(i).getLocation().getLat(), mShopsList.get(i).getLocation().getLng()));
+            marker.position(new LatLng(mShopList.get(i).getLocation().getLat(), mShopList.get(i).getLocation().getLng()));
             marker.title(i+"");
             marker.icon(BitmapDescriptorFactory.fromBitmap(b));
             marker.anchor(0.5f, 0.5f);
@@ -195,7 +298,7 @@ public class MapFragment extends Fragment {
                     // Get Vendor index
                     int index = Integer.parseInt(marker.getTitle());
 
-                    Shop shop = mShopsList.get(index);
+                    Shop shop = mShopList.get(index);
 
                     DecimalFormat df = new DecimalFormat("0.0");
 
@@ -212,28 +315,9 @@ public class MapFragment extends Fragment {
                             .placeholder(R.drawable.pic_img)
                             .into(shopImage);
 
-                    // Add Listener for close icon
-//                    ImageView ivClose = v.findViewById(R.id.ivClose);
-//                    ivClose.setOnTouchListener(new View.OnTouchListener() {
-//                        @Override
-//                        public boolean onTouch(View v1, MotionEvent event) {
-//                            Log.d(TAG, "ivClose - onTouch - Close Button");
-//                            marker.hideInfoWindow();
-//                            return true;
-//                        }
-//                    });
-//                    ivClose.setOnClickListener(new View.OnClickListener() {
-//                        @Override
-//                        public void onClick(View v1) {
-//                            Log.d(TAG, "ivClose - onClick - Close Button");
-//                            marker.hideInfoWindow();
-//                        }
-//                    });
-
                     return v;
                 }
 
-                Log.d(TAG, "onMapReady - getInfoContents - End");
                 return null;
             }
 
@@ -244,34 +328,6 @@ public class MapFragment extends Fragment {
 
 
         });
-
-    }
-
-    private void initCamera( GoogleMap googleMap) {
-
-        Log.d(TAG, "initCamera - Start");
-
-        CameraPosition position = CameraPosition.builder()
-                .target(new LatLng(mLatitude,mLongitude))
-                .zoom(13f)
-                .bearing(0.0f)
-                .tilt(0.0f)
-                .build();
-
-        googleMap.animateCamera(CameraUpdateFactory
-                .newCameraPosition(position), null);
-
-        googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-
-        if (ActivityCompat.checkSelfPermission(this.getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(this.getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            return;
-        }
-        googleMap.setMyLocationEnabled(true);
-        googleMap.getUiSettings().setZoomControlsEnabled( true );
-
-        Log.d(TAG, "initCamera - End");
     }
 
     //----------------------------------------------------------------------------------------------
@@ -317,7 +373,7 @@ public class MapFragment extends Fragment {
     private void loadBundleData(){
         mLatitude = getArguments().getDouble(EXTRA_CURRENT_LATITUDE);
         mLongitude = getArguments().getDouble(EXTRA_CURRENT_LONGITUDE);
-        mShopsList = Parcels.unwrap(getArguments().getParcelable(EXTRA_SHOPS_LIST));
-        Log.d(TAG, "Size: " + mShopsList.size());
+        mSearchKeyword = getArguments().getString(EXTRA_SEARCH_KEYWORD);
+        mShopList = Parcels.unwrap(getArguments().getParcelable(EXTRA_SHOPS_LIST));
     }
 }

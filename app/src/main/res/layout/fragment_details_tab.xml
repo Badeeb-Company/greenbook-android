@@ -1,107 +1,101 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <!--<LinearLayout-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:orientation="horizontal"-->
-        <!--android:background="#f3f3f3"-->
-        <!--android:layout_marginTop="12dp">-->
-    <!---->
-        <!--<TextView-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_marginLeft="32dp"-->
-            <!--android:text="Address: "-->
-            <!--android:textColor="@color/green"-->
-            <!--android:textStyle="bold"-->
-            <!--android:textSize="15sp"-->
-            <!--android:layout_marginTop="8dp"-->
-            <!--android:layout_marginBottom="12dp"-->
-            <!--/>-->
-        <!--<TextView-->
-            <!--android:id="@+id/tvAddress"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:textColor="@color/green"-->
-            <!--android:textSize="15sp"-->
-            <!--android:paddingRight="5dp"-->
-            <!--android:layout_marginTop="8dp"-->
-            <!--android:layout_marginBottom="12dp"-->
-            <!--/>-->
-
-    <!--</LinearLayout>-->
-
-
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:orientation="horizontal"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="13dp"
         android:background="#f3f3f3"
-        android:layout_marginTop="13dp">
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="32dp"
+            android:layout_marginLeft="16dp"
             android:text="Hours: "
             android:textColor="@color/green"
-            android:textStyle="bold"
             android:textSize="15sp"
-            android:layout_marginTop="8dp"
-            />
-        <TextView
-            android:id="@+id/tvWorkingHours"
+            android:textStyle="bold" />
+
+        <Spinner
+            android:id="@+id/sWorkingHours"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/green"
-            android:textSize="15sp"
-            android:layout_marginTop="8dp"
-            />
+            android:layout_height="wrap_content" />
 
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:orientation="horizontal"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="13dp"
         android:background="#f3f3f3"
-        android:layout_marginTop="13dp">
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="32dp"
+            android:layout_marginLeft="16dp"
+            android:text="Website: "
+            android:textColor="@color/green"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
+
+        <TextView
+            android:id="@+id/tvWebsite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="fonts/OpenSans-Semibold.ttf"
+            android:text=""
+            android:autoLink="web"
+            android:textColor="@color/green"
+            android:textSize="15sp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="13dp"
+        android:background="#f3f3f3"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
             android:text="Phone: "
             android:textColor="@color/green"
-            android:textStyle="bold"
             android:textSize="15sp"
-            android:layout_marginTop="8dp"
-            />
+            android:textStyle="bold" />
 
 
         <TextView
             android:id="@+id/tvPhone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#1f92cd"
-            android:textSize="15sp"
-            android:text="+1 275 252"
             android:fontFamily="fonts/OpenSans-Semibold.ttf"
-            android:layout_marginTop="8dp"
-            />
+            android:text="+1 275 252"
+            android:textColor="#1f92cd"
+            android:textSize="15sp" />
 
         <ImageView
             android:id="@+id/ivCall"
             android:layout_width="35dp"
             android:layout_height="25dp"
             android:layout_marginLeft="11dp"
-            android:layout_marginTop="8dp"
-            android:src="@drawable/bt_mob"
-            />
+            android:src="@drawable/bt_mob" />
 
 
     </LinearLayout>

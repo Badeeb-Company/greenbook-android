@@ -16,7 +16,7 @@ public class WorkingDay {
     private String name;
 
     @Expose
-    @SerializedName("opened_at")
+    @SerializedName("opening_hours")
     private String openingHours;
 
 

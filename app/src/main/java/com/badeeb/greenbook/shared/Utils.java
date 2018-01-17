@@ -95,7 +95,7 @@ public class Utils {
                 + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2))
                 * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        double distance = R * c ; // in km
+        double distance = (R * c) / 0.621371 ;
 
         return Math.round(distance);
     }

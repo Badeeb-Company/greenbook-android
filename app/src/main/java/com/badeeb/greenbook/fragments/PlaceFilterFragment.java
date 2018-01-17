@@ -11,6 +11,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -74,24 +76,20 @@ public class PlaceFilterFragment extends Fragment {
         setupListener();
     }
 
-    private void initUi(View view){
-        etPlaceSearch = (EditText) view.findViewById(R.id.etPlaceSearch);
-
-        tvCurrentLocation = (TextView) view.findViewById(R.id.tvCurrentLocation) ;
-
-        ivBack = (ImageView) view.findViewById(R.id.ivBack);
-
-        lvPlaceList = (ListView) view.findViewById(R.id.lvPlaceList) ;
-        mPlaceAutocompleteAdapter = new PlaceAutocompleteAdapter(mActivity,mActivity.getmPlaceGoogleApiClient(), Constants.BOUNDS_MIDDLE_EAST, null);
+    private void initUi(View view) {
+        etPlaceSearch = view.findViewById(R.id.etPlaceSearch);
+        tvCurrentLocation = view.findViewById(R.id.tvCurrentLocation);
+        ivBack = view.findViewById(R.id.ivBack);
+        lvPlaceList = view.findViewById(R.id.lvPlaceList);
+        mPlaceAutocompleteAdapter = new PlaceAutocompleteAdapter(mActivity, mActivity.getmPlaceGoogleApiClient(), Constants.BOUNDS_MIDDLE_EAST, null);
         lvPlaceList.setAdapter(mPlaceAutocompleteAdapter);
     }
 
-    private void setupListener(){
+    private void setupListener() {
         tvCurrentLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mAddress = ""; //empty address will force to search with current location as default
-
                 goToShopListResultFragment();
             }
         });
@@ -116,7 +114,7 @@ public class PlaceFilterFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                Log.d(TAG, "addTextChangedListener - afterTextChanged - seq: "+s);
+                Log.d(TAG, "addTextChangedListener - afterTextChanged - seq: " + s);
 
                 mPlaceAutocompleteAdapter.getFilter().filter(s);
             }
@@ -141,6 +139,22 @@ public class PlaceFilterFragment extends Fragment {
                 placeResult.setResultCallback(mUpdatePlaceDetailsCallback);
             }
         });
+
+        showKeyboard(etPlaceSearch);
+    }
+
+    public void showKeyboard(final EditText ettext) {
+        ettext.requestFocus();
+        ettext.postDelayed(
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        InputMethodManager keyboard = (InputMethodManager) mActivity
+                                .getSystemService(Context.INPUT_METHOD_SERVICE);
+                        keyboard.showSoftInput(ettext, 0);
+                    }
+                }
+                , 100);
     }
 
 
@@ -148,11 +162,8 @@ public class PlaceFilterFragment extends Fragment {
             = new ResultCallback<PlaceBuffer>() {
         @Override
         public void onResult(PlaceBuffer places) {
-            Log.d(TAG, "mUpdatePlaceDetailsCallback - onResult - start ");
             if (!places.getStatus().isSuccess()) {
-                Log.d(TAG, "mUpdatePlaceDetailsCallback - onResult - status not success ");
                 // Request did not complete successfully
-                Log.e(TAG, "Place query did not complete. Error: " + places.getStatus().toString());
                 places.release();
                 return;
             }
@@ -166,7 +177,7 @@ public class PlaceFilterFragment extends Fragment {
             mLatitude = place.getLatLng().latitude;
             mLongitude = place.getLatLng().longitude;
 
-            Log.i(TAG, "location after autocomplete - lat: " + mLatitude+" - lng: "+mLongitude);
+            Log.i(TAG, "location after autocomplete - lat: " + mLatitude + " - lng: " + mLongitude);
 
             places.release();
 
@@ -176,9 +187,7 @@ public class PlaceFilterFragment extends Fragment {
         }
     };
 
-    private void goToShopListResultFragment(){
-        Log.d(TAG, "goToShopResultListFragment - Start");
-        Log.d(TAG, "mSelectedPlace: "+mAddress);
+    private void goToShopListResultFragment() {
         Bundle bundle = new Bundle();
         bundle.putString(ShopListResultFragment.EXTRA_SELECTED_ADDRESS, mAddress);
         bundle.putDouble(ShopListResultFragment.EXTRA_SELECTED_LATITUDE, mLatitude);
@@ -195,7 +204,6 @@ public class PlaceFilterFragment extends Fragment {
 
         fragmentTransaction.commit();
 
-        Log.d(TAG, "goToShopResultListFragment - End");
     }
 
 

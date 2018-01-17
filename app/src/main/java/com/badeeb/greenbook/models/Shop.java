@@ -1,5 +1,6 @@
 package com.badeeb.greenbook.models;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -54,8 +55,8 @@ public class Shop {
     private int numOfReviews;
 
     @Expose
-    @SerializedName("open_now")
-    private boolean openNow;
+    @SerializedName("website")
+    private String website;
 
     public Shop(){
         name = "";
@@ -153,11 +154,11 @@ public class Shop {
         this.numOfReviews = numOfReviews;
     }
 
-    public boolean isOpenNow() {
-        return openNow;
+    public String getWebsite() {
+        return website;
     }
 
-    public void setOpenNow(boolean openNow) {
-        this.openNow = openNow;
+    public void setWebsite(String website) {
+        this.website = website;
     }
 }

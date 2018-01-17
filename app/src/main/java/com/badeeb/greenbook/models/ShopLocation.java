@@ -1,5 +1,6 @@
 package com.badeeb.greenbook.models;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -27,6 +28,10 @@ public class ShopLocation {
         this.lat = 0;
         this.lng = 0;
         this.address = "";
+    }
+
+    public LatLng getPosition(){
+        return new LatLng(lat, lng);
     }
 
     public double getLat() {

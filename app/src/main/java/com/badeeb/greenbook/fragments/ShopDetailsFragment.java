@@ -205,12 +205,6 @@ public class ShopDetailsFragment extends Fragment {
         tvNumberOfReviews.setText("(" + mShop.getNumOfReviews() + ")");
     }
 
-    private String getShopDistance() {
-        int distance = (int) Utils.distance(mShop.getLocation().getLat(), mShop.getLocation().getLng(),
-                mActivity.getCurrentLocation().getLatitude(), mActivity.getCurrentLocation().getLongitude());
-        return distance + " Km around you";
-    }
-
     public void setupListener() {
         Log.d(TAG, "setupListener - Start");
 
