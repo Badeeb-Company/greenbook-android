@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "493699735827",
+    "firebase_url": "https://resolute-spirit-193022.firebaseio.com",
+    "project_id": "resolute-spirit-193022",
+    "storage_bucket": "resolute-spirit-193022.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:493699735827:android:b7d97c979b5010ab",
+        "android_client_info": {
+          "package_name": "com.org.badeeb.greenbook"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "493699735827-7f1d6u92ej6agocl30q6lpcap28ev6rt.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.org.badeeb.greenbook",
+            "certificate_hash": "f208c807cf84022c0a6e16415247c96a6edc8313"
+          }
+        },
+        {
+          "client_id": "493699735827-4nqe8miqubpar3ccaqnepmbdtah0aec6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCNmIbU_JB9R3EM4V3q8xyTdb9HNdO8UwA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "493699735827-4nqe8miqubpar3ccaqnepmbdtah0aec6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

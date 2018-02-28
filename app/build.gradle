@@ -42,6 +42,29 @@ android {
             signingConfig signingConfigs.config
         }
     }
+
+    productFlavors {
+
+        flavorDimensions "default"
+
+        staging {
+            applicationId "com.org.badeeb.greenbook.staging"
+            versionCode 4
+            versionName "1.0"
+
+            buildConfigField "String", "BASE_URL", "\"https://staging-greenbook.herokuapp.com/api/v1\""
+            buildConfigField "String", "OAUTH_WEB_CLIENT_ID", "\"941112756170-fllsaspu0a71c16p0m8ldt2sjqbnv5b1.apps.googleusercontent.com\""
+        }
+
+        production {
+            applicationId "com.org.badeeb.greenbook"
+            versionCode 6
+            versionName "1.0"
+
+            buildConfigField "String", "BASE_URL", "\"https://greenbookshop.herokuapp.com/api/v1\""
+            buildConfigField "String", "OAUTH_WEB_CLIENT_ID", "\"493699735827-4nqe8miqubpar3ccaqnepmbdtah0aec6.apps.googleusercontent.com\""
+        }
+    }
     sourceSets { main { res.srcDirs = ['src/main/res', 'src/main/res/font'] } }
 }
 

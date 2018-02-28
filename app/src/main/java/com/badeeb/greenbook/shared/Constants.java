@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
+import com.badeeb.greenbook.BuildConfig;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 
@@ -18,11 +19,10 @@ import java.util.regex.Pattern;
 
 public class Constants {
 
-    public static final String BASE_URL = "https://staging-greenbook.herokuapp.com/api/v1";
+    public static final String BASE_URL = BuildConfig.BASE_URL;
+    public static final String OAUTH_WEB_CLIENT_ID = BuildConfig.OAUTH_WEB_CLIENT_ID;
 
-    public static final String PLAY_STORE_URL = "https://play.google.com/store/apps/details?id=com.badeeb.greenbook";
-
-    public static final String OAUTH_WEB_CLIENT_ID = "941112756170-fllsaspu0a71c16p0m8ldt2sjqbnv5b1.apps.googleusercontent.com";
+    public static final String PLAY_STORE_URL = "https://play.google.com/store/apps/details?id=com.org.badeeb.greenbook";
 
     // Volley constants
     public static final int VOLLEY_TIME_OUT = 8000; // Milliseconds
