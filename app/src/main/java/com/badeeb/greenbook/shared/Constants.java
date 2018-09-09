@@ -18,7 +18,7 @@ import java.util.regex.Pattern;
 
 public class Constants {
 
-    public static final String BASE_URL = "https://staging-greenbook.herokuapp.com/api/v1";
+    public static final String BASE_URL = "https://greenbookshop.herokuapp.com/api/v1";
 
     public static final String PLAY_STORE_URL = "https://play.google.com/store/apps/details?id=com.badeeb.greenbook";
 

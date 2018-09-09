@@ -20,10 +20,11 @@ import java.util.List;
 public class CategoryRecyclerViewAdapter extends RecyclerView.Adapter<CategoryViewHolder> {
     private final static String TAG = CategoryRecyclerViewAdapter.class.getName();
 
-    public Context mContext;
-    public List<Category> mCategoryList;
+    private Context mContext;
+    private List<Category> mCategoryList;
+    private View.OnClickListener onItemClickListener;
 
-    public CategoryRecyclerViewAdapter(Context context, List<Category> categoryList){
+    public CategoryRecyclerViewAdapter(Context context, List<Category> categoryList) {
         Log.d(TAG, " inside Constructor");
         mContext = context;
         mCategoryList = categoryList;
@@ -32,22 +33,24 @@ public class CategoryRecyclerViewAdapter extends RecyclerView.Adapter<CategoryVi
     @Override
     public CategoryViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Log.d(TAG, " onCreateViewHolder - Start");
-        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.categry_card_view,parent,false);
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.categry_card_view, parent, false);
         Log.d(TAG, " onCreateViewHolder - End");
         return new CategoryViewHolder(itemView);
     }
 
-    @Override
-    public void onBindViewHolder(CategoryViewHolder holder, int position) {
-        Log.d(TAG, " onBindViewHolder - Start - position: "+position);
-        Category category = mCategoryList.get(position);
-
-        Log.d(TAG, " onBindViewHolder - CategoryName: "+category.getName());
-        holder.getTvCategoryName().setText(category.getName());
-
-        Log.d(TAG, " onBindViewHolder - End ");
+    public void setOnItemClickListener(View.OnClickListener onItemClickListener) {
+        this.onItemClickListener = onItemClickListener;
     }
 
+    @Override
+    public void onBindViewHolder(CategoryViewHolder holder, int position) {
+        Category category = mCategoryList.get(position);
+        if (onItemClickListener != null) {
+            holder.itemView.setTag(category.getName());
+            holder.itemView.setOnClickListener(onItemClickListener);
+        }
+        holder.getTvCategoryName().setText(category.getName());
+    }
 
 
     @Override
