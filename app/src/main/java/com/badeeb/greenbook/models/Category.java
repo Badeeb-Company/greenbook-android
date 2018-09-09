@@ -1,7 +1,6 @@
 package com.badeeb.greenbook.models;
 
 import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
 
 import org.parceler.Parcel;
 
@@ -20,6 +19,11 @@ public class Category {
     public Category() {
         this.id = 0;
         this.name = "";
+    }
+
+    public Category(int id, String name) {
+        this.id = id;
+        this.name = name;
     }
 
     @Override

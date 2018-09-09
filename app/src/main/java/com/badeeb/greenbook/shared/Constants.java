@@ -22,6 +22,7 @@ public class Constants {
     public static final String BASE_URL = BuildConfig.BASE_URL;
     public static final String OAUTH_WEB_CLIENT_ID = BuildConfig.OAUTH_WEB_CLIENT_ID;
 
+
     public static final String PLAY_STORE_URL = "https://play.google.com/store/apps/details?id=com.org.badeeb.greenbook";
 
     // Volley constants

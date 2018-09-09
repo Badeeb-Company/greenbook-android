@@ -1,22 +1,13 @@
 package com.badeeb.greenbook.fragments;
 
-import android.Manifest;
 import android.app.ProgressDialog;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.location.Location;
-import android.location.LocationManager;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -32,12 +23,14 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.badeeb.greenbook.R;
 import com.badeeb.greenbook.activities.MainActivity;
+import com.badeeb.greenbook.adaptors.CategoryRecyclerViewAdapter;
 import com.badeeb.greenbook.adaptors.ShopRecyclerViewAdapter;
+import com.badeeb.greenbook.models.Category;
+import com.badeeb.greenbook.models.CategoryInquiry;
 import com.badeeb.greenbook.models.JsonResponse;
 import com.badeeb.greenbook.models.Shop;
 import com.badeeb.greenbook.models.ShopInquiry;
@@ -45,24 +38,15 @@ import com.badeeb.greenbook.network.NonAuthorizedCallback;
 import com.badeeb.greenbook.network.VolleyWrapper;
 import com.badeeb.greenbook.shared.Constants;
 import com.badeeb.greenbook.shared.LocationFinder;
-import com.badeeb.greenbook.shared.OnPermissionsGrantedHandler;
 import com.badeeb.greenbook.shared.PermissionsChecker;
 import com.badeeb.greenbook.shared.UiUtils;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationListener;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationServices;
 import com.google.gson.reflect.TypeToken;
 
 import org.parceler.Parcels;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class ShopListResultFragment extends Fragment {
     public final static String TAG = ShopListResultFragment.class.getName();
@@ -93,11 +77,14 @@ public class ShopListResultFragment extends Fragment {
     private EditText etSearch;
     private ImageView ivBack;
     private TextView tvLocationSearch;
-    private TextView tvFirstSearch;
 
+    private RecyclerView rvCategories;
+
+    private CategoryRecyclerViewAdapter categoriesAdapter;
     private ImageView ivMap;
     private LinearLayout llEmptyResult;
     private LocationFinder locationFinder;
+    private List<Category> categories;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -122,7 +109,7 @@ public class ShopListResultFragment extends Fragment {
 
         locationFinder = new LocationFinder(mActivity, this) {
             protected void onLocationFound() {
-                if(!customLocationSelected()){
+                if (!customLocationSelected()) {
                     mLatitude = locationFinder.getCurrentLocation().getLatitude();
                     mLongitude = locationFinder.getCurrentLocation().getLongitude();
                 }
@@ -138,11 +125,11 @@ public class ShopListResultFragment extends Fragment {
         return view;
     }
 
-    private boolean customLocationSelected(){
+    private boolean customLocationSelected() {
         return !TextUtils.isEmpty(tvLocationSearch.getText().toString());
     }
 
-    public Location getCurrentLocation(){
+    public Location getCurrentLocation() {
         return locationFinder.getCurrentLocation();
     }
 
@@ -153,6 +140,7 @@ public class ShopListResultFragment extends Fragment {
         mActivity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
         mShopList = new ArrayList<>();
+        categories = new ArrayList<>();
 
         initUi(view);
 
@@ -164,10 +152,10 @@ public class ShopListResultFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        if(initialMode){
-            UiUtils.hide(rvShopList);
-            UiUtils.hide(llEmptyResult);
-            UiUtils.show(tvFirstSearch);
+        if (initialMode) {
+            UiUtils.hide(srlShopList);
+            UiUtils.show(rvCategories);
+            callCategoriesApi();
         } else {
             locationFinder.find();
         }
@@ -176,9 +164,9 @@ public class ShopListResultFragment extends Fragment {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode){
+        switch (requestCode) {
             case LocationFinder.PERM_LOCATION_RQST_CODE:
-                if(PermissionsChecker.permissionsGranted(grantResults)){
+                if (PermissionsChecker.permissionsGranted(grantResults)) {
                     locationFinder.find();
                 }
                 break;
@@ -212,11 +200,25 @@ public class ShopListResultFragment extends Fragment {
         mShopListAdaptor = new ShopRecyclerViewAdapter(mActivity, mShopList, this);
         rvShopList.setAdapter(mShopListAdaptor);
 
+        rvCategories = view.findViewById(R.id.rvCategories);
+
+        RecyclerView.LayoutManager categoryLayoutManager = new LinearLayoutManager(mActivity);
+        rvCategories.setLayoutManager(categoryLayoutManager);
+        rvCategories.setItemAnimator(new DefaultItemAnimator());
+
+        categoriesAdapter = new CategoryRecyclerViewAdapter(mActivity, categories);
+        categoriesAdapter.setOnItemClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                etSearch.setText((String) view.getTag());
+                locationFinder.find();
+            }
+        });
+        rvCategories.setAdapter(categoriesAdapter);
 
         etSearch = view.findViewById(R.id.etSearch);
-        tvFirstSearch = view.findViewById(R.id.tvFirstSearch);
 
-        srlShopList = (SwipeRefreshLayout) view.findViewById(R.id.shopList_form);
+        srlShopList = (SwipeRefreshLayout) view.findViewById(R.id.srlShopList);
 
         tvLocationSearch = (TextView) view.findViewById(R.id.tvLocationSearch);
 
@@ -290,6 +292,42 @@ public class ShopListResultFragment extends Fragment {
         Log.d(TAG, "goPlaceFilter - End");
     }
 
+    private void callCategoriesApi() {
+        UiUtils.hideKeyboardIfShown(mActivity);
+        mProgressDialog.show();
+
+        String url = Constants.BASE_URL + "/categories";
+        NonAuthorizedCallback<JsonResponse<CategoryInquiry>> callback = new NonAuthorizedCallback<JsonResponse<CategoryInquiry>>() {
+            @Override
+            public void onSuccess(JsonResponse<CategoryInquiry> jsonResponse) {
+                categories.clear();
+                if (jsonResponse != null
+                        && jsonResponse.getResult() != null
+                        && jsonResponse.getResult().getCategoryList() != null
+                        && !jsonResponse.getResult().getCategoryList().isEmpty()) {
+
+                    categories.addAll(jsonResponse.getResult().getCategoryList());
+                    categoriesAdapter.notifyDataSetChanged();
+                }
+                mProgressDialog.dismiss();
+            }
+
+            @Override
+            public void onError() {
+                mActivity.getmSnackBarDisplayer().displayError("Error while getting categories from the server");
+                mProgressDialog.dismiss();
+            }
+        };
+
+        Type responseType = new TypeToken<JsonResponse<CategoryInquiry>>() {
+        }.getType();
+
+        VolleyWrapper<Object, JsonResponse<CategoryInquiry>> volleyWrapper = new VolleyWrapper<>(null,
+                responseType, Request.Method.GET, url, callback, getContext(),
+                mActivity.getmSnackBarDisplayer(), mActivity.findViewById(R.id.ll_main_view));
+        volleyWrapper.execute();
+    }
+
     private void callSearchApi() {
         UiUtils.hideKeyboardIfShown(mActivity);
         mProgressDialog.show();
@@ -342,14 +380,16 @@ public class ShopListResultFragment extends Fragment {
     }
 
     public void enableNoSearchFoundScreen() {
+        UiUtils.show(srlShopList);
         UiUtils.hide(rvShopList);
-        UiUtils.hide(tvFirstSearch);
+        UiUtils.hide(rvCategories);
         UiUtils.show(llEmptyResult);
     }
 
     public void disableNoSearchFoundScreen() {
+        UiUtils.show(srlShopList);
         UiUtils.show(rvShopList);
-        UiUtils.hide(tvFirstSearch);
+        UiUtils.hide(rvCategories);
         UiUtils.hide(llEmptyResult);
     }
 

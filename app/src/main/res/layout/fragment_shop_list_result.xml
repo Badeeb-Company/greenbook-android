@@ -112,8 +112,13 @@
 
     </LinearLayout>
 
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rvCategories"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
     <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/shopList_form"
+        android:id="@+id/srlShopList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -127,17 +132,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:scrollbars="vertical" />
-
-            <TextView
-                android:id="@+id/tvFirstSearch"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="Pull down or\ntype keyword to search"
-                android:textSize="14sp"
-                android:textColor="@color/gray"
-                android:gravity="center"
-                android:visibility="gone"
-                android:layout_gravity="center"/>
 
             <LinearLayout
                 android:id="@+id/llEmptyResult"
@@ -155,7 +149,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="No Search Result, please try again"
+                    android:text="No search results, please try again"
                     android:textColor="#0ca55f"
                     android:textSize="18sp" />
 
